@@ -41,6 +41,7 @@
 		DDE6FD7E1F466F3600CB11D6 /* GLTFSkin.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDE6FD5A1F466F2000CB11D6 /* GLTFSkin.swift */; };
 		DDE6FD7F1F466F3600CB11D6 /* GLTFTexture.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDE6FD3F1F466F2000CB11D6 /* GLTFTexture.swift */; };
 		DDE6FD801F466F3600CB11D6 /* GLTFTextureInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDE6FD411F466F2000CB11D6 /* GLTFTextureInfo.swift */; };
+		DDE6FD821F466F9B00CB11D6 /* GLTFLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDE6FD811F466F9B00CB11D6 /* GLTFLoader.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -80,6 +81,7 @@
 		DDE6FD5D1F466F2000CB11D6 /* GLTFAccessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GLTFAccessor.swift; sourceTree = "<group>"; };
 		DDE6FD5E1F466F2000CB11D6 /* GLTFAccessorSparse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GLTFAccessorSparse.swift; sourceTree = "<group>"; };
 		DDE6FD5F1F466F2000CB11D6 /* GLTFAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GLTFAnimation.swift; sourceTree = "<group>"; };
+		DDE6FD811F466F9B00CB11D6 /* GLTFLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GLTFLoader.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -130,6 +132,7 @@
 		DDE6FD3D1F466D2700CB11D6 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				DDE6FD811F466F9B00CB11D6 /* GLTFLoader.swift */,
 				DDE6FD3E1F466D5000CB11D6 /* schema */,
 			);
 			path = Common;
@@ -278,6 +281,7 @@
 				DDE6FD7C1F466F3600CB11D6 /* GLTFSampler.swift in Sources */,
 				DDE6FD6C1F466F3600CB11D6 /* GLTFCameraOrthographic.swift in Sources */,
 				DDE6FD6A1F466F3600CB11D6 /* GLTFBufferView.swift in Sources */,
+				DDE6FD821F466F9B00CB11D6 /* GLTFLoader.swift in Sources */,
 				DDE6FD791F466F3600CB11D6 /* GLTFMesh.swift in Sources */,
 				DDE6FD741F466F3600CB11D6 /* GLTFImage.swift in Sources */,
 				DDE6FD7B1F466F3600CB11D6 /* GLTFNode.swift in Sources */,
