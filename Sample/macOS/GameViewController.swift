@@ -19,7 +19,12 @@ class GameViewController: NSViewController {
         
         //let loader = GLTFLoader(path: "art.scnassets/Box/Box.gltf")!
         //loader.debugPrint()
-        let sceneSource = GLTFSceneSource(named: "art.scnassets/Box/Box.gltf")
+        var _sceneSource: SCNSceneSource?
+        do {
+            _sceneSource = try GLTFSceneSource(named: "art.scnassets/Box/Box.gltf")
+        } catch {
+            print("\(error.localizedDescription)")
+        }
         
         // create a new scene
         let scene = SCNScene(named: "art.scnassets/ship.scn")!
