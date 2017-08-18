@@ -50,6 +50,7 @@
 		DDE6FDD31F4675C900CB11D6 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDE6FDAD1F46716B00CB11D6 /* GameView.swift */; };
 		DDE6FDD41F4675CB00CB11D6 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDE6FDAC1F46716B00CB11D6 /* GameViewController.swift */; };
 		DDE6FDD61F46764500CB11D6 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = DDE6FDAA1F46716B00CB11D6 /* MainMenu.xib */; };
+		DDE6FDDA1F46785100CB11D6 /* GLTFSceneSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDE6FDD91F46785100CB11D6 /* GLTFSceneSource.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -123,14 +124,7 @@
 		DDE6FDAE1F46716B00CB11D6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DDE6FDAF1F46716B00CB11D6 /* GameSample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GameSample.entitlements; sourceTree = "<group>"; };
 		DDE6FDB41F4671B000CB11D6 /* GLTFSceneKitSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GLTFSceneKitSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		DDE6FDB61F4671B000CB11D6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		DDE6FDB81F4671B000CB11D6 /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
-		DDE6FDBA1F4671B000CB11D6 /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
-		DDE6FDBC1F4671B000CB11D6 /* art.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = art.scnassets; sourceTree = "<group>"; };
-		DDE6FDBE1F4671B000CB11D6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		DDE6FDC11F4671B000CB11D6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
-		DDE6FDC31F4671B000CB11D6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		DDE6FDC41F4671B000CB11D6 /* GLTFSceneKitSample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GLTFSceneKitSample.entitlements; sourceTree = "<group>"; };
+		DDE6FDD91F46785100CB11D6 /* GLTFSceneSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GLTFSceneSource.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -156,7 +150,6 @@
 			isa = PBXGroup;
 			children = (
 				DD83924E1F466C2D006A1CAC /* Source */,
-				DDE6FDB51F4671B000CB11D6 /* GLTFSceneKitSample */,
 				DD83924D1F466C2D006A1CAC /* Products */,
 				DDE6FD831F46708100CB11D6 /* Sample */,
 			);
@@ -192,8 +185,9 @@
 		DDE6FD3D1F466D2700CB11D6 /* Common */ = {
 			isa = PBXGroup;
 			children = (
-				DDE6FD811F466F9B00CB11D6 /* GLTFLoader.swift */,
 				DDE6FD3E1F466D5000CB11D6 /* schema */,
+				DDE6FD811F466F9B00CB11D6 /* GLTFLoader.swift */,
+				DDE6FDD91F46785100CB11D6 /* GLTFSceneSource.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -275,21 +269,6 @@
 				DDE6FDAA1F46716B00CB11D6 /* MainMenu.xib */,
 			);
 			path = Base.lproj;
-			sourceTree = "<group>";
-		};
-		DDE6FDB51F4671B000CB11D6 /* GLTFSceneKitSample */ = {
-			isa = PBXGroup;
-			children = (
-				DDE6FDB61F4671B000CB11D6 /* AppDelegate.swift */,
-				DDE6FDB81F4671B000CB11D6 /* GameView.swift */,
-				DDE6FDBA1F4671B000CB11D6 /* GameViewController.swift */,
-				DDE6FDBC1F4671B000CB11D6 /* art.scnassets */,
-				DDE6FDBE1F4671B000CB11D6 /* Assets.xcassets */,
-				DDE6FDC01F4671B000CB11D6 /* MainMenu.xib */,
-				DDE6FDC31F4671B000CB11D6 /* Info.plist */,
-				DDE6FDC41F4671B000CB11D6 /* GLTFSceneKitSample.entitlements */,
-			);
-			path = GLTFSceneKitSample;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -436,6 +415,7 @@
 				DDE6FD7B1F466F3600CB11D6 /* GLTFNode.swift in Sources */,
 				DDE6FD651F466F3600CB11D6 /* GLTFAnimationChannel.swift in Sources */,
 				DDE6FD801F466F3600CB11D6 /* GLTFTextureInfo.swift in Sources */,
+				DDE6FDDA1F46785100CB11D6 /* GLTFSceneSource.swift in Sources */,
 				DDE6FD6E1F466F3600CB11D6 /* GLTFExtension.swift in Sources */,
 				DDE6FD6F1F466F3600CB11D6 /* GLTFExtras.swift in Sources */,
 				DDE6FD7D1F466F3600CB11D6 /* GLTFScene.swift in Sources */,
@@ -467,14 +447,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				DDE6FDAB1F46716B00CB11D6 /* Base */,
-			);
-			name = MainMenu.xib;
-			sourceTree = "<group>";
-		};
-		DDE6FDC01F4671B000CB11D6 /* MainMenu.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				DDE6FDC11F4671B000CB11D6 /* Base */,
 			);
 			name = MainMenu.xib;
 			sourceTree = "<group>";
@@ -692,6 +664,7 @@
 				DDE6FDC71F4671B000CB11D6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

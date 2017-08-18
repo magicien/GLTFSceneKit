@@ -8,6 +8,7 @@
 
 import SceneKit
 import QuartzCore
+import GLTFSceneKit
 
 class GameViewController: NSViewController {
     
@@ -15,6 +16,10 @@ class GameViewController: NSViewController {
     
     override func awakeFromNib(){
         super.awakeFromNib()
+        
+        //let loader = GLTFLoader(path: "art.scnassets/Box/Box.gltf")!
+        //loader.debugPrint()
+        let sceneSource = GLTFSceneSource(named: "art.scnassets/Box/Box.gltf")
         
         // create a new scene
         let scene = SCNScene(named: "art.scnassets/ship.scn")!

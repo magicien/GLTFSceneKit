@@ -8,10 +8,10 @@
 
 import Foundation
 
-class GLTFLoader {
-    private var json: GLTFGlTF?
+public class GLTFLoader {
+    var json: GLTFGlTF?
     
-    convenience init?(path: String) {
+    convenience public init?(path: String) {
         var url: URL?
         if let mainPath = Bundle.main.path(forResource: path, ofType: "") {
             url = URL(fileURLWithPath: mainPath)
@@ -31,7 +31,7 @@ class GLTFLoader {
         self.init(data: _data)
     }
     
-    init(data: Data) {
+    public init(data: Data) {
         let decoder = JSONDecoder()
         do {
             self.json = try decoder.decode(GLTFGlTF.self, from: data)
@@ -48,5 +48,9 @@ class GLTFLoader {
             print("\(error.localizedDescription)")
             return
         }
+    }
+    
+    public func debugPrint() {
+        print(self.json)
     }
 }
