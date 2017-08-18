@@ -2,7 +2,7 @@
 //  GLTFLoader.swift
 //  glTFTest2
 //
-//  Created by Yuki OHNO on 2017/08/16.
+//  Created by magicien on 2017/08/17.
 //  Copyright © 2017年 DarkHorse. All rights reserved.
 //
 
@@ -37,13 +37,16 @@ class GLTFLoader {
             self.json = try decoder.decode(GLTFGlTF.self, from: data)
         } catch DecodingError.keyNotFound(let key, let context) {
             print("keyNotFound: \(key): \(context.debugDescription)")
+            return
         } catch DecodingError.typeMismatch(let type, let context) {
             print("typeMismatch: \(context.debugDescription)")
+            return
         } catch DecodingError.valueNotFound(let type, let context) {
             print("valueNotFound: \(context.debugDescription)")
+            return
         } catch {
             print("\(error.localizedDescription)")
+            return
         }
-        print(self.json)
     }
 }

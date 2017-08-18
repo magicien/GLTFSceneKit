@@ -42,7 +42,39 @@
 		DDE6FD7F1F466F3600CB11D6 /* GLTFTexture.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDE6FD3F1F466F2000CB11D6 /* GLTFTexture.swift */; };
 		DDE6FD801F466F3600CB11D6 /* GLTFTextureInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDE6FD411F466F2000CB11D6 /* GLTFTextureInfo.swift */; };
 		DDE6FD821F466F9B00CB11D6 /* GLTFLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDE6FD811F466F9B00CB11D6 /* GLTFLoader.swift */; };
+		DDE6FDB91F4671B000CB11D6 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDE6FDB81F4671B000CB11D6 /* GameView.swift */; };
+		DDE6FDBB1F4671B000CB11D6 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDE6FDBA1F4671B000CB11D6 /* GameViewController.swift */; };
+		DDE6FDC21F4671B000CB11D6 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = DDE6FDC01F4671B000CB11D6 /* MainMenu.xib */; };
+		DDE6FDC81F4671B900CB11D6 /* art.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = DDE6FDA61F46716500CB11D6 /* art.scnassets */; };
+		DDE6FDC91F4671C400CB11D6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDE6FDA71F46716B00CB11D6 /* AppDelegate.swift */; };
+		DDE6FDCA1F4671C400CB11D6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DDE6FDA81F46716B00CB11D6 /* Assets.xcassets */; };
+		DDE6FDCE1F4671F000CB11D6 /* GLTFSceneKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD83924C1F466C2D006A1CAC /* GLTFSceneKit.framework */; };
+		DDE6FDCF1F4671F000CB11D6 /* GLTFSceneKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DD83924C1F466C2D006A1CAC /* GLTFSceneKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		DDE6FDD01F4671F000CB11D6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DD8392431F466C2D006A1CAC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DD83924B1F466C2D006A1CAC;
+			remoteInfo = GLTFSceneKit;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		DDE6FDD21F4671F000CB11D6 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				DDE6FDCF1F4671F000CB11D6 /* GLTFSceneKit.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		DD83924C1F466C2D006A1CAC /* GLTFSceneKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = GLTFSceneKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -82,6 +114,23 @@
 		DDE6FD5E1F466F2000CB11D6 /* GLTFAccessorSparse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GLTFAccessorSparse.swift; sourceTree = "<group>"; };
 		DDE6FD5F1F466F2000CB11D6 /* GLTFAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GLTFAnimation.swift; sourceTree = "<group>"; };
 		DDE6FD811F466F9B00CB11D6 /* GLTFLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GLTFLoader.swift; sourceTree = "<group>"; };
+		DDE6FDA61F46716500CB11D6 /* art.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = art.scnassets; sourceTree = "<group>"; };
+		DDE6FDA71F46716B00CB11D6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		DDE6FDA81F46716B00CB11D6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		DDE6FDAB1F46716B00CB11D6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = MainMenu.xib; sourceTree = "<group>"; };
+		DDE6FDAC1F46716B00CB11D6 /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
+		DDE6FDAD1F46716B00CB11D6 /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
+		DDE6FDAE1F46716B00CB11D6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DDE6FDAF1F46716B00CB11D6 /* GameSample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GameSample.entitlements; sourceTree = "<group>"; };
+		DDE6FDB41F4671B000CB11D6 /* GLTFSceneKitSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GLTFSceneKitSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		DDE6FDB61F4671B000CB11D6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		DDE6FDB81F4671B000CB11D6 /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
+		DDE6FDBA1F4671B000CB11D6 /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
+		DDE6FDBC1F4671B000CB11D6 /* art.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = art.scnassets; sourceTree = "<group>"; };
+		DDE6FDBE1F4671B000CB11D6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		DDE6FDC11F4671B000CB11D6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		DDE6FDC31F4671B000CB11D6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DDE6FDC41F4671B000CB11D6 /* GLTFSceneKitSample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GLTFSceneKitSample.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,6 +141,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		DDE6FDB11F4671B000CB11D6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DDE6FDCE1F4671F000CB11D6 /* GLTFSceneKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -99,7 +156,9 @@
 			isa = PBXGroup;
 			children = (
 				DD83924E1F466C2D006A1CAC /* Source */,
+				DDE6FDB51F4671B000CB11D6 /* GLTFSceneKitSample */,
 				DD83924D1F466C2D006A1CAC /* Products */,
+				DDE6FD831F46708100CB11D6 /* Sample */,
 			);
 			sourceTree = "<group>";
 		};
@@ -107,6 +166,7 @@
 			isa = PBXGroup;
 			children = (
 				DD83924C1F466C2D006A1CAC /* GLTFSceneKit.framework */,
+				DDE6FDB41F4671B000CB11D6 /* GLTFSceneKitSample.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -178,6 +238,60 @@
 			path = schema;
 			sourceTree = "<group>";
 		};
+		DDE6FD831F46708100CB11D6 /* Sample */ = {
+			isa = PBXGroup;
+			children = (
+				DDE6FD851F46709F00CB11D6 /* Common */,
+				DDE6FD841F46709F00CB11D6 /* macOS */,
+			);
+			path = Sample;
+			sourceTree = "<group>";
+		};
+		DDE6FD841F46709F00CB11D6 /* macOS */ = {
+			isa = PBXGroup;
+			children = (
+				DDE6FDA71F46716B00CB11D6 /* AppDelegate.swift */,
+				DDE6FDA81F46716B00CB11D6 /* Assets.xcassets */,
+				DDE6FDA91F46716B00CB11D6 /* Base.lproj */,
+				DDE6FDAF1F46716B00CB11D6 /* GameSample.entitlements */,
+				DDE6FDAD1F46716B00CB11D6 /* GameView.swift */,
+				DDE6FDAC1F46716B00CB11D6 /* GameViewController.swift */,
+				DDE6FDAE1F46716B00CB11D6 /* Info.plist */,
+			);
+			path = macOS;
+			sourceTree = "<group>";
+		};
+		DDE6FD851F46709F00CB11D6 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				DDE6FDA61F46716500CB11D6 /* art.scnassets */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		DDE6FDA91F46716B00CB11D6 /* Base.lproj */ = {
+			isa = PBXGroup;
+			children = (
+				DDE6FDAA1F46716B00CB11D6 /* MainMenu.xib */,
+			);
+			path = Base.lproj;
+			sourceTree = "<group>";
+		};
+		DDE6FDB51F4671B000CB11D6 /* GLTFSceneKitSample */ = {
+			isa = PBXGroup;
+			children = (
+				DDE6FDB61F4671B000CB11D6 /* AppDelegate.swift */,
+				DDE6FDB81F4671B000CB11D6 /* GameView.swift */,
+				DDE6FDBA1F4671B000CB11D6 /* GameViewController.swift */,
+				DDE6FDBC1F4671B000CB11D6 /* art.scnassets */,
+				DDE6FDBE1F4671B000CB11D6 /* Assets.xcassets */,
+				DDE6FDC01F4671B000CB11D6 /* MainMenu.xib */,
+				DDE6FDC31F4671B000CB11D6 /* Info.plist */,
+				DDE6FDC41F4671B000CB11D6 /* GLTFSceneKitSample.entitlements */,
+			);
+			path = GLTFSceneKitSample;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -210,16 +324,39 @@
 			productReference = DD83924C1F466C2D006A1CAC /* GLTFSceneKit.framework */;
 			productType = "com.apple.product-type.framework";
 		};
+		DDE6FDB31F4671B000CB11D6 /* GLTFSceneKitSample */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DDE6FDC51F4671B000CB11D6 /* Build configuration list for PBXNativeTarget "GLTFSceneKitSample" */;
+			buildPhases = (
+				DDE6FDB01F4671B000CB11D6 /* Sources */,
+				DDE6FDB11F4671B000CB11D6 /* Frameworks */,
+				DDE6FDB21F4671B000CB11D6 /* Resources */,
+				DDE6FDD21F4671F000CB11D6 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DDE6FDD11F4671F000CB11D6 /* PBXTargetDependency */,
+			);
+			name = GLTFSceneKitSample;
+			productName = GLTFSceneKitSample;
+			productReference = DDE6FDB41F4671B000CB11D6 /* GLTFSceneKitSample.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		DD8392431F466C2D006A1CAC /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 0900;
 				LastUpgradeCheck = 0900;
 				ORGANIZATIONNAME = DarkHorse;
 				TargetAttributes = {
 					DD83924B1F466C2D006A1CAC = {
+						CreatedOnToolsVersion = 9.0;
+					};
+					DDE6FDB31F4671B000CB11D6 = {
 						CreatedOnToolsVersion = 9.0;
 					};
 				};
@@ -230,6 +367,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = DD8392421F466C2D006A1CAC;
 			productRefGroup = DD83924D1F466C2D006A1CAC /* Products */;
@@ -237,6 +375,7 @@
 			projectRoot = "";
 			targets = (
 				DD83924B1F466C2D006A1CAC /* GLTFSceneKit */,
+				DDE6FDB31F4671B000CB11D6 /* GLTFSceneKitSample */,
 			);
 		};
 /* End PBXProject section */
@@ -246,6 +385,16 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DDE6FDB21F4671B000CB11D6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DDE6FDC81F4671B900CB11D6 /* art.scnassets in Resources */,
+				DDE6FDC21F4671B000CB11D6 /* MainMenu.xib in Resources */,
+				DDE6FDCA1F4671C400CB11D6 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -293,7 +442,44 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		DDE6FDB01F4671B000CB11D6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DDE6FDC91F4671C400CB11D6 /* AppDelegate.swift in Sources */,
+				DDE6FDB91F4671B000CB11D6 /* GameView.swift in Sources */,
+				DDE6FDBB1F4671B000CB11D6 /* GameViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		DDE6FDD11F4671F000CB11D6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DD83924B1F466C2D006A1CAC /* GLTFSceneKit */;
+			targetProxy = DDE6FDD01F4671F000CB11D6 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		DDE6FDAA1F46716B00CB11D6 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				DDE6FDAB1F46716B00CB11D6 /* Base */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+		DDE6FDC01F4671B000CB11D6 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				DDE6FDC11F4671B000CB11D6 /* Base */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		DD8392521F466C2D006A1CAC /* Debug */ = {
@@ -446,6 +632,38 @@
 			};
 			name = Release;
 		};
+		DDE6FDC61F4671B000CB11D6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = GLTFSceneKitSample/GLTFSceneKitSample.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = EF37D6UQZ9;
+				INFOPLIST_FILE = GLTFSceneKitSample/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = jp.0spec.GLTFSceneKitSample;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+			};
+			name = Debug;
+		};
+		DDE6FDC71F4671B000CB11D6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = GLTFSceneKitSample/GLTFSceneKitSample.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = EF37D6UQZ9;
+				INFOPLIST_FILE = GLTFSceneKitSample/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = jp.0spec.GLTFSceneKitSample;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -466,6 +684,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		DDE6FDC51F4671B000CB11D6 /* Build configuration list for PBXNativeTarget "GLTFSceneKitSample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DDE6FDC61F4671B000CB11D6 /* Debug */,
+				DDE6FDC71F4671B000CB11D6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};
