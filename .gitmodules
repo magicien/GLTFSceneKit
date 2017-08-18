@@ -1,0 +1,3 @@
+[submodule "schema"]
+	path = schema
+	url = https://github.com/KhronosGroup/glTF.git
