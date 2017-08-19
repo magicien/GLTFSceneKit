@@ -213,7 +213,8 @@ const convertToSwift = (json, structName) => {
 
   text += 'import Foundation' + br + br
 
-  text += `struct ${structName} : Codable {` + br
+  text += `struct ${structName}: Codable {` + br
+  const codingKeys = []
   for(const propName in json.properties){
     const prop = json.properties[propName]
     //const propType = getType(prop)
@@ -232,17 +233,39 @@ const convertToSwift = (json, structName) => {
     let defaultValue = ''
     if(typeof prop.default !== 'undefined'){
       if(propType === 'String'){
-        defaultValue = ` = "${prop.default}"`
+        defaultValue = `"${prop.default}"`
       }else if(propType.charAt(0) === '['){
-        defaultValue = ` = [${prop.default}]`
+        defaultValue = `[${prop.default}]`
       }else{
-        defaultValue = ` = ${prop.default}`
+        defaultValue = `${prop.default}`
       }
     }
-    const optional = (required.includes(propName) || defaultValue) ? '' : '?'
+    const optional = required.includes(propName) ? '' : '?'
 
-    text += `  let ${propName}: ${propType}${optional}${defaultValue}` + br
+    if(defaultValue === ''){
+      text += `  let ${propName}: ${propType}${optional}${defaultValue}` + br
+      codingKeys.push({name: propName})
+    }else{
+      text += `  let _${propName}: ${propType}?` + br
+      text += `  var ${propName}: ${propType} {` + br
+      text += `    get { return self._${propName} ?? ${defaultValue} }` + br
+      text += `  }` + br
+      codingKeys.push({name: `_${propName}`, key: propName})
+    }
   }
+
+  if(codingKeys.length > 0){
+    text += br + `  private enum CodingKeys: String, CodingKey {` + br
+    for(const codingKey of codingKeys){
+      let key = ''
+      if(codingKey.key){
+        key = ` = "${codingKey.key}"`
+      }
+      text += `    case ${codingKey.name}${key}` + br
+    }
+    text += `  }` + br
+  }
+
   text += '}' + br + br
 
   return text

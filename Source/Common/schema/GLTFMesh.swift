@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct GLTFMesh : Codable {
+struct GLTFMesh: Codable {
 
   /** An array of primitives, each defining geometry to be rendered with a material. */
   let primitives: [GLTFMeshPrimitive]
@@ -20,5 +20,13 @@ struct GLTFMesh : Codable {
   let extensions: GLTFExtension?
 
   let extras: GLTFExtras?
+
+  private enum CodingKeys: String, CodingKey {
+    case primitives
+    case weights
+    case name
+    case extensions
+    case extras
+  }
 }
 

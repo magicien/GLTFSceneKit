@@ -7,13 +7,16 @@
 
 import Foundation
 
-struct GLTFBufferView : Codable {
+struct GLTFBufferView: Codable {
 
   /** The index of the buffer. */
   let buffer: GLTFGlTFid
 
   /** The offset into the buffer in bytes. */
-  let byteOffset: Int
+  let _byteOffset: Int?
+  var byteOffset: Int {
+    get { return self._byteOffset ?? 0 }
+  }
 
   /** The length of the bufferView in bytes. */
   let byteLength: Int
@@ -29,5 +32,16 @@ struct GLTFBufferView : Codable {
   let extensions: GLTFExtension?
 
   let extras: GLTFExtras?
+
+  private enum CodingKeys: String, CodingKey {
+    case buffer
+    case _byteOffset = "byteOffset"
+    case byteLength
+    case byteStride
+    case target
+    case name
+    case extensions
+    case extras
+  }
 }
 

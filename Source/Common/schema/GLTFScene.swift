@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct GLTFScene : Codable {
+struct GLTFScene: Codable {
 
   /** The indices of each root node. */
   let nodes: [GLTFGlTFid]?
@@ -17,5 +17,12 @@ struct GLTFScene : Codable {
   let extensions: GLTFExtension?
 
   let extras: GLTFExtras?
+
+  private enum CodingKeys: String, CodingKey {
+    case nodes
+    case name
+    case extensions
+    case extras
+  }
 }
 

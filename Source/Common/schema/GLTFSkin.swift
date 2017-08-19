@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct GLTFSkin : Codable {
+struct GLTFSkin: Codable {
 
   /** The index of the accessor containing the floating-point 4x4 inverse-bind matrices.  The default is that each matrix is a 4x4 identity matrix, which implies that inverse-bind matrices were pre-applied. */
   let inverseBindMatrices: GLTFGlTFid?
@@ -23,5 +23,14 @@ struct GLTFSkin : Codable {
   let extensions: GLTFExtension?
 
   let extras: GLTFExtras?
+
+  private enum CodingKeys: String, CodingKey {
+    case inverseBindMatrices
+    case skeleton
+    case joints
+    case name
+    case extensions
+    case extras
+  }
 }
 

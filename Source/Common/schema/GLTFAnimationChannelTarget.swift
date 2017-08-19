@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct GLTFAnimationChannelTarget : Codable {
+struct GLTFAnimationChannelTarget: Codable {
 
   /** The index of the node to target. */
   let node: GLTFGlTFid?
@@ -18,5 +18,12 @@ struct GLTFAnimationChannelTarget : Codable {
   let extensions: GLTFExtension?
 
   let extras: GLTFExtras?
+
+  private enum CodingKeys: String, CodingKey {
+    case node
+    case path
+    case extensions
+    case extras
+  }
 }
 

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct GLTFGlTF : Codable {
+struct GLTFGlTF: Codable {
 
   /** Names of glTF extensions used somewhere in this asset. */
   let extensionsUsed: [String]?
@@ -63,5 +63,27 @@ struct GLTFGlTF : Codable {
   let extensions: GLTFExtension?
 
   let extras: GLTFExtras?
+
+  private enum CodingKeys: String, CodingKey {
+    case extensionsUsed
+    case extensionsRequired
+    case accessors
+    case animations
+    case asset
+    case buffers
+    case bufferViews
+    case cameras
+    case images
+    case materials
+    case meshes
+    case nodes
+    case samplers
+    case scene
+    case scenes
+    case skins
+    case textures
+    case extensions
+    case extras
+  }
 }
 

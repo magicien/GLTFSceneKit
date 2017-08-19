@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct GLTFMeshPrimitive : Codable {
+struct GLTFMeshPrimitive: Codable {
 
   /** A dictionary object, where each key corresponds to mesh attribute semantic and each value is the index of the accessor containing attribute's data. */
   let attributes: [String:GLTFGlTFid]
@@ -19,7 +19,10 @@ struct GLTFMeshPrimitive : Codable {
   let material: GLTFGlTFid?
 
   /** The type of primitives to render. All valid values correspond to WebGL enums. */
-  let mode: Int = 4
+  let _mode: Int?
+  var mode: Int {
+    get { return self._mode ?? 4 }
+  }
 
   /** An array of Morph Targets, each  Morph Target is a dictionary mapping attributes (only `POSITION`, `NORMAL`, and `TANGENT` supported) to their deviations in the Morph Target. */
   let targets: [[String:GLTFGlTFid]]?
@@ -27,5 +30,15 @@ struct GLTFMeshPrimitive : Codable {
   let extensions: GLTFExtension?
 
   let extras: GLTFExtras?
+
+  private enum CodingKeys: String, CodingKey {
+    case attributes
+    case indices
+    case material
+    case _mode = "mode"
+    case targets
+    case extensions
+    case extras
+  }
 }
 

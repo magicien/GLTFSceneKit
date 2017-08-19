@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct GLTFAccessorSparse : Codable {
+struct GLTFAccessorSparse: Codable {
 
   /** The number of attributes encoded in this sparse accessor. */
   let count: Int
@@ -21,5 +21,13 @@ struct GLTFAccessorSparse : Codable {
   let extensions: GLTFExtension?
 
   let extras: GLTFExtras?
+
+  private enum CodingKeys: String, CodingKey {
+    case count
+    case indices
+    case values
+    case extensions
+    case extras
+  }
 }
 

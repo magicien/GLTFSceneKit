@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct GLTFAnimationChannel : Codable {
+struct GLTFAnimationChannel: Codable {
 
   /** The index of a sampler in this animation used to compute the value for the target, e.g., a node's translation, rotation, or scale (TRS). */
   let sampler: GLTFGlTFid
@@ -18,5 +18,12 @@ struct GLTFAnimationChannel : Codable {
   let extensions: GLTFExtension?
 
   let extras: GLTFExtras?
+
+  private enum CodingKeys: String, CodingKey {
+    case sampler
+    case target
+    case extensions
+    case extras
+  }
 }
 

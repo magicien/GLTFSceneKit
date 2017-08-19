@@ -8,12 +8,34 @@
 
 import Foundation
 
-public enum GLTFUnarchiveError : Error {
+public enum GLTFUnarchiveError: Error {
     case DataInconsistent(String)
     case NotSupported(String)
     case Unknown(String)
 }
 
-public enum GLTFArhiverError : Error {
+extension GLTFUnarchiveError: LocalizedError {
+    public var errorDescription: String? {
+        switch self {
+        case .DataInconsistent(let message):
+            return NSLocalizedString(message, comment: "")
+        case .NotSupported(let message):
+            return NSLocalizedString(message, comment: "")
+        case .Unknown(let message):
+            return NSLocalizedString(message, comment: "")
+        }
+    }
+}
+
+public enum GLTFArchiveError: Error {
     case Unknown(String)
+}
+
+extension GLTFArchiveError: LocalizedError {
+    public var errorDescription: String? {
+        switch self {
+        case .Unknown(let message):
+            return NSLocalizedString(message, comment: "")
+        }
+    }
 }

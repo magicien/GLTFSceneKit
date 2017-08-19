@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct GLTFCameraOrthographic : Codable {
+struct GLTFCameraOrthographic: Codable {
 
   /** The floating-point horizontal magnification of the view. Must not be zero. */
   let xmag: Float
@@ -24,5 +24,14 @@ struct GLTFCameraOrthographic : Codable {
   let extensions: GLTFExtension?
 
   let extras: GLTFExtras?
+
+  private enum CodingKeys: String, CodingKey {
+    case xmag
+    case ymag
+    case zfar
+    case znear
+    case extensions
+    case extras
+  }
 }
 

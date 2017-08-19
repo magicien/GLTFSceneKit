@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct GLTFCameraPerspective : Codable {
+struct GLTFCameraPerspective: Codable {
 
   /** The floating-point aspect ratio of the field of view. When this is undefined, the aspect ratio of the canvas is used. */
   let aspectRatio: Float?
@@ -24,5 +24,14 @@ struct GLTFCameraPerspective : Codable {
   let extensions: GLTFExtension?
 
   let extras: GLTFExtras?
+
+  private enum CodingKeys: String, CodingKey {
+    case aspectRatio
+    case yfov
+    case zfar
+    case znear
+    case extensions
+    case extras
+  }
 }
 

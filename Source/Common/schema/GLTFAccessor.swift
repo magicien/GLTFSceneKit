@@ -7,19 +7,25 @@
 
 import Foundation
 
-struct GLTFAccessor : Codable {
+struct GLTFAccessor: Codable {
 
   /** The index of the bufferView. When not defined, accessor must be initialized with zeros; `sparse` property or extensions could override zeros with actual values. */
   let bufferView: GLTFGlTFid?
 
   /** The offset relative to the start of the bufferView in bytes.  This must be a multiple of the size of the component datatype. */
-  let byteOffset: Int = 0
+  let _byteOffset: Int?
+  var byteOffset: Int {
+    get { return self._byteOffset ?? 0 }
+  }
 
   /** The datatype of components in the attribute.  All valid values correspond to WebGL enums.  The corresponding typed arrays are `Int8Array`, `Uint8Array`, `Int16Array`, `Uint16Array`, `Uint32Array`, and `Float32Array`, respectively.  5125 (UNSIGNED_INT) is only allowed when the accessor contains indices, i.e., the accessor is only referenced by `primitive.indices`. */
   let componentType: Int
 
   /** Specifies whether integer data values should be normalized (`true`) to [0, 1] (for unsigned types) or [-1, 1] (for signed types), or converted directly (`false`) when they are accessed. This property is defined only for accessors that contain vertex attributes or animation output data. */
-  let normalized: Bool = false
+  let _normalized: Bool?
+  var normalized: Bool {
+    get { return self._normalized ?? false }
+  }
 
   /** The number of attributes referenced by this accessor, not to be confused with the number of bytes or number of components. */
   let count: Int
@@ -45,5 +51,20 @@ struct GLTFAccessor : Codable {
   let extensions: GLTFExtension?
 
   let extras: GLTFExtras?
+
+  private enum CodingKeys: String, CodingKey {
+    case bufferView
+    case _byteOffset = "byteOffset"
+    case componentType
+    case _normalized = "normalized"
+    case count
+    case type
+    case max
+    case min
+    case sparse
+    case name
+    case extensions
+    case extras
+  }
 }
 

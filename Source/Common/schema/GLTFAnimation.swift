@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct GLTFAnimation : Codable {
+struct GLTFAnimation: Codable {
 
   /** An array of channels, each of which targets an animation's sampler at a node's property. Different channels of the same animation can't have equal targets. */
   let channels: [GLTFAnimationChannel]
@@ -20,5 +20,13 @@ struct GLTFAnimation : Codable {
   let extensions: GLTFExtension?
 
   let extras: GLTFExtras?
+
+  private enum CodingKeys: String, CodingKey {
+    case channels
+    case samplers
+    case name
+    case extensions
+    case extras
+  }
 }
 

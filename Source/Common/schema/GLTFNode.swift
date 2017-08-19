@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct GLTFNode : Codable {
+struct GLTFNode: Codable {
 
   /** The index of the camera referenced by this node. */
   let camera: GLTFGlTFid?
@@ -19,19 +19,31 @@ struct GLTFNode : Codable {
   let skin: GLTFGlTFid?
 
   /** A floating-point 4x4 transformation matrix stored in column-major order. */
-  let matrix: [Float] = [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]
+  let _matrix: [Float]?
+  var matrix: [Float] {
+    get { return self._matrix ?? [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1] }
+  }
 
   /** The index of the mesh in this node. */
   let mesh: GLTFGlTFid?
 
   /** The node's unit quaternion rotation in the order (x, y, z, w), where w is the scalar. */
-  let rotation: [Float] = [0,0,0,1]
+  let _rotation: [Float]?
+  var rotation: [Float] {
+    get { return self._rotation ?? [0,0,0,1] }
+  }
 
   /** The node's non-uniform scale. */
-  let scale: [Float] = [1,1,1]
+  let _scale: [Float]?
+  var scale: [Float] {
+    get { return self._scale ?? [1,1,1] }
+  }
 
   /** The node's translation. */
-  let translation: [Float] = [0,0,0]
+  let _translation: [Float]?
+  var translation: [Float] {
+    get { return self._translation ?? [0,0,0] }
+  }
 
   /** The weights of the instantiated Morph Target. Number of elements must match number of Morph Targets of used mesh. */
   let weights: [Float]?
@@ -41,5 +53,20 @@ struct GLTFNode : Codable {
   let extensions: GLTFExtension?
 
   let extras: GLTFExtras?
+
+  private enum CodingKeys: String, CodingKey {
+    case camera
+    case children
+    case skin
+    case _matrix = "matrix"
+    case mesh
+    case _rotation = "rotation"
+    case _scale = "scale"
+    case _translation = "translation"
+    case weights
+    case name
+    case extensions
+    case extras
+  }
 }
 

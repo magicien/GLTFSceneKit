@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct GLTFMaterial : Codable {
+struct GLTFMaterial: Codable {
 
   let name: String?
 
@@ -28,15 +28,41 @@ struct GLTFMaterial : Codable {
   let emissiveTexture: GLTFTextureInfo?
 
   /** The RGB components of the emissive color of the material. These values are linear. If an emissiveTexture is specified, this value is multiplied with the texel values. */
-  let emissiveFactor: [Float] = [0,0,0]
+  let _emissiveFactor: [Float]?
+  var emissiveFactor: [Float] {
+    get { return self._emissiveFactor ?? [0,0,0] }
+  }
 
   /** The material's alpha rendering mode enumeration specifying the interpretation of the alpha value of the main factor and texture. */
-  let alphaMode: String = "OPAQUE"
+  let _alphaMode: String?
+  var alphaMode: String {
+    get { return self._alphaMode ?? "OPAQUE" }
+  }
 
   /** Specifies the cutoff threshold when in `MASK` mode. If the alpha value is greater than or equal to this value then it is rendered as fully opaque, otherwise, it is rendered as fully transparent. A value greater than 1.0 will render the entire material as fully transparent. This value is ignored for other modes. */
-  let alphaCutoff: Float = 0.5
+  let _alphaCutoff: Float?
+  var alphaCutoff: Float {
+    get { return self._alphaCutoff ?? 0.5 }
+  }
 
   /** Specifies whether the material is double sided. When this value is false, back-face culling is enabled. When this value is true, back-face culling is disabled and double sided lighting is enabled. The back-face must have its normals reversed before the lighting equation is evaluated. */
-  let doubleSided: Bool = false
+  let _doubleSided: Bool?
+  var doubleSided: Bool {
+    get { return self._doubleSided ?? false }
+  }
+
+  private enum CodingKeys: String, CodingKey {
+    case name
+    case extensions
+    case extras
+    case pbrMetallicRoughness
+    case normalTexture
+    case occlusionTexture
+    case emissiveTexture
+    case _emissiveFactor = "emissiveFactor"
+    case _alphaMode = "alphaMode"
+    case _alphaCutoff = "alphaCutoff"
+    case _doubleSided = "doubleSided"
+  }
 }
 

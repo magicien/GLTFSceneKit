@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct GLTFAsset : Codable {
+struct GLTFAsset: Codable {
 
   /** A copyright message suitable for display to credit the content creator. */
   let copyright: String?
@@ -24,5 +24,14 @@ struct GLTFAsset : Codable {
   let extensions: GLTFExtension?
 
   let extras: GLTFExtras?
+
+  private enum CodingKeys: String, CodingKey {
+    case copyright
+    case generator
+    case version
+    case minVersion
+    case extensions
+    case extras
+  }
 }
 

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct GLTFCamera : Codable {
+struct GLTFCamera: Codable {
 
   /** An orthographic camera containing properties to create an orthographic projection matrix. */
   let orthographic: GLTFCameraOrthographic?
@@ -23,5 +23,14 @@ struct GLTFCamera : Codable {
   let extensions: GLTFExtension?
 
   let extras: GLTFExtras?
+
+  private enum CodingKeys: String, CodingKey {
+    case orthographic
+    case perspective
+    case type
+    case name
+    case extensions
+    case extras
+  }
 }
 
