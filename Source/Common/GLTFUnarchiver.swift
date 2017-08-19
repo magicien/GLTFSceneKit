@@ -7,24 +7,29 @@
 //
 
 import SceneKit
+import SpriteKit
 
 public class GLTFUnarchiver {
+    private var directoryPath: String? = nil
     private var json: GLTFGlTF! = nil
     
     private var scene: SCNScene?
-    private var scenes = [SCNScene?]()
-    private var nodes = [SCNNode?]()
-    private var meshes = [SCNGeometry?]()
-    private var accessors = [Any?]()
-    private var bufferViews = [Data?]()
-    private var buffers = [Data?]()
-    private var materials = [SCNMaterial?]()
+    private var scenes: [SCNScene?] = []
+    private var nodes: [SCNNode?] = []
+    //private var meshes = [SCNGeometry?]()
+    private var meshes: [SCNNode?] = []
+    private var accessors: [Any?] = []
+    private var bufferViews: [Data?] = []
+    private var buffers: [Data?] = []
+    private var materials: [SCNMaterial?] = []
     
     #if !os(watchOS)
         private var workingAnimationGroup: CAAnimationGroup! = nil
     #endif
     
     convenience public init(path: String) throws {
+        let directoryPath = (path as NSString).deletingLastPathComponent
+        
         var url: URL?
         if let mainPath = Bundle.main.path(forResource: path, ofType: "") {
             url = URL(fileURLWithPath: mainPath)
@@ -37,37 +42,17 @@ public class GLTFUnarchiver {
         
         let data = try Data(contentsOf: _url)
         try self.init(data: data)
+        self.directoryPath = directoryPath
     }
     
     public init(data: Data) throws {
         let decoder = JSONDecoder()
-        /*
-        do {
-            self.json = try decoder.decode(GLTFGlTF.self, from: data)
-        } catch DecodingError.keyNotFound(let key, let context) {
-            print("keyNotFound: \(key): \(context.debugDescription)")
-            return
-        } catch DecodingError.typeMismatch(let type, let context) {
-            print("typeMismatch: \(context.debugDescription)")
-            return
-        } catch DecodingError.valueNotFound(let type, let context) {
-            print("valueNotFound: \(context.debugDescription)")
-            return
-        } catch {
-            print("\(error.localizedDescription)")
-            return
-        }
-         */
         
         // just throw the error to the user
         self.json = try decoder.decode(GLTFGlTF.self, from: data)
         
-        try self.loadScenes()
-    }
-    
-    private func loadData(options: [SCNSceneSource.LoadingOption : Any]? = nil) throws {
+        //try self.loadData()
         self.initArrays()
-        try self.loadScenes()
     }
     
     private func initArrays() {
@@ -80,7 +65,8 @@ public class GLTFUnarchiver {
         }
         
         if let meshes = self.json.meshes {
-            self.meshes = [SCNGeometry?](repeating: nil, count: meshes.count)
+            //self.meshes = [SCNGeometry?](repeating: nil, count: meshes.count)
+            self.meshes = [SCNNode?](repeating: nil, count: meshes.count)
         }
         
         if let accessors = self.json.accessors {
@@ -94,13 +80,93 @@ public class GLTFUnarchiver {
         if let buffers = self.json.buffers {
             self.buffers = [Data?](repeating: nil, count: buffers.count)
         }
+        
+        if let materials = self.json.materials {
+            self.materials = [SCNMaterial?](repeating: nil, count: materials.count)
+        }
+    }
+    
+    private func getBase64Str(from str: String) -> String? {
+        guard str.starts(with: "data:") else { return nil }
+        
+        let mark = ";base64,"
+        guard str.contains(mark) else { return nil }
+        guard let base64Str = str.components(separatedBy: mark).last else { return nil }
+        
+        return base64Str
+    }
+    
+    private func calcPrimitiveCount(ofCount count: Int, primitiveType: SCNGeometryPrimitiveType) -> Int {
+        switch primitiveType {
+        case .line:
+            return count / 2
+        case .point:
+            return count
+        case .polygon:
+            // Is it correct?
+            return count - 2
+        case .triangles:
+            return count / 3
+        case .triangleStrip:
+            return count - 2
+        }
     }
     
     private func loadCamera(index: Int) -> SCNCamera {
+        
+        
+        
+        
+        
+        
+        
         return SCNCamera()
     }
     
-    private func loadBufferView(index: Int) throws -> Data {
+    private func loadBuffer(index: Int) throws -> Data {
+        guard index < self.buffers.count else {
+            throw GLTFUnarchiveError.DataInconsistent("loadBuffer: out of index: \(index) < \(self.buffers.count)")
+        }
+        
+        if let buffer = self.buffers[index] {
+            return buffer
+        }
+        
+        guard let buffers = self.json.buffers else {
+            throw GLTFUnarchiveError.DataInconsistent("loadBufferView: buffers is not defined")
+        }
+        
+        let glBuffer = buffers[index]
+        
+        var _buffer: Data?
+        if let uri = glBuffer.uri {
+            if let base64Str = self.getBase64Str(from: uri) {
+                _buffer = Data(base64Encoded: base64Str)
+            } else {
+                var path = uri
+                if let directoryPath = self.directoryPath {
+                    path = "\(directoryPath)/\(path)"
+                }
+                let url = URL(fileURLWithPath: path)
+                _buffer = try Data(contentsOf: url)
+            }
+        } else {
+            // TODO: implement
+        }
+        
+        guard let buffer = _buffer else {
+            throw GLTFUnarchiveError.Unknown("loadBufferView: buffer \(index) load error")
+        }
+        
+        guard buffer.count == glBuffer.byteLength else {
+            throw GLTFUnarchiveError.DataInconsistent("loadBuffer: byteLength does not match: \(buffer.count) != \(glBuffer.byteLength)")
+        }
+        
+        self.buffers[index] = buffer
+        return buffer
+    }
+    
+    private func loadBufferView(index: Int, expectedTarget: Int? = nil) throws -> Data {
         guard index < self.bufferViews.count else {
             throw GLTFUnarchiveError.DataInconsistent("loadBufferView: out of index: \(index) < \(self.bufferViews.count)")
         }
@@ -114,11 +180,42 @@ public class GLTFUnarchiver {
         }
         let glBufferView = bufferViews[index]
         
+        if let expectedTarget = expectedTarget {
+            if let target = glBufferView.target {
+                guard expectedTarget == target else {
+                    throw GLTFUnarchiveError.DataInconsistent("loadBufferView: index \(index): target inconsistent")
+                }
+            }
+        }
         
+        let buffer = try self.loadBuffer(index: glBufferView.buffer)
+        let bufferView = buffer.subdata(in: glBufferView.byteOffset..<glBufferView.byteOffset + glBufferView.byteLength)
         
+        print("bufferView.count: \(bufferView.count)")
+        print("glBufferView.byteLength: \(glBufferView.byteLength)")
+        print("glBufferView.byteOffset: \(glBufferView.byteOffset)")
+        if bufferView.count == 72 {
+            print("===== bufferView =====")
+            bufferView.withUnsafeBytes { (p: UnsafePointer<UInt16>) in
+                for i in 0..<36 {
+                    let data = p[i]
+                    print("\(i): \(data)")
+                }
+            }
+            
+            print("===== buffer =====")
+            buffer.withUnsafeBytes { (p: UnsafePointer<UInt16>) in
+                for i in 0..<36 {
+                    let data = p[i]
+                    print("\(i): \(data)")
+                }
+            }
+            
+        }
         
-        let data = Data()
-        return data
+        self.bufferViews[index] = bufferView
+        
+        return bufferView
     }
     
     private func getDataStride(ofBufferViewIndex index: Int) throws -> Int? {
@@ -135,7 +232,36 @@ public class GLTFUnarchiver {
         return stride
     }
     
-    private func loadVertexAccessor(index: Int, semantic: SCNGeometrySource.Semantic) throws -> SCNGeometrySource? {
+    private func createIndexData(_ data: Data, offset: Int, size: Int, stride: Int, count: Int) -> Data {
+        let dataSize = size * count
+        if stride == size {
+            if offset == 0 {
+                return data
+            }
+            return data.subdata(in: offset..<offset + dataSize)
+        }
+        
+        var indexData = Data(capacity: dataSize)
+        
+        data.withUnsafeBytes { (s: UnsafePointer<UInt8>) in
+            indexData.withUnsafeMutableBytes { (d: UnsafeMutablePointer<UInt8>) in
+                let srcStep = stride - size
+                var srcPos = offset
+                var dstPos = 0
+                for _ in 0..<count {
+                    for _ in 0..<size {
+                        d[dstPos] = s[srcPos]
+                        srcPos += 1
+                        dstPos += 1
+                    }
+                    srcPos += srcStep
+                }
+            }
+        }
+        return indexData
+    }
+    
+    private func loadVertexAccessor(index: Int, semantic: SCNGeometrySource.Semantic) throws -> SCNGeometrySource {
         guard index < self.accessors.count else {
             throw GLTFUnarchiveError.DataInconsistent("loadVertexAccessor: out of index: \(index) < \(self.accessors.count)")
         }
@@ -183,11 +309,103 @@ public class GLTFUnarchiver {
         return geometrySource
     }
     
-    private func loadIndexAccessor(index: Int) -> SCNGeometryElement? {
-        return nil
+    private func loadIndexAccessor(index: Int, primitiveMode: Int) throws -> SCNGeometryElement {
+        guard index < self.accessors.count else {
+            throw GLTFUnarchiveError.DataInconsistent("loadIndexAccessor: out of index: \(index) < \(self.accessors.count)")
+        }
+        
+        if let accessor = self.accessors[index] as? SCNGeometryElement {
+            return accessor
+        }
+        if (self.accessors[index] as? SCNGeometrySource) != nil {
+            throw GLTFUnarchiveError.DataInconsistent("loadIndexAccessor: the accessor \(index) is defined as SCNGeometrySource")
+        }
+        
+        guard let accessors = self.json.accessors else {
+            throw GLTFUnarchiveError.DataInconsistent("loadIndexAccessor: accessors is not defined")
+        }
+        let glAccessor = accessors[index]
+        
+        guard let primitiveType = primitiveTypeMap[primitiveMode] else {
+            throw GLTFUnarchiveError.NotSupported("loadIndexAccessor: primitve mode \(primitiveMode) is not supported")
+        }
+        let primitiveCount = self.calcPrimitiveCount(ofCount: glAccessor.count, primitiveType: primitiveType)
+        
+        guard let usesFloatComponents = usesFloatComponentsMap[glAccessor.componentType] else {
+            throw GLTFUnarchiveError.NotSupported("loadIndexAccessor: user defined accessor.componentType is not supported")
+        }
+        if usesFloatComponents {
+            throw GLTFUnarchiveError.DataInconsistent("loadIndexAccessor: cannot use Float for index accessor")
+        }
+        
+        guard let componentsPerVector = componentsPerVectorMap[glAccessor.type] else {
+            throw GLTFUnarchiveError.NotSupported("loadIndexAccessor: user defined accessor.type is not supported")
+        }
+        if componentsPerVector != 1 {
+            throw GLTFUnarchiveError.DataInconsistent("loadIndexAccessor: accessor type must be SCALAR")
+        }
+        
+        guard let bytesPerComponent = bytesPerComponentMap[glAccessor.componentType] else {
+            throw GLTFUnarchiveError.NotSupported("loadndexIAccessor: user defined accessor.componentType is not supported")
+        }
+        
+        let dataOffset = glAccessor.byteOffset
+        
+        var bufferView: Data
+        var dataStride: Int = bytesPerComponent
+        if let bufferViewIndex = glAccessor.bufferView {
+            let bv = try self.loadBufferView(index: bufferViewIndex)
+            bufferView = bv
+            if let ds = try self.getDataStride(ofBufferViewIndex: bufferViewIndex) {
+                dataStride = ds
+            }
+        } else {
+            let dataSize = dataStride * glAccessor.count
+            bufferView = Data(count: dataSize)
+        }
+        let data = self.createIndexData(bufferView, offset: dataOffset, size: bytesPerComponent, stride: dataStride, count: glAccessor.count)
+        
+        let geometryElement = SCNGeometryElement(data: data, primitiveType: primitiveType, primitiveCount: primitiveCount, bytesPerIndex: bytesPerComponent)
+        self.accessors[index] = geometryElement
+        
+        return geometryElement
     }
     
-    private func loadMesh(index: Int) throws -> SCNGeometry? {
+    private func loadMaterial(index: Int) throws -> SCNMaterial {
+        guard index < self.materials.count else {
+            throw GLTFUnarchiveError.DataInconsistent("loadMaterial: out of index: \(index) < \(self.materials.count)")
+        }
+        
+        if let material = self.materials[index] {
+            return material
+        }
+        
+        guard let materials = self.json.materials else {
+            throw GLTFUnarchiveError.DataInconsistent("loadMaterials: materials it not defined")
+        }
+        let glMaterial = materials[index]
+        let material = SCNMaterial()
+        self.materials[index] = material
+        
+        if let pbr = glMaterial.pbrMetallicRoughness {
+            material.lightingModel = .physicallyBased
+            material.diffuse.contents = self.createVector4(pbr.baseColorFactor)
+            material.metalness.contents = self.createGrayColor(white: pbr.metallicFactor)
+            material.roughness.contents = self.createGrayColor(white: pbr.roughnessFactor)
+            
+            if let baseTexture = pbr.baseColorTexture {
+                // TODO: implement
+            }
+            
+            if let metallicTexture = pbr.metallicRoughnessTexture {
+                // TODO: implement
+            }
+        }
+            
+        return material
+    }
+    
+    private func loadMesh(index: Int) throws -> SCNNode {
         guard index < self.meshes.count else {
             throw GLTFUnarchiveError.DataInconsistent("loadMesh: out of index: \(index) < \(self.meshes.count)")
         }
@@ -200,34 +418,55 @@ public class GLTFUnarchiver {
             throw GLTFUnarchiveError.DataInconsistent("loadMesh: meshes it not defined")
         }
         let glMesh = meshes[index]
-        let geometry = SCNGeometry()
-        self.meshes[index] = geometry
+        let node = SCNNode()
+        self.meshes[index] = node
         
         if let name = glMesh.name {
-            geometry.name = name
+            node.name = name
         }
+        
         for primitive in glMesh.primitives {
+            let primitiveNode = SCNNode()
+            var sources = [SCNGeometrySource]()
             for (attribute, accessorIndex) in primitive.attributes {
                 if let semantic = attributeMap[attribute] {
                     let accessor = try self.loadVertexAccessor(index: accessorIndex, semantic: semantic)
-                    
-                    
-                    
-                    
-                    
+                    sources.append(accessor)
                 } else {
                     // user defined semantic
                     throw GLTFUnarchiveError.NotSupported("loadMesh: user defined semantic is not supported: " + attribute)
                 }
             }
-        }
-        if let weights = glMesh.weights {
+            
+            var elements = [SCNGeometryElement]()
+            if let indexIndex = primitive.indices {
+                let accessor = try self.loadIndexAccessor(index: indexIndex, primitiveMode: primitive.mode)
+                elements.append(accessor)
+            } else {
+                // TODO: define indices
+            }
+            
+            let geometry = SCNGeometry(sources: sources, elements: elements)
+            primitiveNode.geometry = geometry
+            
+            if let materialIndex = primitive.material {
+                let material = try self.loadMaterial(index: materialIndex)
+                geometry.materials = [material]
+            } else {
+                // TODO: set default material
+            }
+            
+            node.addChildNode(primitiveNode)
         }
         
-        return geometry
+        if let weights = glMesh.weights {
+            // TODO: set weights
+        }
+        
+        return node
     }
     
-    private func loadNode(index: Int) throws -> SCNNode? {
+    private func loadNode(index: Int) throws -> SCNNode {
         guard index < self.nodes.count else {
             throw GLTFUnarchiveError.DataInconsistent("loadNode: out of index: \(index) < \(self.nodes.count)")
         }
@@ -250,12 +489,16 @@ public class GLTFUnarchiver {
             scnNode.camera = self.loadCamera(index: camera)
         }
         if let mesh = glNode.mesh {
-            scnNode.geometry = try self.loadMesh(index: mesh)
+            //scnNode.geometry = try self.loadMesh(index: mesh)
+            let meshNode = try self.loadMesh(index: mesh)
+            scnNode.addChildNode(meshNode)
         }
-        //scnNode.transform = self.createMatrix(glNode.matrix)
+        
+        scnNode.transform = self.createMatrix4(glNode.matrix)
         //glNode.rotation
         //glNode.scale
         //glNode.translation
+        
         if let skin = glNode.skin {
             // load skin
         }
@@ -264,7 +507,7 @@ public class GLTFUnarchiver {
         }
         if let children = glNode.children {
             for child in children {
-                let scnChild = try self.loadNode(index: child)!
+                let scnChild = try self.loadNode(index: child)
                 scnNode.addChildNode(scnChild)
             }
         }
@@ -272,7 +515,21 @@ public class GLTFUnarchiver {
         return scnNode
     }
     
-    private func createMatrix(_ matrix: [Float]) -> SCNMatrix4 {
+    private func createGrayColor(white: Float) -> SKColor {
+        return SKColor(white: CGFloat(white), alpha: 1.0)
+    }
+    
+    private func createVector3(_ vector: [Float]) -> SCNVector3 {
+        let v: [CGFloat] = vector.map { CGFloat($0) }
+        return SCNVector3(x: v[0], y: v[1], z: v[2])
+    }
+    
+    private func createVector4(_ vector: [Float]) -> SCNVector4 {
+        let v: [CGFloat] = vector.map { CGFloat($0) }
+        return SCNVector4(x: v[0], y: v[1], z: v[2], w: v[3])
+    }
+    
+    private func createMatrix4(_ matrix: [Float]) -> SCNMatrix4 {
         let m: [CGFloat] = matrix.map { CGFloat($0) }
         return SCNMatrix4(
             m11: m[0], m12: m[1], m13: m[2], m14: m[3],
@@ -281,11 +538,14 @@ public class GLTFUnarchiver {
             m41: m[12], m42: m[13], m43: m[14], m44: m[15])
     }
     
-    func loadScene() throws -> SCNScene? {
+    func loadScene() throws -> SCNScene {
+        if let sceneIndex = self.json.scene {
+            return try self.loadScene(index: sceneIndex)
+        }
         return try self.loadScene(index: 0)
     }
     
-    private func loadScene(index: Int) throws -> SCNScene? {
+    private func loadScene(index: Int) throws -> SCNScene {
         guard index < self.scenes.count else {
             throw GLTFUnarchiveError.DataInconsistent("loadScene: out of index: \(index) < \(self.scenes.count)")
         }
@@ -305,7 +565,7 @@ public class GLTFUnarchiver {
         }
         if let nodes = glScene.nodes {
             for node in nodes {
-                let scnNode = try self.loadNode(index: node)!
+                let scnNode = try self.loadNode(index: node)
                 scnScene.rootNode.addChildNode(scnNode)
             }
         }
@@ -321,3 +581,4 @@ public class GLTFUnarchiver {
         }
     }
 }
+

@@ -26,6 +26,17 @@ let GLTF_UNSIGNED_SHORT = Int(GL_UNSIGNED_SHORT)
 let GLTF_UNSIGNED_INT = Int(GL_UNSIGNED_INT)
 let GLTF_FLOAT = Int(GL_FLOAT)
 
+let GLTF_ARRAY_BUFFER = Int(GL_ARRAY_BUFFER)
+let GLTF_ELEMENT_ARRAY_BUFFER = Int(GL_ELEMENT_ARRAY_BUFFER)
+
+let GLTF_POINTS = Int(GL_POINTS)
+let GLTF_LINES = Int(GL_LINES)
+let GLTF_LINE_LOOP = Int(GL_LINE_LOOP)
+let GLTF_LINE_STRIP = Int(GL_LINE_STRIP)
+let GLTF_TRIANGLES = Int(GL_TRIANGLES)
+let GLTF_TRIANGLE_STRIP = Int(GL_TRIANGLE_STRIP)
+let GLTF_TRIANGLE_FAN = Int(GL_TRIANGLE_FAN)
+
 let usesFloatComponentsMap: [Int: Bool] = [
     GLTF_BYTE: false,
     GLTF_UNSIGNED_BYTE: false,
@@ -52,5 +63,13 @@ let componentsPerVectorMap: [String: Int] = [
     "MAT2": 4,
     "MAT3": 9,
     "MAT4": 16
+]
+
+// GLTF_LINE_LOOP, GLTF_LINE_STRIP, GLTF_TRIANGEL_FAN: need to convert
+let primitiveTypeMap: [Int: SCNGeometryPrimitiveType] = [
+    GLTF_POINTS: SCNGeometryPrimitiveType.point,
+    GLTF_LINES: SCNGeometryPrimitiveType.line,
+    GLTF_TRIANGLES: SCNGeometryPrimitiveType.triangles,
+    GLTF_TRIANGLE_STRIP: SCNGeometryPrimitiveType.triangleStrip
 ]
 

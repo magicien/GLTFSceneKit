@@ -13,7 +13,7 @@ struct GLTFBufferView : Codable {
   let buffer: GLTFGlTFid
 
   /** The offset into the buffer in bytes. */
-  let byteOffset: Int = 0
+  let byteOffset: Int
 
   /** The length of the bufferView in bytes. */
   let byteLength: Int

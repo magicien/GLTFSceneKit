@@ -19,15 +19,42 @@ class GameViewController: NSViewController {
         
         //let loader = GLTFLoader(path: "art.scnassets/Box/Box.gltf")!
         //loader.debugPrint()
-        var _sceneSource: SCNSceneSource?
+        var scene: SCNScene
         do {
-            _sceneSource = try GLTFSceneSource(named: "art.scnassets/Box/Box.gltf")
+            let sceneSource = try GLTFSceneSource(named: "art.scnassets/Box/Box.gltf")
+            scene = try sceneSource.scene()
         } catch {
             print("\(error.localizedDescription)")
+            return
+        }
+        
+        print("childNodes: \(scene.rootNode.childNodes.count)")
+        let node0 = scene.rootNode.childNodes[0]
+        let node1 = node0.childNodes[0]
+        let primitiveNode = node1.childNodes[0]
+        let mesh0 = primitiveNode.childNodes[0]
+        let geometry = mesh0.geometry!
+        let element = geometry.element(at: 0)
+        print("===== geometry ====")
+        element.data.withUnsafeBytes { (p: UnsafePointer<UInt16>) in
+            for i in 0..<element.primitiveCount {
+                let i1 = p[i*3 + 0]
+                let i2 = p[i*3 + 1]
+                let i3 = p[i*3 + 2]
+                print("\(i): \(i1), \(i2), \(i3)")
+            }
+        }
+        element.data.withUnsafeBytes { (p: UnsafePointer<Float32>) in
+            for i in 0..<10 {
+                let i1 = p[i*3 + 0]
+                let i2 = p[i*3 + 1]
+                let i3 = p[i*3 + 2]
+                print("\(i): \(i1), \(i2), \(i3)")
+            }
         }
         
         // create a new scene
-        let scene = SCNScene(named: "art.scnassets/ship.scn")!
+        //let scene = SCNScene(named: "art.scnassets/ship.scn")!
         
         // create and add a camera to the scene
         let cameraNode = SCNNode()
@@ -51,6 +78,7 @@ class GameViewController: NSViewController {
         ambientLightNode.light!.color = NSColor.darkGray
         scene.rootNode.addChildNode(ambientLightNode)
         
+        /*
         // retrieve the ship node
         let ship = scene.rootNode.childNode(withName: "ship", recursively: true)!
         
@@ -60,7 +88,8 @@ class GameViewController: NSViewController {
         animation.duration = 3
         animation.repeatCount = MAXFLOAT //repeat forever
         ship.addAnimation(animation, forKey: nil)
-
+*/
+        
         // set the scene to the view
         self.gameView!.scene = scene
         

@@ -9,7 +9,6 @@
 import SceneKit
 
 public class GLTFSceneSource : SCNSceneSource {
-    private var directoryPath: String! = nil
     private var loader: GLTFUnarchiver! = nil
     
     public override init() {
@@ -32,7 +31,6 @@ public class GLTFSceneSource : SCNSceneSource {
     
     public convenience init(path: String, options: [SCNSceneSource.LoadingOption : Any]? = nil) throws {
         self.init()
-        self.directoryPath = (path as NSString).deletingLastPathComponent
         
         /*
         let data = try? Data(contentsOf: URL(fileURLWithPath: path))
@@ -67,13 +65,7 @@ public class GLTFSceneSource : SCNSceneSource {
         try self.init(path: path, options: options)
     }
     
-    open func scene() -> SCNScene? {
-        do {
-            return try self.loader.loadScene()
-        } catch {
-            print("\(error.localizedDescription)")
-        }
-        
-        return nil
+    public override func scene(options: [SCNSceneSource.LoadingOption : Any]? = nil) throws -> SCNScene {
+        return try self.loader.loadScene()
     }
 }
