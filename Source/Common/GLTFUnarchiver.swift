@@ -9,9 +9,14 @@
 import SceneKit
 import SpriteKit
 
+let glbMagic = 0x46546C67 // "glTF"
+let chunkTypeJSON = 0x4E4F534A // "JSON"
+let chunkTypeBIN = 0x004E4942 // "BIN"
+
 public class GLTFUnarchiver {
     private var directoryPath: String? = nil
     private var json: GLTFGlTF! = nil
+    private var bin: Data?
     
     private var scene: SCNScene?
     private var scenes: [SCNScene?] = []
@@ -47,10 +52,38 @@ public class GLTFUnarchiver {
     
     public init(data: Data) throws {
         let decoder = JSONDecoder()
+        var jsonData = data
+        
+        let magic: UInt32 = data.subdata(in: 0..<4).withUnsafeBytes { $0.pointee }
+        if magic == glbMagic {
+            let version: UInt32 = data.subdata(in: 4..<8).withUnsafeBytes { $0.pointee }
+            if version != 2 {
+                throw GLTFUnarchiveError.NotSupported("version \(version) is not supported")
+            }
+            let length: UInt32 = data.subdata(in: 8..<12).withUnsafeBytes { $0.pointee }
+            
+            let chunk0Length: UInt32 = data.subdata(in: 12..<16).withUnsafeBytes { $0.pointee }
+            let chunk0Type: UInt32 = data.subdata(in: 16..<20).withUnsafeBytes { $0.pointee }
+            if chunk0Type != chunkTypeJSON {
+                throw GLTFUnarchiveError.NotSupported("chunkType \(chunk0Type) is not supported")
+            }
+            let chunk0EndPos = 20 + Int(chunk0Length)
+            jsonData = data.subdata(in: 20..<chunk0EndPos)
+            
+            if length > chunk0EndPos {
+                let chunk1Length: UInt32 = data.subdata(in: chunk0EndPos..<chunk0EndPos+4).withUnsafeBytes { $0.pointee }
+                let chunk1Type: UInt32 = data.subdata(in: chunk0EndPos+4..<chunk0EndPos+8).withUnsafeBytes { $0.pointee }
+                if chunk1Type != chunkTypeBIN {
+                    throw GLTFUnarchiveError.NotSupported("chunkType \(chunk1Type) is not supported")
+                }
+                let chunk1EndPos = chunk0EndPos + 8 + Int(chunk1Length)
+                self.bin = data.subdata(in: chunk0EndPos+8..<chunk1EndPos)
+            }
+        }
         
         // just throw the error to the user
         do {
-            self.json = try decoder.decode(GLTFGlTF.self, from: data)
+            self.json = try decoder.decode(GLTFGlTF.self, from: jsonData)
         } catch DecodingError.keyNotFound(let key, let context) {
             print("keyNotFound: \(key): \(context)")
         } catch DecodingError.typeMismatch(let type, let context) {
@@ -59,7 +92,6 @@ public class GLTFUnarchiver {
             print("valueNotFound: \(type): \(context)")
         }
         
-        //try self.loadData()
         self.initArrays()
     }
     
@@ -159,7 +191,7 @@ public class GLTFUnarchiver {
                 _buffer = try Data(contentsOf: url)
             }
         } else {
-            // TODO: implement
+            _buffer = self.bin
         }
         
         guard let buffer = _buffer else {

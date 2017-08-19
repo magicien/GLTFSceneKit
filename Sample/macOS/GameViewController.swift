@@ -21,13 +21,14 @@ class GameViewController: NSViewController {
         //loader.debugPrint()
         var scene: SCNScene
         do {
-            let sceneSource = try GLTFSceneSource(named: "art.scnassets/Box/Box.gltf")
+            //let sceneSource = try GLTFSceneSource(named: "art.scnassets/Box/glTF/Box.gltf")
+            let sceneSource = try GLTFSceneSource(named: "art.scnassets/Box/glTF-Binary/Box.glb")
             scene = try sceneSource.scene()
         } catch {
             print("\(error.localizedDescription)")
             return
         }
-                
+        
         // create and add a camera to the scene
         let cameraNode = SCNNode()
         cameraNode.camera = SCNCamera()

@@ -53,8 +53,6 @@ public class GLTFSceneSource : SCNSceneSource {
  */
         let loader = try GLTFUnarchiver(path: path)
         self.loader = loader
-        
-        //self.loadData(options: options)
     }
     
     public convenience init(named name: String, options: [SCNSceneSource.LoadingOption : Any]? = nil) throws {
