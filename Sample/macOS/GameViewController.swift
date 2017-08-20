@@ -13,22 +13,33 @@ import GLTFSceneKit
 class GameViewController: NSViewController {
     
     @IBOutlet weak var gameView: GameView!
+    @IBOutlet weak var openFileButton: NSButton!
     
     override func awakeFromNib(){
         super.awakeFromNib()
         
-        //let loader = GLTFLoader(path: "art.scnassets/Box/Box.gltf")!
-        //loader.debugPrint()
         var scene: SCNScene
         do {
-            //let sceneSource = try GLTFSceneSource(named: "art.scnassets/Box/glTF/Box.gltf")
-            let sceneSource = try GLTFSceneSource(named: "art.scnassets/Box/glTF-Binary/Box.glb")
+            let sceneSource = try GLTFSceneSource(named: "art.scnassets/Box/glTF/Box.gltf")
             scene = try sceneSource.scene()
         } catch {
             print("\(error.localizedDescription)")
             return
         }
         
+        self.setScene(scene)
+        
+        // allows the user to manipulate the camera
+        self.gameView!.allowsCameraControl = true
+        
+        // show statistics such as fps and timing information
+        self.gameView!.showsStatistics = true
+        
+        // configure the view
+        self.gameView!.backgroundColor = NSColor.black
+    }
+    
+    func setScene(_ scene: SCNScene) {
         // create and add a camera to the scene
         let cameraNode = SCNNode()
         cameraNode.camera = SCNCamera()
@@ -51,29 +62,28 @@ class GameViewController: NSViewController {
         ambientLightNode.light!.color = NSColor.darkGray
         scene.rootNode.addChildNode(ambientLightNode)
         
-        /*
-        // retrieve the ship node
-        let ship = scene.rootNode.childNode(withName: "ship", recursively: true)!
-        
-        // animate the 3d object
-        let animation = CABasicAnimation(keyPath: "rotation")
-        animation.toValue = NSValue(scnVector4: SCNVector4(x: CGFloat(0), y: CGFloat(1), z: CGFloat(0), w: CGFloat(Double.pi)*2))
-        animation.duration = 3
-        animation.repeatCount = MAXFLOAT //repeat forever
-        ship.addAnimation(animation, forKey: nil)
-*/
-        
         // set the scene to the view
         self.gameView!.scene = scene
-        
-        // allows the user to manipulate the camera
-        self.gameView!.allowsCameraControl = true
-        
-        // show statistics such as fps and timing information
-        self.gameView!.showsStatistics = true
-        
-        // configure the view
-        self.gameView!.backgroundColor = NSColor.black
     }
-
+    
+    @IBAction func openFileButtonClicked(_ sender: Any) {
+        let openPanel = NSOpenPanel()
+        openPanel.canChooseFiles = true
+        openPanel.canChooseDirectories = false
+        openPanel.allowsMultipleSelection = false
+        openPanel.allowedFileTypes = ["gltf", "glb"]
+        openPanel.message = "choose glTF file"
+        openPanel.begin { (response) in
+            if response == .OK {
+                guard let url = openPanel.url else { return }
+                do {
+                    let sceneSource = GLTFSceneSource(url: url)
+                    let scene = try sceneSource.scene()
+                    self.setScene(scene)
+                } catch {
+                    print("\(error.localizedDescription)")
+                }
+            }
+        }
+    }
 }

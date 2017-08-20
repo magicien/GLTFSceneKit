@@ -15,44 +15,30 @@ public class GLTFSceneSource : SCNSceneSource {
         super.init()
     }
     
-    public override convenience init(url: URL, options: [SCNSceneSource.LoadingOption : Any]? = nil) {
+    public convenience init(path: String, options: [SCNSceneSource.LoadingOption : Any]? = nil) throws {
         self.init()
+        
+        let loader = try GLTFUnarchiver(path: path)
+        self.loader = loader
     }
     
-    public override convenience init(data: Data, options: [SCNSceneSource.LoadingOption : Any]? = nil) {
+    public override convenience init(url: URL, options: [SCNSceneSource.LoadingOption : Any]? = nil) {
         self.init()
+        
         do {
-            let loader = try GLTFUnarchiver(data: data)
-            self.loader = loader
+            self.loader = try GLTFUnarchiver(url: url)
         } catch {
             print("\(error.localizedDescription)")
         }
     }
     
-    public convenience init(path: String, options: [SCNSceneSource.LoadingOption : Any]? = nil) throws {
+    public override convenience init(data: Data, options: [SCNSceneSource.LoadingOption : Any]? = nil) {
         self.init()
-        
-        /*
-        let data = try? Data(contentsOf: URL(fileURLWithPath: path))
-        if data == nil {
-            print("data is nil... (\(path))")
-            return nil
-        } else {
-            var opt: [SCNSceneSource.LoadingOption: Any]
-            if options != nil {
-                opt = options!
-            } else {
-                opt = [:]
-            }
-            
-            if opt[.assetDirectoryURLs] == nil {
-                opt[.assetDirectoryURLs] = [URL(fileURLWithPath: self.directoryPath)]
-            }
-            self.loadData(data!, options: opt)
+        do {
+            self.loader = try GLTFUnarchiver(data: data)
+        } catch {
+            print("\(error.localizedDescription)")
         }
- */
-        let loader = try GLTFUnarchiver(path: path)
-        self.loader = loader
     }
     
     public convenience init(named name: String, options: [SCNSceneSource.LoadingOption : Any]? = nil) throws {

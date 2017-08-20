@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13122.17" systemVersion="16G29" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
+        <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13122.17"/>
         <plugIn identifier="com.apple.SceneKitIBPlugin" version="13122.17"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -670,28 +671,41 @@
                 <rect key="frame" x="0.0" y="0.0" width="640" height="480"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <sceneView autoenablesDefaultLighting="YES" translatesAutoresizingMaskIntoConstraints="NO" id="536" customClass="GameView" customModuleProvider="target">
-                        <rect key="frame" x="0.0" y="0.0" width="640" height="480"/>
+                    <sceneView autoenablesDefaultLighting="YES" translatesAutoresizingMaskIntoConstraints="NO" id="536" customClass="GameView" customModule="GLTFSceneKitSample" customModuleProvider="target">
+                        <rect key="frame" x="0.0" y="61" width="640" height="419"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </sceneView>
+                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vnK-Gi-HZT">
+                        <rect key="frame" x="513" y="13" width="113" height="32"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                        <buttonCell key="cell" type="push" title="Open File" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Wh5-Kz-guc">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="openFileButtonClicked:" target="z44-Lp-cgU" id="rzH-ou-AC6"/>
+                        </connections>
+                    </button>
                 </subviews>
                 <constraints>
                     <constraint firstItem="536" firstAttribute="leading" secondItem="372" secondAttribute="leading" id="541"/>
                     <constraint firstItem="536" firstAttribute="top" secondItem="372" secondAttribute="top" id="542"/>
-                    <constraint firstItem="536" firstAttribute="bottom" secondItem="372" secondAttribute="bottom" id="543"/>
+                    <constraint firstItem="536" firstAttribute="bottom" secondItem="372" secondAttribute="bottom" constant="-61" id="543"/>
                     <constraint firstItem="536" firstAttribute="trailing" secondItem="372" secondAttribute="trailing" id="544"/>
                 </constraints>
             </view>
+            <point key="canvasLocation" x="84" y="46"/>
         </window>
-        <customObject id="494" customClass="AppDelegate" customModuleProvider="target">
+        <customObject id="494" customClass="AppDelegate" customModule="GLTFSceneKitSample" customModuleProvider="target">
             <connections>
                 <outlet property="window" destination="371" id="532"/>
             </connections>
         </customObject>
         <customObject id="420" customClass="NSFontManager"/>
-        <viewController id="z44-Lp-cgU" customClass="GameViewController" customModuleProvider="target">
+        <viewController id="z44-Lp-cgU" customClass="GameViewController" customModule="GLTFSceneKitSample" customModuleProvider="target">
             <connections>
                 <outlet property="gameView" destination="536" id="No3-Ct-Xwn"/>
+                <outlet property="openFileButton" destination="vnK-Gi-HZT" id="e2g-l0-PJF"/>
                 <outlet property="view" destination="372" id="bTQ-MN-Ejh"/>
             </connections>
         </viewController>

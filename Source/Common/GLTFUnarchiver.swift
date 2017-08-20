@@ -14,7 +14,7 @@ let chunkTypeJSON = 0x4E4F534A // "JSON"
 let chunkTypeBIN = 0x004E4942 // "BIN"
 
 public class GLTFUnarchiver {
-    private var directoryPath: String? = nil
+    private var directoryPath: URL? = nil
     private var json: GLTFGlTF! = nil
     private var bin: Data?
     
@@ -33,8 +33,6 @@ public class GLTFUnarchiver {
     #endif
     
     convenience public init(path: String) throws {
-        let directoryPath = (path as NSString).deletingLastPathComponent
-        
         var url: URL?
         if let mainPath = Bundle.main.path(forResource: path, ofType: "") {
             url = URL(fileURLWithPath: mainPath)
@@ -44,10 +42,13 @@ public class GLTFUnarchiver {
         guard let _url = url else {
             throw URLError(.fileDoesNotExist)
         }
-        
-        let data = try Data(contentsOf: _url)
+        try self.init(url: _url)
+    }
+    
+    convenience public init(url: URL) throws {
+        let data = try Data(contentsOf: url)
         try self.init(data: data)
-        self.directoryPath = directoryPath
+        self.directoryPath = url.deletingLastPathComponent()
     }
     
     public init(data: Data) throws {
@@ -183,11 +184,7 @@ public class GLTFUnarchiver {
             if let base64Str = self.getBase64Str(from: uri) {
                 _buffer = Data(base64Encoded: base64Str)
             } else {
-                var path = uri
-                if let directoryPath = self.directoryPath {
-                    path = "\(directoryPath)/\(path)"
-                }
-                let url = URL(fileURLWithPath: path)
+                let url = URL(fileURLWithPath: uri, relativeTo: self.directoryPath)
                 _buffer = try Data(contentsOf: url)
             }
         } else {
