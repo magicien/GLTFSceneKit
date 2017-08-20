@@ -205,8 +205,8 @@ public class GLTFUnarchiver {
             throw GLTFUnarchiveError.Unknown("loadBufferView: buffer \(index) load error")
         }
         
-        guard buffer.count == glBuffer.byteLength else {
-            throw GLTFUnarchiveError.DataInconsistent("loadBuffer: byteLength does not match: \(buffer.count) != \(glBuffer.byteLength)")
+        guard buffer.count >= glBuffer.byteLength else {
+            throw GLTFUnarchiveError.DataInconsistent("loadBuffer: buffer.count < byteLength: \(buffer.count) < \(glBuffer.byteLength)")
         }
         
         self.buffers[index] = buffer
@@ -515,8 +515,15 @@ public class GLTFUnarchiver {
         
         var image: Image?
         if let uri = glImage.uri {
-            let url = URL(fileURLWithPath: uri, relativeTo: self.directoryPath)
-            image = Image(contentsOf: url)
+            if let base64Str = self.getBase64Str(from: uri) {
+                guard let data = Data(base64Encoded: base64Str) else {
+                    throw GLTFUnarchiveError.Unknown("loadImage: cannot convert the base64 string to Data")
+                }
+                image = Image(data: data)
+            } else {
+                let url = URL(fileURLWithPath: uri, relativeTo: self.directoryPath)
+                image = Image(contentsOf: url)
+            }
         }
         
         guard let _image = image else {

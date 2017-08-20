@@ -18,9 +18,9 @@ extension GLTFUnarchiveError: LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .DataInconsistent(let message):
-            return NSLocalizedString(message, comment: "")
+            return NSLocalizedString("DataInconsistent: " + message, comment: "")
         case .NotSupported(let message):
-            return NSLocalizedString(message, comment: "")
+            return NSLocalizedString("NotSupported: " + message, comment: "")
         case .Unknown(let message):
             return NSLocalizedString(message, comment: "")
         }
