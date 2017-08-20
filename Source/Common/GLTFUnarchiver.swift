@@ -27,6 +27,8 @@ public class GLTFUnarchiver {
     private var bufferViews: [Data?] = []
     private var buffers: [Data?] = []
     private var materials: [SCNMaterial?] = []
+    private var textures: [SCNMaterialProperty?] = []
+    private var images: [Image?] = []
     
     #if !os(watchOS)
         private var workingAnimationGroup: CAAnimationGroup! = nil
@@ -124,6 +126,14 @@ public class GLTFUnarchiver {
         
         if let materials = self.json.materials {
             self.materials = [SCNMaterial?](repeating: nil, count: materials.count)
+        }
+        
+        if let textures = self.json.textures {
+            self.textures = [SCNMaterialProperty?](repeating: nil, count: textures.count)
+        }
+        
+        if let images = self.json.images {
+            self.images = [Image?](repeating: nil, count: images.count)
         }
     }
     
@@ -348,6 +358,39 @@ public class GLTFUnarchiver {
         return geometrySource
     }
     
+    private func createIndexAccessor(for source: SCNGeometrySource, primitiveMode: Int) throws -> SCNGeometryElement {
+        assert(source.semantic == .vertex)
+        guard let primitiveType = primitiveTypeMap[primitiveMode] else {
+            throw GLTFUnarchiveError.NotSupported("createIndexAccessor: primitve mode \(primitiveMode) is not supported")
+        }
+        
+        if source.vectorCount <= 0xFFFF {
+            var indices = [UInt16](repeating: 0, count: source.vectorCount)
+            for i in 0..<source.vectorCount {
+                indices[i] = UInt16(i)
+            }
+            let geometryElement = SCNGeometryElement(indices: indices, primitiveType: primitiveType)
+            return geometryElement
+        }
+        
+        if source.vectorCount <= 0xFFFFFFFF {
+            var indices = [UInt32](repeating: 0, count: source.vectorCount)
+            for i in 0..<source.vectorCount {
+                indices[i] = UInt32(i)
+            }
+            let geometryElement = SCNGeometryElement(indices: indices, primitiveType: primitiveType)
+            return geometryElement
+        }
+        
+        var indices = [UInt64](repeating: 0, count: source.vectorCount)
+        for i in 0..<source.vectorCount {
+            indices[i] = UInt64(i)
+        }
+        let geometryElement = SCNGeometryElement(indices: indices, primitiveType: primitiveType)
+        
+        return geometryElement
+    }
+    
     private func loadIndexAccessor(index: Int, primitiveMode: Int) throws -> SCNGeometryElement {
         guard index < self.accessors.count else {
             throw GLTFUnarchiveError.DataInconsistent("loadIndexAccessor: out of index: \(index) < \(self.accessors.count)")
@@ -410,6 +453,205 @@ public class GLTFUnarchiver {
         return geometryElement
     }
     
+    private func createNormalSource(for vertexSource: SCNGeometrySource, elements: [SCNGeometryElement]) throws -> SCNGeometrySource {
+        let vertexArray = try createVertexArray(from: vertexSource)
+        let dummyNormal = SCNVector3()
+        var normals = [SCNVector3](repeating: dummyNormal, count: vertexArray.count)
+        var counts = [Int](repeating: 0, count: vertexArray.count)
+        
+        for element in elements {
+            if element.primitiveType != .triangles {
+                throw GLTFUnarchiveError.NotSupported("createNormalSource: only triangles primitveType is supported: \(element.primitiveType)")
+            }
+            
+            let indexArray = createIndexArray(from: element)
+            
+            var indexPos = 0
+            for _ in 0..<indexArray.count/3 {
+                let i0 = indexArray[indexPos]
+                let i1 = indexArray[indexPos+1]
+                let i2 = indexArray[indexPos+2]
+                
+                let v0 = vertexArray[i0]
+                let v1 = vertexArray[i1]
+                let v2 = vertexArray[i2]
+                
+                let n = createNormal(v0, v1, v2)
+                
+                normals[i0] = add(normals[i0], n)
+                normals[i1] = add(normals[i1], n)
+                normals[i2] = add(normals[i2], n)
+                
+                counts[i0] += 1
+                counts[i1] += 1
+                counts[i2] += 1
+                
+                indexPos += 3
+            }
+        }
+        for i in 0..<normals.count {
+            if counts[i] != 0 {
+                normals[i] = normalize(div(normals[i], CGFloat(counts[i])))
+            }
+        }
+        
+        let normalSource = SCNGeometrySource(normals: normals)
+        return normalSource
+    }
+    
+    private func loadImage(index: Int) throws -> Image {
+        guard index < self.images.count else {
+            throw GLTFUnarchiveError.DataInconsistent("loadImage: out of index: \(index) < \(self.images.count)")
+        }
+        
+        if let image = self.images[index] {
+            return image
+        }
+        
+        guard let images = self.json.images else {
+            throw GLTFUnarchiveError.DataInconsistent("loadImage: images is not defined")
+        }
+        let glImage = images[index]
+        
+        var image: Image?
+        if let uri = glImage.uri {
+            let url = URL(fileURLWithPath: uri, relativeTo: self.directoryPath)
+            image = Image(contentsOf: url)
+        }
+        
+        guard let _image = image else {
+            throw GLTFUnarchiveError.Unknown("loadImage: image \(index) is not loaded")
+        }
+        
+        self.images[index] = _image
+        return _image
+    }
+    
+    private func setSampler(index: Int, to property: SCNMaterialProperty) throws {
+        guard let samplers = self.json.samplers else {
+            throw GLTFUnarchiveError.DataInconsistent("setSampler: samplers is not defined")
+        }
+        if index >= samplers.count {
+            throw GLTFUnarchiveError.DataInconsistent("setSampler: out of index: \(index) < \(samplers.count)")
+        }
+        
+        let sampler = samplers[index]
+        
+        if let magFilter = sampler.magFilter {
+            guard let filter = filterModeMap[magFilter] else {
+                throw GLTFUnarchiveError.NotSupported("setSampler: magFilter \(magFilter) is not supported")
+            }
+            property.magnificationFilter = filter
+        }
+        
+        if let minFilter = sampler.minFilter {
+            switch minFilter {
+            case GLTF_NEAREST:
+                property.minificationFilter = .nearest
+                property.mipFilter = .none
+            case GLTF_LINEAR:
+                property.minificationFilter = .linear
+                property.mipFilter = .none
+            case GLTF_NEAREST_MIPMAP_NEAREST:
+                property.minificationFilter = .nearest
+                property.mipFilter = .nearest
+            case GLTF_LINEAR_MIPMAP_NEAREST:
+                property.minificationFilter = .linear
+                property.mipFilter = .nearest
+            case GLTF_NEAREST_MIPMAP_LINEAR:
+                property.minificationFilter = .nearest
+                property.mipFilter = .linear
+            case GLTF_LINEAR_MIPMAP_LINEAR:
+                property.minificationFilter = .linear
+                property.mipFilter = .linear
+            default:
+                throw GLTFUnarchiveError.NotSupported("setSampler: minFilter \(minFilter) is not supported")
+            }
+        }
+        
+        guard let wrapS = wrapModeMap[sampler.wrapS] else {
+            throw GLTFUnarchiveError.NotSupported("setSampler: wrapS \(sampler.wrapS) is not supported")
+        }
+        property.wrapS = wrapS
+        
+        guard let wrapT = wrapModeMap[sampler.wrapT] else {
+            throw GLTFUnarchiveError.NotSupported("setSampler: wrapT \(sampler.wrapT) is not supported")
+        }
+        property.wrapT = wrapT
+        
+        let hoge = "sampler"
+        print("\(sampler.name ?? hoge): sampler.wrapS: \(sampler.wrapS), wrapS: \(wrapS.rawValue), wrapT: \(wrapT.rawValue)")
+    }
+    
+    private func loadTexture(index: Int) throws -> SCNMaterialProperty {
+        guard index < self.textures.count else {
+            throw GLTFUnarchiveError.DataInconsistent("loadTexture: out of index: \(index) < \(self.textures.count)")
+        }
+        
+        if let texture = self.textures[index] {
+            return texture
+        }
+        
+        guard let textures = self.json.textures else {
+            throw GLTFUnarchiveError.DataInconsistent("loadTexture: textures is not defined")
+        }
+        let glTexture = textures[index]
+        
+        guard let sourceIndex = glTexture.source else {
+            throw GLTFUnarchiveError.NotSupported("loadTexture: texture without source is not supported")
+        }
+        let image = try self.loadImage(index: sourceIndex)
+        
+        let texture = SCNMaterialProperty(contents: image)
+        
+        // TODO: retain glTexture.name somewhere
+        
+        if let sampler = glTexture.sampler {
+            try self.setSampler(index: sampler, to: texture)
+        }
+        
+        self.textures[index] = texture
+        
+        return texture
+    }
+    
+    private func setTexture(index: Int, to property: SCNMaterialProperty) throws {
+        let texture = try self.loadTexture(index: index)
+        guard let contents = texture.contents else {
+            throw GLTFUnarchiveError.DataInconsistent("setTexture: contents of texture \(index) is nil")
+        }
+        
+        property.contents = contents
+        property.minificationFilter = texture.minificationFilter
+        property.magnificationFilter = texture.magnificationFilter
+        property.mipFilter = texture.mipFilter
+        property.wrapS = texture.wrapS
+        property.wrapT = texture.wrapT
+        property.intensity = texture.intensity
+        property.maxAnisotropy = texture.maxAnisotropy
+        property.contentsTransform = texture.contentsTransform
+        property.mappingChannel = texture.mappingChannel
+        if #available(OSX 10.13, *) {
+            property.textureComponents = texture.textureComponents
+        } else {
+            // Fallback on earlier versions
+        }
+    }
+    
+    var defaultMaterial: SCNMaterial {
+        get {
+            let material = SCNMaterial()
+            
+            material.lightingModel = .physicallyBased
+            material.diffuse.contents = self.createColor([1.0, 1.0, 1.0, 1.0])
+            material.metalness.contents = self.createGrayColor(white: 1.0)
+            material.roughness.contents = self.createGrayColor(white: 1.0)
+            material.isDoubleSided = false
+            
+            return material
+        }
+    }
+    
     private func loadMaterial(index: Int) throws -> SCNMaterial {
         guard index < self.materials.count else {
             throw GLTFUnarchiveError.DataInconsistent("loadMaterial: out of index: \(index) < \(self.materials.count)")
@@ -433,14 +675,59 @@ public class GLTFUnarchiver {
             material.roughness.contents = self.createGrayColor(white: pbr.roughnessFactor)
             
             if let baseTexture = pbr.baseColorTexture {
-                // TODO: implement
+                // TODO: multiply baseColorFactor and the diffuse texture
+                try self.setTexture(index: baseTexture.index, to: material.diffuse)
+                material.diffuse.mappingChannel = baseTexture.texCoord
             }
             
             if let metallicTexture = pbr.metallicRoughnessTexture {
-                // TODO: implement
+                // TODO: multiply metalness/roughness and the textures
+                try self.setTexture(index: metallicTexture.index, to: material.metalness)
+                material.metalness.mappingChannel = metallicTexture.texCoord
+                if #available(OSX 10.13, *) {
+                    material.metalness.textureComponents = .blue
+                } else {
+                    // Fallback on earlier versions
+                }
+                
+                try self.setTexture(index: metallicTexture.index, to: material.roughness)
+                material.roughness.mappingChannel = metallicTexture.texCoord
+                if #available(OSX 10.13, *) {
+                    material.roughness.textureComponents = .green
+                } else {
+                    // Fallback on earlier versions
+                }
             }
         }
+        
+        if let normalTexture = glMaterial.normalTexture {
+            try self.setTexture(index: normalTexture.index, to: material.normal)
+            material.normal.mappingChannel = normalTexture.texCoord
             
+            // TODO: - use normalTexture.scale
+        }
+        
+        if let occlusionTexture = glMaterial.occlusionTexture {
+            try self.setTexture(index: occlusionTexture.index, to: material.ambientOcclusion)
+            material.ambientOcclusion.mappingChannel = occlusionTexture.texCoord
+            material.ambientOcclusion.intensity = CGFloat(occlusionTexture.strength * 1000.0) // Is it correct?
+        }
+        
+        if let emissiveTexture = glMaterial.emissiveTexture {
+            if material.lightingModel == .physicallyBased {
+                try self.setTexture(index: emissiveTexture.index, to: material.selfIllumination)
+                material.selfIllumination.mappingChannel = emissiveTexture.texCoord
+            } else {
+                try self.setTexture(index: emissiveTexture.index, to: material.emission)
+                material.emission.mappingChannel = emissiveTexture.texCoord
+            }
+        }
+        
+        material.isDoubleSided = glMaterial.doubleSided
+        
+        // TODO: use glMaterial.alphaCutOff
+        // TODO: use glMaterial.alphaMode
+        
         return material
     }
     
@@ -467,10 +754,17 @@ public class GLTFUnarchiver {
         for primitive in glMesh.primitives {
             let primitiveNode = SCNNode()
             var sources = [SCNGeometrySource]()
+            var vertexSource: SCNGeometrySource?
+            var normalSource: SCNGeometrySource?
             for (attribute, accessorIndex) in primitive.attributes {
                 if let semantic = attributeMap[attribute] {
                     let accessor = try self.loadVertexAccessor(index: accessorIndex, semantic: semantic)
                     sources.append(accessor)
+                    if semantic == .vertex {
+                        vertexSource = accessor
+                    } else if semantic == .normal {
+                        normalSource = accessor
+                    }
                 } else {
                     // user defined semantic
                     throw GLTFUnarchiveError.NotSupported("loadMesh: user defined semantic is not supported: " + attribute)
@@ -481,8 +775,20 @@ public class GLTFUnarchiver {
             if let indexIndex = primitive.indices {
                 let accessor = try self.loadIndexAccessor(index: indexIndex, primitiveMode: primitive.mode)
                 elements.append(accessor)
+            } else if let vertexSource = vertexSource {
+                let accessor = try self.createIndexAccessor(for: vertexSource, primitiveMode: primitive.mode)
+                elements.append(accessor)
             } else {
-                // TODO: define indices
+                // Should it be error?
+            }
+            
+            if normalSource == nil {
+                if let vertexSource = vertexSource {
+                    normalSource = try self.createNormalSource(for: vertexSource, elements: elements)
+                    sources.append(normalSource!)
+                } else {
+                    // Should it be error?
+                }
             }
             
             let geometry = SCNGeometry(sources: sources, elements: elements)
@@ -492,7 +798,8 @@ public class GLTFUnarchiver {
                 let material = try self.loadMaterial(index: materialIndex)
                 geometry.materials = [material]
             } else {
-                // TODO: set default material
+                let material = self.defaultMaterial
+                geometry.materials = [material]
             }
             
             node.addChildNode(primitiveNode)
@@ -534,7 +841,7 @@ public class GLTFUnarchiver {
         }
         
         if let matrix = glNode._matrix {
-            scnNode.transform = self.createMatrix4(glNode.matrix)
+            scnNode.transform = self.createMatrix4(matrix)
             if glNode._rotation != nil || glNode._scale != nil || glNode._translation != nil {
                 throw GLTFUnarchiveError.DataInconsistent("loadNode: both matrix and rotation/scale/translation are defined")
             }

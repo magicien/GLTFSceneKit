@@ -91,6 +91,18 @@ const hasParam = (json, paramName) => {
   return false
 }
 
+const getRequired = (json) => {
+  const required = json.required || []
+
+  if(json.allOf){
+    for(const refItem of json.allOf){
+      required.push(...getRequired(refItem._ref))
+    }
+  }
+  
+  return required
+}
+
 /**
  * @param {Object} json - json object
  * @param {string} paramName - name of the parameter
@@ -104,6 +116,35 @@ const getParam = (json, paramName) => {
     return getParam(json._ref, paramName)
   }
   return null
+}
+
+const getDefaultValue = (json, paramName) => {
+  const prop = json.properties[paramName]
+  if(!prop){
+    return ''
+  }
+  const propType = getPropertyType(json, paramName)
+    
+  if(typeof prop.default !== 'undefined'){
+    if(propType === 'String'){
+      return `"${prop.default}"`
+    }else if(propType.charAt(0) === '['){
+      return `[${prop.default}]`
+    }else{
+      return `${prop.default}`
+    }
+  }
+
+  if(json.allOf){
+    for(const refItem of json.allOf){
+      const def = getDefaultValue(refItem._ref, paramName)
+      if(def !== ''){
+        return def
+      }
+    }
+  }
+
+  return ''
 }
 
 /**
@@ -188,7 +229,8 @@ const getPropertyType = (json, propName) => {
 const convertToSwift = (json, structName) => {
   let text = ''
   const br = '\n'
-  const required = json.required || []
+  //const required = json.required || []
+  const required = getRequired(json)
 
   // header
   text += '//' + br
@@ -230,17 +272,8 @@ const convertToSwift = (json, structName) => {
       text += `  /** ${desc} */` + br
     }
 
-    let defaultValue = ''
-    if(typeof prop.default !== 'undefined'){
-      if(propType === 'String'){
-        defaultValue = `"${prop.default}"`
-      }else if(propType.charAt(0) === '['){
-        defaultValue = `[${prop.default}]`
-      }else{
-        defaultValue = `${prop.default}`
-      }
-    }
-    const optional = required.includes(propName) ? '' : '?'
+    const defaultValue = getDefaultValue(json, propName)
+        const optional = required.includes(propName) ? '' : '?'
 
     if(defaultValue === ''){
       text += `  let ${propName}: ${propType}${optional}${defaultValue}` + br

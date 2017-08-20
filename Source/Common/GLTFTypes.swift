@@ -37,6 +37,17 @@ let GLTF_TRIANGLES = Int(GL_TRIANGLES)
 let GLTF_TRIANGLE_STRIP = Int(GL_TRIANGLE_STRIP)
 let GLTF_TRIANGLE_FAN = Int(GL_TRIANGLE_FAN)
 
+let GLTF_NEAREST = Int(GL_NEAREST)
+let GLTF_LINEAR = Int(GL_LINEAR)
+let GLTF_NEAREST_MIPMAP_NEAREST = Int(GL_NEAREST_MIPMAP_NEAREST)
+let GLTF_LINEAR_MIPMAP_NEAREST = Int(GL_LINEAR_MIPMAP_NEAREST)
+let GLTF_NEAREST_MIPMAP_LINEAR = Int(GL_NEAREST_MIPMAP_LINEAR)
+let GLTF_LINEAR_MIPMAP_LINEAR = Int(GL_LINEAR_MIPMAP_LINEAR)
+
+let GLTF_CLAMP_TO_EDGE = Int(GL_CLAMP_TO_EDGE)
+let GLTF_MIRRORED_REPEAT = Int(GL_MIRRORED_REPEAT)
+let GLTF_REPEAT = Int(GL_REPEAT)
+
 let usesFloatComponentsMap: [Int: Bool] = [
     GLTF_BYTE: false,
     GLTF_UNSIGNED_BYTE: false,
@@ -72,4 +83,21 @@ let primitiveTypeMap: [Int: SCNGeometryPrimitiveType] = [
     GLTF_TRIANGLES: SCNGeometryPrimitiveType.triangles,
     GLTF_TRIANGLE_STRIP: SCNGeometryPrimitiveType.triangleStrip
 ]
+
+let filterModeMap: [Int: SCNFilterMode] = [
+    GLTF_NEAREST: SCNFilterMode.nearest,
+    GLTF_LINEAR: SCNFilterMode.linear
+]
+
+let wrapModeMap: [Int: SCNWrapMode] = [
+    GLTF_CLAMP_TO_EDGE: SCNWrapMode.clamp,
+    GLTF_MIRRORED_REPEAT: SCNWrapMode.mirror,
+    GLTF_REPEAT: SCNWrapMode.repeat
+]
+
+#if os(macOS)
+    typealias Image = NSImage
+#elseif os(iOS) || os(tvOS) || os(watchOS)
+    typealias Image = UIImage
+#endif
 

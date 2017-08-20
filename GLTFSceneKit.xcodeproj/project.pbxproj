@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		DD10459A1F47723D004B20CE /* GLTFTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1045991F47723D004B20CE /* GLTFTypes.swift */; };
 		DD10459C1F4772E3004B20CE /* GLTFErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD10459B1F4772E3004B20CE /* GLTFErrors.swift */; };
+		DD634F9D1F4A2D90008886AD /* GLTFFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD634F9C1F4A2D90008886AD /* GLTFFunctions.swift */; };
 		DD8392511F466C2D006A1CAC /* GLTFSceneKit.h in Headers */ = {isa = PBXBuildFile; fileRef = DD83924F1F466C2D006A1CAC /* GLTFSceneKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DDE6FD601F466F3600CB11D6 /* GLTFAccessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDE6FD5D1F466F2000CB11D6 /* GLTFAccessor.swift */; };
 		DDE6FD611F466F3600CB11D6 /* GLTFAccessorSparse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDE6FD5E1F466F2000CB11D6 /* GLTFAccessorSparse.swift */; };
@@ -82,6 +83,7 @@
 /* Begin PBXFileReference section */
 		DD1045991F47723D004B20CE /* GLTFTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GLTFTypes.swift; sourceTree = "<group>"; };
 		DD10459B1F4772E3004B20CE /* GLTFErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GLTFErrors.swift; sourceTree = "<group>"; };
+		DD634F9C1F4A2D90008886AD /* GLTFFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GLTFFunctions.swift; sourceTree = "<group>"; };
 		DD83924C1F466C2D006A1CAC /* GLTFSceneKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = GLTFSceneKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD83924F1F466C2D006A1CAC /* GLTFSceneKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GLTFSceneKit.h; sourceTree = "<group>"; };
 		DD8392501F466C2D006A1CAC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -193,6 +195,7 @@
 				DDE6FD811F466F9B00CB11D6 /* GLTFUnarchiver.swift */,
 				DDE6FDD91F46785100CB11D6 /* GLTFSceneSource.swift */,
 				DD1045991F47723D004B20CE /* GLTFTypes.swift */,
+				DD634F9C1F4A2D90008886AD /* GLTFFunctions.swift */,
 				DD10459B1F4772E3004B20CE /* GLTFErrors.swift */,
 			);
 			path = Common;
@@ -421,6 +424,7 @@
 				DDE6FD671F466F3600CB11D6 /* GLTFAnimationSampler.swift in Sources */,
 				DDE6FD7C1F466F3600CB11D6 /* GLTFSampler.swift in Sources */,
 				DDE6FD6C1F466F3600CB11D6 /* GLTFCameraOrthographic.swift in Sources */,
+				DD634F9D1F4A2D90008886AD /* GLTFFunctions.swift in Sources */,
 				DDE6FD6A1F466F3600CB11D6 /* GLTFBufferView.swift in Sources */,
 				DDE6FD821F466F9B00CB11D6 /* GLTFUnarchiver.swift in Sources */,
 				DDE6FD791F466F3600CB11D6 /* GLTFMesh.swift in Sources */,
