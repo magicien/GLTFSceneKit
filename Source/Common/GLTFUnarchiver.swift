@@ -321,10 +321,15 @@ public class GLTFUnarchiver {
         
         var bufferView: Data
         var dataStride: Int = bytesPerComponent * componentsPerVector
+        var padding = 0
         if let bufferViewIndex = glAccessor.bufferView {
             let bv = try self.loadBufferView(index: bufferViewIndex)
             bufferView = bv
             if let ds = try self.getDataStride(ofBufferViewIndex: bufferViewIndex) {
+                guard ds >= dataStride else {
+                    throw GLTFUnarchiveError.DataInconsistent("loadVertexAccessor: dataStride is too small: \(ds) < \(dataStride)")
+                }
+                padding = ds - dataStride
                 dataStride = ds
             }
         } else {
@@ -332,7 +337,7 @@ public class GLTFUnarchiver {
             bufferView = Data(count: dataSize)
         }
         
-        /*
+        
         print("==================================================")
         print("semantic: \(semantic)")
         print("vectorCount: \(vectorCount)")
@@ -342,13 +347,13 @@ public class GLTFUnarchiver {
         print("dataOffset: \(dataOffset)")
         print("dataStride: \(dataStride)")
         print("bufferView.count: \(bufferView.count)")
-        print("dataOffset + dataStride * vectorCount: \(dataOffset + dataStride * vectorCount)")
+        print("padding: \(padding)")
+        print("dataOffset + dataStride * vectorCount - padding: \(dataOffset + dataStride * vectorCount - padding)")
         print("==================================================")
-        */
         
         #if SEEMS_TO_HAVE_VALIDATE_VERTEX_ATTRIBUTE_BUG
             // Metal validateVertexAttribute function seems to have a bug, so dateOffset must be 0.
-            bufferView = bufferView.subdata(in: dataOffset..<dataOffset + dataStride * vectorCount)
+            bufferView = bufferView.subdata(in: dataOffset..<dataOffset + dataStride * vectorCount - padding)
             let geometrySource = SCNGeometrySource(data: bufferView, semantic: semantic, vectorCount: vectorCount, usesFloatComponents: usesFloatComponents, componentsPerVector: componentsPerVector, bytesPerComponent: bytesPerComponent, dataOffset: 0, dataStride: dataStride)
         #else
             let geometrySource = SCNGeometrySource(data: bufferView, semantic: semantic, vectorCount: vectorCount, usesFloatComponents: usesFloatComponents, componentsPerVector: componentsPerVector, bytesPerComponent: bytesPerComponent, dataOffset: dataOffset, dataStride: dataStride)
@@ -585,9 +590,6 @@ public class GLTFUnarchiver {
             throw GLTFUnarchiveError.NotSupported("setSampler: wrapT \(sampler.wrapT) is not supported")
         }
         property.wrapT = wrapT
-        
-        let hoge = "sampler"
-        print("\(sampler.name ?? hoge): sampler.wrapS: \(sampler.wrapS), wrapS: \(wrapS.rawValue), wrapT: \(wrapT.rawValue)")
     }
     
     private func loadTexture(index: Int) throws -> SCNMaterialProperty {
@@ -650,9 +652,9 @@ public class GLTFUnarchiver {
             let material = SCNMaterial()
             
             material.lightingModel = .physicallyBased
-            material.diffuse.contents = self.createColor([1.0, 1.0, 1.0, 1.0])
-            material.metalness.contents = self.createGrayColor(white: 1.0)
-            material.roughness.contents = self.createGrayColor(white: 1.0)
+            material.diffuse.contents = createColor([1.0, 1.0, 1.0, 1.0])
+            material.metalness.contents = createGrayColor(white: 1.0)
+            material.roughness.contents = createGrayColor(white: 1.0)
             material.isDoubleSided = false
             
             return material
@@ -677,9 +679,9 @@ public class GLTFUnarchiver {
         
         if let pbr = glMaterial.pbrMetallicRoughness {
             material.lightingModel = .physicallyBased
-            material.diffuse.contents = self.createColor(pbr.baseColorFactor)
-            material.metalness.contents = self.createGrayColor(white: pbr.metallicFactor)
-            material.roughness.contents = self.createGrayColor(white: pbr.roughnessFactor)
+            material.diffuse.contents = createColor(pbr.baseColorFactor)
+            material.metalness.contents = createGrayColor(white: pbr.metallicFactor)
+            material.roughness.contents = createGrayColor(white: pbr.roughnessFactor)
             
             if let baseTexture = pbr.baseColorTexture {
                 // TODO: multiply baseColorFactor and the diffuse texture
@@ -848,14 +850,14 @@ public class GLTFUnarchiver {
         }
         
         if let matrix = glNode._matrix {
-            scnNode.transform = self.createMatrix4(matrix)
+            scnNode.transform = createMatrix4(matrix)
             if glNode._rotation != nil || glNode._scale != nil || glNode._translation != nil {
                 throw GLTFUnarchiveError.DataInconsistent("loadNode: both matrix and rotation/scale/translation are defined")
             }
         } else {
-            scnNode.orientation = self.createVector4(glNode.rotation)
-            scnNode.scale = self.createVector3(glNode.scale)
-            scnNode.position = self.createVector3(glNode.translation)
+            scnNode.orientation = createVector4(glNode.rotation)
+            scnNode.scale = createVector3(glNode.scale)
+            scnNode.position = createVector3(glNode.translation)
         }
         
         if let skin = glNode.skin {
@@ -874,37 +876,7 @@ public class GLTFUnarchiver {
         return scnNode
     }
     
-    private func createColor(_ color: [Float]) -> SKColor {
-        let c: [CGFloat] = color.map { CGFloat($0) }
-        assert(c.count >= 4)
-        return SKColor.init(red: c[0], green: c[1], blue: c[2], alpha: c[3])
-    }
     
-    private func createGrayColor(white: Float) -> SKColor {
-        return SKColor(white: CGFloat(white), alpha: 1.0)
-    }
-    
-    private func createVector3(_ vector: [Float]) -> SCNVector3 {
-        let v: [CGFloat] = vector.map { CGFloat($0) }
-        assert(v.count >= 3)
-        return SCNVector3(x: v[0], y: v[1], z: v[2])
-    }
-    
-    private func createVector4(_ vector: [Float]) -> SCNVector4 {
-        let v: [CGFloat] = vector.map { CGFloat($0) }
-        assert(v.count >= 4)
-        return SCNVector4(x: v[0], y: v[1], z: v[2], w: v[3])
-    }
-    
-    private func createMatrix4(_ matrix: [Float]) -> SCNMatrix4 {
-        let m: [CGFloat] = matrix.map { CGFloat($0) }
-        assert(m.count >= 16)
-        return SCNMatrix4(
-            m11: m[0], m12: m[1], m13: m[2], m14: m[3],
-            m21: m[4], m22: m[5], m23: m[6], m24: m[7],
-            m31: m[8], m32: m[9], m33: m[10], m34: m[11],
-            m41: m[12], m42: m[13], m43: m[14], m44: m[15])
-    }
     
     func loadScene() throws -> SCNScene {
         if let sceneIndex = self.json.scene {

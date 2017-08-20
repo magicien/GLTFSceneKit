@@ -8,6 +8,7 @@
 //
 
 import SceneKit
+import SpriteKit
 
 func add(_ v0: SCNVector3, _ v1: SCNVector3) -> SCNVector3 {
     return SCNVector3(v0.x + v1.x, v0.y + v1.y, v0.z + v1.z)
@@ -111,3 +112,34 @@ func createIndexArray(from element: SCNGeometryElement) -> [Int] {
     return indices
 }
 
+func createColor(_ color: [Float]) -> SKColor {
+    let c: [CGFloat] = color.map { CGFloat($0) }
+    assert(c.count >= 4)
+    return SKColor.init(red: c[0], green: c[1], blue: c[2], alpha: c[3])
+}
+
+func createGrayColor(white: Float) -> SKColor {
+    return SKColor(white: CGFloat(white), alpha: 1.0)
+}
+
+func createVector3(_ vector: [Float]) -> SCNVector3 {
+    let v: [CGFloat] = vector.map { CGFloat($0) }
+    assert(v.count >= 3)
+    return SCNVector3(x: v[0], y: v[1], z: v[2])
+}
+
+func createVector4(_ vector: [Float]) -> SCNVector4 {
+    let v: [CGFloat] = vector.map { CGFloat($0) }
+    assert(v.count >= 4)
+    return SCNVector4(x: v[0], y: v[1], z: v[2], w: v[3])
+}
+
+func createMatrix4(_ matrix: [Float]) -> SCNMatrix4 {
+    let m: [CGFloat] = matrix.map { CGFloat($0) }
+    assert(m.count >= 16)
+    return SCNMatrix4(
+        m11: m[0], m12: m[1], m13: m[2], m14: m[3],
+        m21: m[4], m22: m[5], m23: m[6], m24: m[7],
+        m31: m[8], m32: m[9], m33: m[10], m34: m[11],
+        m41: m[12], m42: m[13], m43: m[14], m44: m[15])
+}
