@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct GLTFNode: Codable {
+struct GLTFNode: GLTFPropertyProtocol {
 
   /** The index of the camera referenced by this node. */
   let camera: GLTFGlTFid?
@@ -18,8 +18,8 @@ struct GLTFNode: Codable {
   /** The index of the skin referenced by this node. */
   let skin: GLTFGlTFid?
 
-  /** A floating-point 4x4 transformation matrix stored in column-major order. */
   let _matrix: [Float]?
+  /** A floating-point 4x4 transformation matrix stored in column-major order. */
   var matrix: [Float] {
     get { return self._matrix ?? [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1] }
   }
@@ -27,20 +27,20 @@ struct GLTFNode: Codable {
   /** The index of the mesh in this node. */
   let mesh: GLTFGlTFid?
 
-  /** The node's unit quaternion rotation in the order (x, y, z, w), where w is the scalar. */
   let _rotation: [Float]?
+  /** The node's unit quaternion rotation in the order (x, y, z, w), where w is the scalar. */
   var rotation: [Float] {
     get { return self._rotation ?? [0,0,0,1] }
   }
 
-  /** The node's non-uniform scale. */
   let _scale: [Float]?
+  /** The node's non-uniform scale. */
   var scale: [Float] {
     get { return self._scale ?? [1,1,1] }
   }
 
-  /** The node's translation. */
   let _translation: [Float]?
+  /** The node's translation. */
   var translation: [Float] {
     get { return self._translation ?? [0,0,0] }
   }
@@ -48,10 +48,13 @@ struct GLTFNode: Codable {
   /** The weights of the instantiated Morph Target. Number of elements must match number of Morph Targets of used mesh. */
   let weights: [Float]?
 
+  /** The user-defined name of this object.  This is not necessarily unique, e.g., an accessor and a buffer could have the same name, or two accessors could even have the same name. */
   let name: String?
 
+  /** Dictionary object with extension-specific objects. */
   let extensions: GLTFExtension?
 
+  /** Application-specific data. */
   let extras: GLTFExtras?
 
   private enum CodingKeys: String, CodingKey {

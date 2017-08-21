@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct GLTFMesh: Codable {
+struct GLTFMesh: GLTFPropertyProtocol {
 
   /** An array of primitives, each defining geometry to be rendered with a material. */
   let primitives: [GLTFMeshPrimitive]
@@ -15,10 +15,13 @@ struct GLTFMesh: Codable {
   /** Array of weights to be applied to the Morph Targets. */
   let weights: [Float]?
 
+  /** The user-defined name of this object.  This is not necessarily unique, e.g., an accessor and a buffer could have the same name, or two accessors could even have the same name. */
   let name: String?
 
+  /** Dictionary object with extension-specific objects. */
   let extensions: GLTFExtension?
 
+  /** Application-specific data. */
   let extras: GLTFExtras?
 
   private enum CodingKeys: String, CodingKey {

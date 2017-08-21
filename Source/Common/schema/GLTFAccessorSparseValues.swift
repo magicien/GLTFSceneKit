@@ -7,19 +7,21 @@
 
 import Foundation
 
-struct GLTFAccessorSparseValues: Codable {
+struct GLTFAccessorSparseValues: GLTFPropertyProtocol {
 
   /** The index of the bufferView with sparse values. Referenced bufferView can't have ARRAY_BUFFER or ELEMENT_ARRAY_BUFFER target. */
   let bufferView: GLTFGlTFid
 
-  /** The offset relative to the start of the bufferView in bytes. Must be aligned. */
   let _byteOffset: Int?
+  /** The offset relative to the start of the bufferView in bytes. Must be aligned. */
   var byteOffset: Int {
     get { return self._byteOffset ?? 0 }
   }
 
+  /** Dictionary object with extension-specific objects. */
   let extensions: GLTFExtension?
 
+  /** Application-specific data. */
   let extras: GLTFExtras?
 
   private enum CodingKeys: String, CodingKey {

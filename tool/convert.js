@@ -34,6 +34,15 @@ const typeLUT = {
   'boolean': 'Bool'
 }
 
+/**
+ * @type {string[]}
+ */
+const copyFiles = [
+  'GLTFExtension.swift',
+  'GLTFExtras.swift'
+]
+const copyDirPath = 'tool'
+
 // functions
 
 /**
@@ -222,6 +231,64 @@ const getPropertyType = (json, propName) => {
 }
 
 /**
+ * @param {Object} json -
+ * @param {string} propName -
+ * @returns {string?} - description
+ */
+const getDescription = (json, propName) => {
+  const prop = json.properties[propName]
+  if(prop){
+    const detail = getParam(prop, 'gltf_detailedDescription')
+    if(detail){
+      return detail
+    }
+    const desc = getParam(prop, 'description')
+    if(desc){
+      return desc
+    }
+  }
+
+  if(json.allOf){
+    for(const refItem of json.allOf){
+      const t = getDescription(refItem._ref, propName)
+      if(t){
+        return t
+      }
+    }
+  }
+
+  return null
+}
+
+/**
+ * @param {Object} json -
+ * @param {string} schema -
+ * @returns {boolean} -
+ */
+const isInherited = (json, schema) => {
+  if(!json.allOf){
+    return false
+  }
+  for(const refItem of json.allOf){
+    if(refItem.$ref === schema){
+      return true
+    }
+    if(isInherited(refItem._ref, schema)){
+      return true
+    }
+  }
+  return false
+}
+
+/**
+ * @param {Object} json -
+ * @returns {boolean} -
+ */
+const isExtensible = (json) => {
+  return isInherited(json, 'glTFProperty.schema.json') && (typeof json.properties.extensions !== 'undefined')
+}
+
+/**
  * @param {Object} json - json object
  * @param {string} structName - name of the struct
  * @returns {string}
@@ -229,7 +296,6 @@ const getPropertyType = (json, propName) => {
 const convertToSwift = (json, structName) => {
   let text = ''
   const br = '\n'
-  //const required = json.required || []
   const required = getRequired(json)
 
   // header
@@ -255,7 +321,11 @@ const convertToSwift = (json, structName) => {
 
   text += 'import Foundation' + br + br
 
-  text += `struct ${structName}: Codable {` + br
+  if(isExtensible(json)){
+    text += `struct ${structName}: GLTFPropertyProtocol {` + br
+  }else{
+    text += `struct ${structName}: Codable {` + br
+  }
   const codingKeys = []
   for(const propName in json.properties){
     const prop = json.properties[propName]
@@ -264,22 +334,23 @@ const convertToSwift = (json, structName) => {
 
     text += br
 
-    let desc = getParam(prop, 'gltf_detailedDescription', json)
-    if(!desc){
-      desc = getParam(prop, 'description', json)
-    }
-    if(desc){
-      text += `  /** ${desc} */` + br
-    }
+    //const desc = getDescription(prop, json)
+    const desc = getDescription(json, propName)
 
     const defaultValue = getDefaultValue(json, propName)
-        const optional = required.includes(propName) ? '' : '?'
+    const optional = required.includes(propName) ? '' : '?'
 
     if(defaultValue === ''){
+      if(desc){
+        text += `  /** ${desc} */` + br
+      }
       text += `  let ${propName}: ${propType}${optional}${defaultValue}` + br
       codingKeys.push({name: propName})
     }else{
       text += `  let _${propName}: ${propType}?` + br
+      if(desc){
+        text += `  /** ${desc} */` + br
+      }
       text += `  var ${propName}: ${propType} {` + br
       text += `    get { return self._${propName} ?? ${defaultValue} }` + br
       text += `  }` + br
@@ -359,13 +430,21 @@ readPromise.then(() => {
   for(const fileName in schemas){
     const json = schemas[fileName]
     const structName = getStructNameFromFileName(fileName, false)
-    const swiftText = convertToSwift(json, structName)
-    const swiftFilePath = `${swiftDirPath}/${structName}.swift`
-    fs.writeFile(swiftFilePath, swiftText, (err) => {
-      if(err){
-        throw new Error(`writeFile error: ${swiftFileName}: ${err}`)
-      }
-    })
+    const swiftFileName = `${structName}.swift`
+    const swiftFilePath = `${swiftDirPath}/${swiftFileName}`
+
+    if(copyFiles.indexOf(swiftFileName) >= 0){
+      // just copy the file in tool directory
+      const srcFilePath = `${copyDirPath}/${swiftFileName}`
+      fs.createReadStream(srcFilePath).pipe(fs.createWriteStream(swiftFilePath))
+    }else{
+      const swiftText = convertToSwift(json, structName)
+      fs.writeFile(swiftFilePath, swiftText, (err) => {
+        if(err){
+          throw new Error(`writeFile error: ${swiftFileName}: ${err}`)
+        }
+      })
+    }
   }
 })
 

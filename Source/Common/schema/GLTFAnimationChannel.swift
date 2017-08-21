@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct GLTFAnimationChannel: Codable {
+struct GLTFAnimationChannel: GLTFPropertyProtocol {
 
   /** The index of a sampler in this animation used to compute the value for the target, e.g., a node's translation, rotation, or scale (TRS). */
   let sampler: GLTFGlTFid
@@ -15,8 +15,10 @@ struct GLTFAnimationChannel: Codable {
   /** The index of the node and TRS property to target. */
   let target: GLTFAnimationChannelTarget
 
+  /** Dictionary object with extension-specific objects. */
   let extensions: GLTFExtension?
 
+  /** Application-specific data. */
   let extras: GLTFExtras?
 
   private enum CodingKeys: String, CodingKey {

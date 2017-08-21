@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct GLTFSkin: Codable {
+struct GLTFSkin: GLTFPropertyProtocol {
 
   /** The index of the accessor containing the floating-point 4x4 inverse-bind matrices.  The default is that each matrix is a 4x4 identity matrix, which implies that inverse-bind matrices were pre-applied. */
   let inverseBindMatrices: GLTFGlTFid?
@@ -18,10 +18,13 @@ struct GLTFSkin: Codable {
   /** Indices of skeleton nodes, used as joints in this skin.  The array length must be the same as the `count` property of the `inverseBindMatrices` accessor (when defined). */
   let joints: [GLTFGlTFid]
 
+  /** The user-defined name of this object.  This is not necessarily unique, e.g., an accessor and a buffer could have the same name, or two accessors could even have the same name. */
   let name: String?
 
+  /** Dictionary object with extension-specific objects. */
   let extensions: GLTFExtension?
 
+  /** Application-specific data. */
   let extras: GLTFExtras?
 
   private enum CodingKeys: String, CodingKey {

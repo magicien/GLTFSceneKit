@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct GLTFAccessorSparse: Codable {
+struct GLTFAccessorSparse: GLTFPropertyProtocol {
 
   /** The number of attributes encoded in this sparse accessor. */
   let count: Int
@@ -18,8 +18,10 @@ struct GLTFAccessorSparse: Codable {
   /** Array of size `count` times number of components, storing the displaced accessor attributes pointed by `indices`. Substituted values must have the same `componentType` and number of components as the base accessor. */
   let values: GLTFAccessorSparseValues
 
+  /** Dictionary object with extension-specific objects. */
   let extensions: GLTFExtension?
 
+  /** Application-specific data. */
   let extras: GLTFExtras?
 
   private enum CodingKeys: String, CodingKey {

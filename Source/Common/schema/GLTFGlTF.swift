@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct GLTFGlTF: Codable {
+struct GLTFGlTF: GLTFPropertyProtocol {
 
   /** Names of glTF extensions used somewhere in this asset. */
   let extensionsUsed: [String]?
@@ -60,8 +60,10 @@ struct GLTFGlTF: Codable {
   /** An array of textures. */
   let textures: [GLTFTexture]?
 
+  /** Dictionary object with extension-specific objects. */
   let extensions: GLTFExtension?
 
+  /** Application-specific data. */
   let extras: GLTFExtras?
 
   private enum CodingKeys: String, CodingKey {

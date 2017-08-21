@@ -1,4 +1,4 @@
 #!/bin/bash
 
-node convert
+node tool/convert
 

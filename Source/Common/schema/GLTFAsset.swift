@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct GLTFAsset: Codable {
+struct GLTFAsset: GLTFPropertyProtocol {
 
   /** A copyright message suitable for display to credit the content creator. */
   let copyright: String?
@@ -21,8 +21,10 @@ struct GLTFAsset: Codable {
   /** The minimum glTF version that this asset targets. */
   let minVersion: String?
 
+  /** Dictionary object with extension-specific objects. */
   let extensions: GLTFExtension?
 
+  /** Application-specific data. */
   let extras: GLTFExtras?
 
   private enum CodingKeys: String, CodingKey {

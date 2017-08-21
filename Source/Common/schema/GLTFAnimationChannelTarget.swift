@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct GLTFAnimationChannelTarget: Codable {
+struct GLTFAnimationChannelTarget: GLTFPropertyProtocol {
 
   /** The index of the node to target. */
   let node: GLTFGlTFid?
@@ -15,8 +15,10 @@ struct GLTFAnimationChannelTarget: Codable {
   /** The name of the node's TRS property to modify, or the "weights" of the Morph Targets it instantiates. */
   let path: String
 
+  /** Dictionary object with extension-specific objects. */
   let extensions: GLTFExtension?
 
+  /** Application-specific data. */
   let extras: GLTFExtras?
 
   private enum CodingKeys: String, CodingKey {
