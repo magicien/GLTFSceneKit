@@ -101,3 +101,27 @@ let wrapModeMap: [Int: SCNWrapMode] = [
     typealias Image = UIImage
 #endif
 
+public protocol GLTFCodable: Codable {
+    func didLoad(by object: Any, unarchiver: GLTFUnarchiver)
+}
+
+protocol GLTFPropertyProtocol: GLTFCodable {
+    /** Dictionary object with extension-specific objects. */
+    var extensions: GLTFExtension? { get }
+    
+    /** Application-specific data. */
+    var extras: GLTFExtras? { get }
+}
+
+extension GLTFPropertyProtocol {
+    func didLoad(by object: Any, unarchiver: GLTFUnarchiver) {
+        if let extensions = self.extensions?.extensions {
+            for ext in extensions.values {
+                if let codable = ext as? GLTFCodable {
+                    codable.didLoad(by: object, unarchiver: unarchiver)
+                }
+            }
+        }
+    }
+}
+

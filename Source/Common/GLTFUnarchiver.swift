@@ -34,7 +34,7 @@ public class GLTFUnarchiver {
         private var workingAnimationGroup: CAAnimationGroup! = nil
     #endif
     
-    convenience public init(path: String) throws {
+    convenience public init(path: String, extensions: [String:Codable.Type]? = nil) throws {
         var url: URL?
         if let mainPath = Bundle.main.path(forResource: path, ofType: "") {
             url = URL(fileURLWithPath: mainPath)
@@ -44,17 +44,18 @@ public class GLTFUnarchiver {
         guard let _url = url else {
             throw URLError(.fileDoesNotExist)
         }
-        try self.init(url: _url)
+        try self.init(url: _url, extensions: extensions)
     }
     
-    convenience public init(url: URL) throws {
+    convenience public init(url: URL, extensions: [String:Codable.Type]? = nil) throws {
         let data = try Data(contentsOf: url)
-        try self.init(data: data)
+        try self.init(data: data, extensions: extensions)
         self.directoryPath = url.deletingLastPathComponent()
     }
     
-    public init(data: Data) throws {
+    public init(data: Data, extensions: [String:Codable.Type]? = nil) throws {
         let decoder = JSONDecoder()
+        decoder.userInfo[GLTFExtensionCodingUserInfoKey] = extensions
         var jsonData = data
         
         let magic: UInt32 = data.subdata(in: 0..<4).withUnsafeBytes { $0.pointee }
@@ -337,7 +338,7 @@ public class GLTFUnarchiver {
             bufferView = Data(count: dataSize)
         }
         
-        
+        /*
         print("==================================================")
         print("semantic: \(semantic)")
         print("vectorCount: \(vectorCount)")
@@ -350,6 +351,7 @@ public class GLTFUnarchiver {
         print("padding: \(padding)")
         print("dataOffset + dataStride * vectorCount - padding: \(dataOffset + dataStride * vectorCount - padding)")
         print("==================================================")
+        */
         
         #if SEEMS_TO_HAVE_VALIDATE_VERTEX_ATTRIBUTE_BUG
             // Metal validateVertexAttribute function seems to have a bug, so dateOffset must be 0.
@@ -736,6 +738,8 @@ public class GLTFUnarchiver {
         
         // TODO: use glMaterial.alphaCutOff
         // TODO: use glMaterial.alphaMode
+        
+        glMaterial.didLoad(by: material, unarchiver: self)
         
         return material
     }

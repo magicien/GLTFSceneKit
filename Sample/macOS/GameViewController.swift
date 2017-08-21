@@ -77,7 +77,10 @@ class GameViewController: NSViewController {
             if response == .OK {
                 guard let url = openPanel.url else { return }
                 do {
-                    let sceneSource = GLTFSceneSource(url: url)
+                    let extensions: [String: Codable.Type] = [
+                        "KHR_materials_common": KHRMaterialCommonExtension.self
+                    ]
+                    let sceneSource = GLTFSceneSource.init(url: url, options: nil, extensions: extensions)
                     let scene = try sceneSource.scene()
                     self.setScene(scene)
                 } catch {
@@ -87,3 +90,19 @@ class GameViewController: NSViewController {
         }
     }
 }
+
+struct KHRMaterialCommonExtension: GLTFCodable {
+    struct KHRMaterialCommon: Codable {
+        let doubleSided: Bool
+    }
+    let materialCommon: KHRMaterialCommon
+    
+    enum CodingKeys: String, CodingKey {
+        case materialCommon = "KHR_materials_common"
+    }
+    
+    func didLoad(by object: Any, unarchiver: GLTFUnarchiver) {
+        print("material commons loaded!")
+    }
+}
+

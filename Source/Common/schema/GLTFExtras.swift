@@ -7,6 +7,6 @@
 
 import Foundation
 
-struct GLTFExtras: Codable {
+public struct GLTFExtras: Codable {
 }
 

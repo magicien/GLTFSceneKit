@@ -15,18 +15,22 @@ public class GLTFSceneSource : SCNSceneSource {
         super.init()
     }
     
-    public convenience init(path: String, options: [SCNSceneSource.LoadingOption : Any]? = nil) throws {
+    public convenience init(path: String, options: [SCNSceneSource.LoadingOption : Any]? = nil, extensions: [String:Codable.Type]? = nil) throws {
         self.init()
         
-        let loader = try GLTFUnarchiver(path: path)
+        let loader = try GLTFUnarchiver(path: path, extensions: extensions)
         self.loader = loader
     }
     
     public override convenience init(url: URL, options: [SCNSceneSource.LoadingOption : Any]? = nil) {
+        self.init(url: url, options: options, extensions: nil)
+    }
+    
+    public convenience init(url: URL, options: [SCNSceneSource.LoadingOption : Any]?, extensions: [String:Codable.Type]?) {
         self.init()
         
         do {
-            self.loader = try GLTFUnarchiver(url: url)
+            self.loader = try GLTFUnarchiver(url: url, extensions: extensions)
         } catch {
             print("\(error.localizedDescription)")
         }
@@ -41,12 +45,12 @@ public class GLTFSceneSource : SCNSceneSource {
         }
     }
     
-    public convenience init(named name: String, options: [SCNSceneSource.LoadingOption : Any]? = nil) throws {
+    public convenience init(named name: String, options: [SCNSceneSource.LoadingOption : Any]? = nil, extensions: [String:Codable.Type]? = nil) throws {
         let filePath = Bundle.main.path(forResource: name, ofType: nil)
         guard let path = filePath else {
             throw URLError(.fileDoesNotExist)
         }
-        try self.init(path: path, options: options)
+        try self.init(path: path, options: options, extensions: extensions)
     }
     
     public override func scene(options: [SCNSceneSource.LoadingOption : Any]? = nil) throws -> SCNScene {
