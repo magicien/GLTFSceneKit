@@ -8,6 +8,7 @@
 
 import SceneKit
 import SpriteKit
+import QuartzCore
 
 let glbMagic = 0x46546C67 // "glTF"
 let chunkTypeJSON = 0x4E4F534A // "JSON"
@@ -21,7 +22,8 @@ public class GLTFUnarchiver {
     private var scene: SCNScene?
     private var scenes: [SCNScene?] = []
     private var nodes: [SCNNode?] = []
-    //private var meshes = [SCNGeometry?]()
+    private var animationChannels: [[Any?]?] = [] // SCNAcnimation
+    private var animationSamplers: [[CAKeyframeAnimation?]?] = []
     private var meshes: [SCNNode?] = []
     private var accessors: [Any?] = []
     private var bufferViews: [Data?] = []
@@ -108,8 +110,16 @@ public class GLTFUnarchiver {
             self.nodes = [SCNNode?](repeating: nil, count: nodes.count)
         }
         
+        if let animations = self.json.animations {
+            if #available(OSX 10.13, *) {
+                self.animationChannels = [[SCNAnimation?]?](repeating: nil, count: animations.count)
+                self.animationSamplers = [[CAKeyframeAnimation?]?](repeating: nil, count: animations.count)
+            } else {
+                print("GLTFAnimation is not supported for this OS version.")
+            }
+        }
+        
         if let meshes = self.json.meshes {
-            //self.meshes = [SCNGeometry?](repeating: nil, count: meshes.count)
             self.meshes = [SCNNode?](repeating: nil, count: meshes.count)
         }
         
@@ -211,6 +221,8 @@ public class GLTFUnarchiver {
         }
         
         self.buffers[index] = buffer
+        
+        glBuffer.didLoad(by: buffer, unarchiver: self)
         return buffer
     }
     
@@ -245,6 +257,7 @@ public class GLTFUnarchiver {
         
         self.bufferViews[index] = bufferView
         
+        glBufferView.didLoad(by: bufferView, unarchiver: self)
         return bufferView
     }
     
@@ -299,8 +312,8 @@ public class GLTFUnarchiver {
         if let accessor = self.accessors[index] as? SCNGeometrySource {
             return accessor
         }
-        if (self.accessors[index] as? SCNGeometryElement) != nil {
-            throw GLTFUnarchiveError.DataInconsistent("loadVertexAccessor: the accessor \(index) is defined as SCNGeometryElement")
+        if self.accessors[index] != nil {
+            throw GLTFUnarchiveError.DataInconsistent("loadVertexAccessor: the accessor \(index) is not SCNGeometrySource")
         }
         
         guard let accessors = self.json.accessors else {
@@ -362,6 +375,7 @@ public class GLTFUnarchiver {
         #endif
         self.accessors[index] = geometrySource
         
+        glAccessor.didLoad(by: geometrySource, unarchiver: self)
         return geometrySource
     }
     
@@ -406,8 +420,11 @@ public class GLTFUnarchiver {
         if let accessor = self.accessors[index] as? SCNGeometryElement {
             return accessor
         }
-        if (self.accessors[index] as? SCNGeometrySource) != nil {
-            throw GLTFUnarchiveError.DataInconsistent("loadIndexAccessor: the accessor \(index) is defined as SCNGeometrySource")
+        //if (self.accessors[index] as? SCNGeometrySource) != nil {
+        //    throw GLTFUnarchiveError.DataInconsistent("loadIndexAccessor: the accessor \(index) is defined as SCNGeometrySource")
+        //}
+        if self.accessors[index] != nil {
+            throw GLTFUnarchiveError.DataInconsistent("loadIndexAccessor: the accessor \(index) is not SCNGeometryElement")
         }
         
         guard let accessors = self.json.accessors else {
@@ -457,6 +474,7 @@ public class GLTFUnarchiver {
         let geometryElement = SCNGeometryElement(data: data, primitiveType: primitiveType, primitiveCount: primitiveCount, bytesPerIndex: bytesPerComponent)
         self.accessors[index] = geometryElement
         
+        glAccessor.didLoad(by: geometryElement, unarchiver: self)
         return geometryElement
     }
     
@@ -506,6 +524,30 @@ public class GLTFUnarchiver {
         return normalSource
     }
     
+    private func loadKeyframeAccessor(index: Int, interpolation: String) throws -> CAKeyframeAnimation {
+        guard index < self.accessors.count else {
+            throw GLTFUnarchiveError.DataInconsistent("loadKeyframeAccessor: out of index: \(index) < \(self.accessors.count)")
+        }
+        
+        if let accessor = self.accessors[index] as? CAKeyframeAnimation {
+            return accessor
+        }
+        if self.accessors[index] != nil {
+            throw GLTFUnarchiveError.DataInconsistent("loadKeyframeAccessor: the accessor \(index) is not CAKeyframeAnimation")
+        }
+        
+        guard let accessors = self.json.accessors else {
+            throw GLTFUnarchiveError.DataInconsistent("loadIndexAccessor: accessors is not defined")
+        }
+        let glAccessor = accessors[index]
+        
+        
+        
+        
+        
+        return CAKeyframeAnimation()
+    }
+        
     private func loadImage(index: Int) throws -> Image {
         guard index < self.images.count else {
             throw GLTFUnarchiveError.DataInconsistent("loadImage: out of index: \(index) < \(self.images.count)")
@@ -538,6 +580,8 @@ public class GLTFUnarchiver {
         }
         
         self.images[index] = _image
+        
+        glImage.didLoad(by: _image, unarchiver: self)
         return _image
     }
     
@@ -623,6 +667,7 @@ public class GLTFUnarchiver {
         
         self.textures[index] = texture
         
+        glTexture.didLoad(by: texture, unarchiver: self)
         return texture
     }
     
@@ -740,7 +785,6 @@ public class GLTFUnarchiver {
         // TODO: use glMaterial.alphaMode
         
         glMaterial.didLoad(by: material, unarchiver: self)
-        
         return material
     }
     
@@ -822,7 +866,78 @@ public class GLTFUnarchiver {
             // TODO: set weights
         }
         
+        glMesh.didLoad(by: node, unarchiver: self)
         return node
+    }
+    
+    @available(OSX 10.13, *)
+    private func loadAnimation(index: Int, channel: Int) throws -> SCNAnimation {
+        guard index < self.animationChannels.count else {
+            throw GLTFUnarchiveError.DataInconsistent("loadAnimation: out of index: \(index) < \(self.animationChannels.count)")
+        }
+        
+        if let animationChannels = self.animationChannels[index] as? [SCNAnimation?] {
+            if let animation = animationChannels[channel] {
+                return animation
+            }
+        }
+        
+        guard let animations = self.json.animations else {
+            throw GLTFUnarchiveError.DataInconsistent("loadAnimation: animations is not defined")
+        }
+        let glAnimation = animations[index]
+        
+        
+        guard channel < glAnimation.channels.count else {
+            throw GLTFUnarchiveError.DataInconsistent("loadAnimation: out of index: channel \(channel) < \(glAnimation.channels.count)")
+        }
+        let glChannel = glAnimation.channels[channel]
+        
+        // Animation Channel Target
+        guard let nodeIndex = glChannel.target.node else {
+            throw GLTFUnarchiveError.NotSupported("loadAnimation: animation without node target is not supported")
+        }
+        let node = try self.loadNode(index: nodeIndex)
+        let keyPath = glAnimation.channels[channel].target.path
+        let animation = CAKeyframeAnimation(keyPath: keyPath)
+        
+        // Animation Sampler
+        let samplerIndex = glChannel.sampler
+        
+        guard samplerIndex < glAnimation.samplers.count else {
+            throw GLTFUnarchiveError.DataInconsistent("loadAnimation: out of index: sampler \(samplerIndex) < \(glAnimation.samplers.count)")
+        }
+        let glSampler = glAnimation.samplers[samplerIndex]
+        
+        animation.values = []
+        animation.keyTimes = []
+        animation.timingFunctions = []
+        
+        // LINEAR, STEP, CATMULLROMSPLINE, CUBICSPLINE
+        
+        
+        
+        
+        let scnAnimation = SCNAnimation(caAnimation: animation)
+        node.addAnimation(scnAnimation, forKey: keyPath)
+        
+        glAnimation.didLoad(by: scnAnimation, unarchiver: self)
+        return scnAnimation
+    }
+    
+    @available(OSX 10.13, *)
+    private func loadAnimation(forNode index: Int) throws {
+        guard let animations = self.json.animations else { return }
+        
+        for i in 0..<animations.count {
+            let animation = animations[i]
+            for j in 0..<animation.channels.count {
+                let channel = animation.channels[j]
+                if channel.target.node == index {
+                    _ = try self.loadAnimation(index: i, channel: j)
+                }
+            }
+        }
     }
     
     private func loadNode(index: Int) throws -> SCNNode {
@@ -877,10 +992,13 @@ public class GLTFUnarchiver {
             }
         }
         
+        if #available(OSX 10.13, *) {
+            try self.loadAnimation(forNode: index)
+        }
+        
+        glNode.didLoad(by: scnNode, unarchiver: self)
         return scnNode
     }
-    
-    
     
     func loadScene() throws -> SCNScene {
         if let sceneIndex = self.json.scene {
@@ -915,6 +1033,8 @@ public class GLTFUnarchiver {
         }
         
         self.scenes[index] = scnScene
+        
+        glScene.didLoad(by: scnScene, unarchiver: self)
         return scnScene
     }
     

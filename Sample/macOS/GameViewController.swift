@@ -95,7 +95,7 @@ struct KHRMaterialCommonExtension: GLTFCodable {
     struct KHRMaterialCommon: Codable {
         let doubleSided: Bool
     }
-    let materialCommon: KHRMaterialCommon
+    let materialCommon: KHRMaterialCommon?
     
     enum CodingKeys: String, CodingKey {
         case materialCommon = "KHR_materials_common"
