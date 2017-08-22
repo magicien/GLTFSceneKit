@@ -9,6 +9,7 @@
 import SceneKit
 import SpriteKit
 import QuartzCore
+import CoreGraphics
 
 let glbMagic = 0x46546C67 // "glTF"
 let chunkTypeJSON = 0x4E4F534A // "JSON"
@@ -616,11 +617,14 @@ public class GLTFUnarchiver {
                 guard let data = Data(base64Encoded: base64Str) else {
                     throw GLTFUnarchiveError.Unknown("loadImage: cannot convert the base64 string to Data")
                 }
-                image = Image(data: data)
+                image = GLTFSceneKit.loadImage(from: data)
             } else {
                 let url = URL(fileURLWithPath: uri, relativeTo: self.directoryPath)
-                image = Image(contentsOf: url)
+                image = try GLTFSceneKit.loadImage(from: url)
             }
+        } else if let bufferViewIndex = glImage.bufferView {
+            let bufferView = try self.loadBufferView(index: bufferViewIndex)
+            image = GLTFSceneKit.loadImage(from: bufferView)
         }
         
         guard let _image = image else {

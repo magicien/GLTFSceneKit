@@ -50,6 +50,7 @@ class GameViewController: NSViewController {
         cameraNode.position = SCNVector3(x: 0, y: 0, z: 15)
         */
         
+        /*
         // create and add a light to the scene
         let lightNode = SCNNode()
         lightNode.light = SCNLight()
@@ -63,6 +64,7 @@ class GameViewController: NSViewController {
         ambientLightNode.light!.type = .ambient
         ambientLightNode.light!.color = NSColor.darkGray
         scene.rootNode.addChildNode(ambientLightNode)
+        */
         
         // set the scene to the view
         self.gameView!.scene = scene

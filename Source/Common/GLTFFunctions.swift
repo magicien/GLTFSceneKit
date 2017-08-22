@@ -9,6 +9,7 @@
 
 import SceneKit
 import SpriteKit
+import CoreGraphics
 
 func add(_ v0: SCNVector3, _ v1: SCNVector3) -> SCNVector3 {
     return SCNVector3(v0.x + v1.x, v0.y + v1.y, v0.z + v1.z)
@@ -144,4 +145,24 @@ func createMatrix4(_ matrix: [Float]) -> SCNMatrix4 {
         m41: m[12], m42: m[13], m43: m[14], m44: m[15])
 }
 
- 
+func loadImage(from url: URL) throws -> Image? {
+    let data = try Data.init(contentsOf: url)
+    return loadImage(from: data)
+}
+
+func loadImage(from data: Data) -> Image? {
+    #if SEEMS_TO_HAVE_PNG_LOADING_BUG
+        let magic: UInt64 = data.subdata(in: 0..<8).withUnsafeBytes { $0.pointee }
+        if magic == 0x0A1A0A0D474E5089 {
+            // PNG file
+            let cgDataProvider = CGDataProvider(data: data as CFData)
+            guard let cgImage = CGImage(pngDataProviderSource: cgDataProvider!, decode: nil, shouldInterpolate: false, intent: CGColorRenderingIntent.defaultIntent) else {
+                print("loadImage error: cannot create CGImage")
+                return nil
+            }
+            let imageSize = CGSize(width: cgImage.width, height: cgImage.height)
+            return NSImage(cgImage: cgImage, size: imageSize)
+        }
+    #endif
+    return Image(data: data)
+}
