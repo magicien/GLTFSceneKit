@@ -21,6 +21,7 @@ public class GLTFUnarchiver {
     
     private var scene: SCNScene?
     private var scenes: [SCNScene?] = []
+    private var cameras: [SCNCamera?] = []
     private var nodes: [SCNNode?] = []
     private var animationChannels: [[Any?]?] = [] // SCNAcnimation
     private var animationSamplers: [[CAKeyframeAnimation?]?] = []
@@ -106,6 +107,10 @@ public class GLTFUnarchiver {
             self.scenes = [SCNScene?](repeating: nil, count: scenes.count)
         }
         
+        if let cameras = self.json.cameras {
+            self.cameras = [SCNCamera?](repeating: nil, count: cameras.count)
+        }
+        
         if let nodes = self.json.nodes {
             self.nodes = [SCNNode?](repeating: nil, count: nodes.count)
         }
@@ -174,15 +179,58 @@ public class GLTFUnarchiver {
         }
     }
     
-    private func loadCamera(index: Int) -> SCNCamera {
+    private func loadCamera(index: Int) throws -> SCNCamera {
+        guard index < self.cameras.count else {
+            throw GLTFUnarchiveError.DataInconsistent("loadCamera: out of index: \(index) < \(self.cameras.count)")
+        }
         
+        if let camera = self.cameras[index] {
+            return camera
+        }
         
+        guard let cameras = self.json.cameras else {
+            throw GLTFUnarchiveError.DataInconsistent("loadCamera: cameras is not defined")
+        }
         
+        let glCamera = cameras[index]
+        let camera = SCNCamera()
         
+        if let name = glCamera.name {
+            camera.name = name
+        }
+        switch glCamera.type {
+        case "perspective":
+            camera.usesOrthographicProjection = false
+            guard let perspective = glCamera.perspective else {
+                throw GLTFUnarchiveError.DataInconsistent("loadCamera: perspective is not defined")
+            }
+            camera.yFov = Double(perspective.yfov) * 180.0 / Double.pi
+            if let aspectRatio = perspective.aspectRatio {
+                camera.xFov = camera.yFov * Double(aspectRatio)
+            }
+            camera.zNear = Double(perspective.znear)
+            camera.zFar = Double(perspective.zfar ?? Float.infinity)
+            
+            perspective.didLoad(by: camera, unarchiver: self)
+            
+        case "orthographic":
+            camera.usesOrthographicProjection = true
+            guard let orthographic = glCamera.orthographic else {
+                throw GLTFUnarchiveError.DataInconsistent("loadCamera: orthographic is not defined")
+            }
+            // TODO: use xmag
+            camera.orthographicScale = Double(orthographic.ymag)
+            camera.zNear = Double(orthographic.znear)
+            camera.zFar = Double(orthographic.zfar)
+            
+            orthographic.didLoad(by: camera, unarchiver: self)
+            
+        default:
+            throw GLTFUnarchiveError.NotSupported("loadCamera: type \(glCamera.type) is not supported")
+        }
         
-        
-        
-        return SCNCamera()
+        glCamera.didLoad(by: camera, unarchiver: self)
+        return camera
     }
     
     private func loadBuffer(index: Int) throws -> Data {
@@ -960,7 +1008,7 @@ public class GLTFUnarchiver {
             scnNode.name = name
         }
         if let camera = glNode.camera {
-            scnNode.camera = self.loadCamera(index: camera)
+            scnNode.camera = try self.loadCamera(index: camera)
         }
         if let mesh = glNode.mesh {
             //scnNode.geometry = try self.loadMesh(index: mesh)
