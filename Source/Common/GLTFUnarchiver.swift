@@ -26,7 +26,7 @@ public class GLTFUnarchiver {
     private var nodes: [SCNNode?] = []
     //private var animationChannels: [[Any?]?] = [] // SCNAcnimation
     private var animationChannels: [[CAAnimation?]?] = []
-    private var animationSamplers: [[CAKeyframeAnimation?]?] = []
+    private var animationSamplers: [[CAAnimation?]?] = []
     private var meshes: [SCNNode?] = []
     private var accessors: [Any?] = []
     private var durations: [CFTimeInterval?] = []
@@ -125,7 +125,7 @@ public class GLTFUnarchiver {
             //if #available(OSX 10.13, *) {
                // self.animationChannels = [[SCNAnimation?]?](repeating: nil, count: animations.count)
             self.animationChannels = [[CAAnimation?]?](repeating: nil, count: animations.count)
-                self.animationSamplers = [[CAKeyframeAnimation?]?](repeating: nil, count: animations.count)
+            self.animationSamplers = [[CAAnimation?]?](repeating: nil, count: animations.count)
             //} else {
             //    print("GLTFAnimation is not supported for this OS version.")
             //}
@@ -323,12 +323,13 @@ public class GLTFUnarchiver {
             byteStride = glByteStride
         }
         
-        guard glBufferView.byteOffset + offset + byteStride * count <= glBufferView.byteLength else {
-            throw GLTFUnarchiveError.DataInconsistent("iterateBufferView: byteOffset (\(glBufferView.byteOffset)) + offset (\(offset)) + byteStride (\(byteStride)) * count (\(count)) shoule be equal or less than byteLength (\(glBufferView.byteLength)))")
+        //guard glBufferView.byteOffset + offset + byteStride * count <= glBufferView.byteLength else {
+        guard offset + byteStride * count <= glBufferView.byteLength else {
+            throw GLTFUnarchiveError.DataInconsistent("iterateBufferView: offset (\(offset)) + byteStride (\(byteStride)) * count (\(count)) shoule be equal or less than byteLength (\(glBufferView.byteLength)))")
         }
         
         bufferView.withUnsafeBytes { (pointer: UnsafePointer<UInt8>) in
-            var p = pointer.advanced(by: glBufferView.byteOffset + offset)
+            var p = pointer.advanced(by: offset)
             for _ in 0..<count {
                 block(UnsafeRawPointer(p))
                 p = p.advanced(by: byteStride)
@@ -426,7 +427,7 @@ public class GLTFUnarchiver {
             bufferView = Data(count: dataSize)
         }
         
-        
+        /*
         print("==================================================")
         print("semantic: \(semantic)")
         print("vectorCount: \(vectorCount)")
@@ -439,7 +440,7 @@ public class GLTFUnarchiver {
         print("padding: \(padding)")
         print("dataOffset + dataStride * vectorCount - padding: \(dataOffset + dataStride * vectorCount - padding)")
         print("==================================================")
-        
+        */
         
         #if SEEMS_TO_HAVE_VALIDATE_VERTEX_ATTRIBUTE_BUG
             // Metal validateVertexAttribute function seems to have a bug, so dateOffset must be 0.
@@ -665,9 +666,9 @@ public class GLTFUnarchiver {
         */
         let (keyTimeArray, duration) = createKeyTimeArray(from: bufferView, stride: dataStride, count: glAccessor.count)
         
-        for keyTime in keyTimeArray {
-            print("keyTime: \(keyTime)")
-        }
+        //for keyTime in keyTimeArray {
+        //    print("keyTime: \(keyTime)")
+        //}
         self.accessors[index] = keyTimeArray
         self.durations[index] = duration
         
@@ -737,13 +738,14 @@ public class GLTFUnarchiver {
         
         //let valueArray = self.createValueArray(of: glAccessor)
         if glAccessor.type == "SCALAR" {
-            print("SCALAR!!!!")
+            //print("SCALAR!!!!")
             var valueArray = [NSNumber]()
             valueArray.reserveCapacity(glAccessor.count)
             try self.iterateBufferView(index: bufferViewIndex, offset: dataOffset, stride: dataStride, count: glAccessor.count) { (p) in
                 // TODO: it could be BYTE, UNSIGNED_BYTE, ...
-                let value = p.load(fromByteOffset: 0, as: Float.self)
-                print("value: \(value)")
+                let value = p.load(fromByteOffset: 0, as: Float32.self)
+                //let value = p.bindMemory(to: Float32.self, capacity: 1).pointee
+                //print("value: \(value)")
                 valueArray.append(NSNumber(value: value))
             }
             
@@ -755,15 +757,15 @@ public class GLTFUnarchiver {
         var valueArray = [NSValue]()
         valueArray.reserveCapacity(glAccessor.count)
         if glAccessor.type == "VEC4" {
-            print("VEC4!!!!")
+            //print("VEC4!!!!")
             try self.iterateBufferView(index: bufferViewIndex, offset: dataOffset, stride: dataStride, count: glAccessor.count) { (p) in
-                let x = p.load(fromByteOffset: 0, as: Float.self)
-                let y = p.load(fromByteOffset: 4, as: Float.self)
-                let z = p.load(fromByteOffset: 8, as: Float.self)
-                let w = p.load(fromByteOffset: 12, as: Float.self)
+                let x = p.load(fromByteOffset: 0, as: Float32.self)
+                let y = p.load(fromByteOffset: 4, as: Float32.self)
+                let z = p.load(fromByteOffset: 8, as: Float32.self)
+                let w = p.load(fromByteOffset: 12, as: Float32.self)
                 let v = SCNVector4(x, y, z, w)
                 
-                print("value: \(x), \(y), \(z), \(w)")
+                //print("value: \(x), \(y), \(z), \(w)")
                 valueArray.append(NSValue(scnVector4: v))
             }
         }
@@ -1013,6 +1015,21 @@ public class GLTFUnarchiver {
         return material
     }
     
+    private func loadAttributes(_ attributes: [String: GLTFGlTFid]) throws -> [SCNGeometrySource] {
+        var sources = [SCNGeometrySource]()
+        
+        for (attribute, accessorIndex) in attributes {
+            if let semantic = attributeMap[attribute] {
+                let accessor = try self.loadVertexAccessor(index: accessorIndex, semantic: semantic)
+                sources.append(accessor)
+            } else {
+                // user defined semantic
+                throw GLTFUnarchiveError.NotSupported("loadMesh: user defined semantic is not supported: " + attribute)
+            }
+        }
+        return sources
+    }
+    
     private func loadMesh(index: Int) throws -> SCNNode {
         guard index < self.meshes.count else {
             throw GLTFUnarchiveError.DataInconsistent("loadMesh: out of index: \(index) < \(self.meshes.count)")
@@ -1033,11 +1050,15 @@ public class GLTFUnarchiver {
             node.name = name
         }
         
-        for primitive in glMesh.primitives {
+        var weightPaths = [String]()
+        for i in 0..<glMesh.primitives.count {
+            let primitive = glMesh.primitives[i]
             let primitiveNode = SCNNode()
-            var sources = [SCNGeometrySource]()
-            var vertexSource: SCNGeometrySource?
-            var normalSource: SCNGeometrySource?
+            //var sources = [SCNGeometrySource]()
+            //var vertexSource: SCNGeometrySource?
+            //var normalSource: SCNGeometrySource?
+            
+            /*
             for (attribute, accessorIndex) in primitive.attributes {
                 if let semantic = attributeMap[attribute] {
                     let accessor = try self.loadVertexAccessor(index: accessorIndex, semantic: semantic)
@@ -1052,6 +1073,10 @@ public class GLTFUnarchiver {
                     throw GLTFUnarchiveError.NotSupported("loadMesh: user defined semantic is not supported: " + attribute)
                 }
             }
+ */
+            var sources = try self.loadAttributes(primitive.attributes)
+            var vertexSource = sources.first { $0.semantic == .vertex }
+            var normalSource = sources.first { $0.semantic == .normal }
             
             var elements = [SCNGeometryElement]()
             if let indexIndex = primitive.indices {
@@ -1084,12 +1109,43 @@ public class GLTFUnarchiver {
                 geometry.materials = [material]
             }
             
+            if let targets = primitive.targets {
+                let morpher = SCNMorpher()
+                for targetIndex in 0..<targets.count {
+                    let target = targets[targetIndex]
+                    let sources = try self.loadAttributes(target)
+                    let geometry = SCNGeometry(sources: sources, elements: nil)
+                    morpher.targets.append(geometry)
+                    let weightPath = "childNodes[0].childNodes[\(i)].morpher.weights[\(targetIndex)]"
+                    weightPaths.append(weightPath)
+                    
+                }
+                morpher.calculationMode = .additive
+                primitiveNode.morpher = morpher
+            }
+            
             node.addChildNode(primitiveNode)
         }
         
+        // TODO: set default weights
+        /*
         if let weights = glMesh.weights {
-            // TODO: set weights
+            for i in 0..<weights.count {
+                print("keyPath: \(weightPaths[i])")
+                node.setValue(0.123, forKeyPath: weightPaths[i])
+                print("value: \(node.value(forKeyPath: weightPaths[i]))")
+                //print("v: \(node.childNodes[0].childNodes[0].morpher?.wefight(forTargetAt: i))")
+                
+                node.setValue(weights[i], forKeyPath: weightPaths[i])
+            }
+            
+            //node.setValue(0.234, forKeyPath: "childNodes[0].morpher.weights[")
+            //print("value: \(node.childNodes[0].morpher?.weight(forTargetAt: 0))")
         }
+        */
+        //node.childNodes[0].morpher?.setWeight(1.0, forTargetAt: 0)
+        //node.childNodes[0].morpher?.setWeight(1.0, forTargetAt: 1)
+        
         
         glMesh.didLoad(by: node, unarchiver: self)
         return node
@@ -1103,6 +1159,13 @@ public class GLTFUnarchiver {
         if let animationSamplers = self.animationSamplers[index] {
             if let animation = animationSamplers[sampler] {
                 return animation.copy() as! CAKeyframeAnimation
+            }
+        } else {
+            self.animationSamplers[index] = [CAAnimation?]()
+        }
+        if self.animationSamplers[index]!.count <= sampler {
+            for _ in self.animationSamplers[index]!.count...sampler {
+                self.animationSamplers[index]!.append(nil)
             }
         }
         
@@ -1129,12 +1192,78 @@ public class GLTFUnarchiver {
         animation.duration = duration
         //animation.timingFunctions = timingFunctions
         
+        self.animationSamplers[index]![sampler] = animation
+        
         return animation
+    }
+    
+    private func loadWeightAnimationsSampler(index: Int, sampler: Int, paths: [String]) throws -> CAAnimationGroup {
+        guard index < self.animationSamplers.count else {
+            throw GLTFUnarchiveError.DataInconsistent("loadWeightAnimationsSampler: out of index: \(index) < \(self.animationSamplers.count)")
+        }
+        
+        if let animationSamplers = self.animationSamplers[index] {
+            if let animation = animationSamplers[sampler] {
+                return animation.copy() as! CAAnimationGroup
+            }
+        }
+        
+        guard let glAnimations = self.json.animations else {
+            throw GLTFUnarchiveError.DataInconsistent("loadWeightAnimationsSampler: animations is not defined")
+        }
+        let glAnimation = glAnimations[index]
+        
+        guard sampler < glAnimation.samplers.count else {
+            throw GLTFUnarchiveError.DataInconsistent("loadWeightAnimationsSampler: out of index: sampler \(sampler) < \(glAnimation.samplers.count)")
+        }
+        let glSampler = glAnimation.samplers[sampler]
+        
+        let (keyTimes, duration) = try self.loadKeyTimeAccessor(index: glSampler.input)
+        guard let values = try self.loadValueAccessor(index: glSampler.output) as? [NSNumber] else {
+            throw GLTFUnarchiveError.DataInconsistent("loadWeightAnimationsSampler: data type is not [NSNumber]")
+        }
+        
+        let group = CAAnimationGroup()
+        group.duration = duration
+        //group.animations = []
+        
+        var animations = [CAKeyframeAnimation]()
+        for path in paths {
+            let animation = CAKeyframeAnimation()
+            
+            animation.keyPath = path
+            animation.keyTimes = keyTimes
+            //animation.values = [NSNumber]()
+            //animation.repeatCount = .infinity
+            animation.duration = duration
+            
+            animations.append(animation)
+        }
+        group.animations = animations
+        group.repeatCount = .infinity
+        
+        let step = animations.count
+        let dataLength = values.count / step
+        guard dataLength == keyTimes.count else {
+            throw GLTFUnarchiveError.DataInconsistent("loadWeightAnimationsSampler: data count mismatch: \(dataLength) != \(keyTimes.count)")
+        }
+        for i in 0..<animations.count {
+            var valueIndex = i
+            var v = [NSNumber]()
+            v.reserveCapacity(dataLength)
+            for _ in 0..<dataLength {
+                v.append(values[valueIndex])
+                valueIndex += step
+            }
+            animations[i].values = v
+        }
+        
+        return group
     }
     
     //@available(OSX 10.13, *)
     //private func loadAnimation(index: Int, channel: Int) throws -> SCNAnimation {
-    private func loadAnimation(index: Int, channel: Int) throws -> CAAnimation {
+    private func loadAnimation(index: Int, channel: Int, weightPaths: [String]?) throws -> CAAnimation {
         guard index < self.animationChannels.count else {
             throw GLTFUnarchiveError.DataInconsistent("loadAnimation: out of index: \(index) < \(self.animationChannels.count)")
         }
@@ -1172,8 +1301,17 @@ public class GLTFUnarchiver {
         }
         let glSampler = glAnimation.samplers[samplerIndex]
         */
-        let animation = try self.loadAnimationSampler(index: index, sampler: samplerIndex)
-        animation.keyPath = keyPathMap[keyPath]
+        var animation: CAAnimation
+        if keyPath == "weights" {
+            guard let weightPaths = weightPaths else {
+                throw GLTFUnarchiveError.DataInconsistent("loadAnimation: morpher is not defined)")
+            }
+            animation = try self.loadWeightAnimationsSampler(index: index, sampler: samplerIndex, paths: weightPaths)
+        } else {
+            let keyframeAnimation = try self.loadAnimationSampler(index: index, sampler: samplerIndex)
+            keyframeAnimation.keyPath = keyPathMap[keyPath]
+            animation = keyframeAnimation
+        }
         
         //let scnAnimation = SCNAnimation(caAnimation: animation)
         //node.addAnimation(scnAnimation, forKey: keyPath)
@@ -1190,12 +1328,13 @@ public class GLTFUnarchiver {
         guard let animations = self.json.animations else { return }
         
         let node = try self.loadNode(index: index)
+        let weightPaths = node.value(forUndefinedKey: "weightPaths") as? [String]
         for i in 0..<animations.count {
             let animation = animations[i]
             for j in 0..<animation.channels.count {
                 let channel = animation.channels[j]
                 if channel.target.node == index {
-                    let animation = try self.loadAnimation(index: i, channel: j)
+                    let animation = try self.loadAnimation(index: i, channel: j, weightPaths: weightPaths)
                     node.addAnimation(animation, forKey: nil)
                 }
             }
@@ -1228,6 +1367,18 @@ public class GLTFUnarchiver {
             //scnNode.geometry = try self.loadMesh(index: mesh)
             let meshNode = try self.loadMesh(index: mesh)
             scnNode.addChildNode(meshNode)
+            
+            var weightPaths = [String]()
+            for i in 0..<meshNode.childNodes.count {
+                let primitive = meshNode.childNodes[i]
+                if let morpher = primitive.morpher {
+                    for j in 0..<morpher.targets.count {
+                        let path = "childNodes[0].childNodes[\(i)].morpher.weights[\(j)]"
+                        weightPaths.append(path)
+                    }
+                }
+            }
+            scnNode.setValue(weightPaths, forUndefinedKey: "weightPaths")
         }
         
         if let matrix = glNode._matrix {
