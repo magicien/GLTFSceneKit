@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		DD10459A1F47723D004B20CE /* GLTFTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1045991F47723D004B20CE /* GLTFTypes.swift */; };
 		DD10459C1F4772E3004B20CE /* GLTFErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD10459B1F4772E3004B20CE /* GLTFErrors.swift */; };
+		DD2E982E1F4CF5B800D47C89 /* ExtensionList.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD2E982D1F4CF5B800D47C89 /* ExtensionList.swift */; };
+		DD2E98311F4CF98600D47C89 /* GLTFKHRMaterialsCommon_GLTFKHRMaterialsCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD2E98301F4CF6FA00D47C89 /* GLTFKHRMaterialsCommon_GLTFKHRMaterialsCommon.swift */; };
 		DD634F9D1F4A2D90008886AD /* GLTFFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD634F9C1F4A2D90008886AD /* GLTFFunctions.swift */; };
 		DD8392511F466C2D006A1CAC /* GLTFSceneKit.h in Headers */ = {isa = PBXBuildFile; fileRef = DD83924F1F466C2D006A1CAC /* GLTFSceneKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DDE6FD601F466F3600CB11D6 /* GLTFAccessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDE6FD5D1F466F2000CB11D6 /* GLTFAccessor.swift */; };
@@ -83,6 +85,8 @@
 /* Begin PBXFileReference section */
 		DD1045991F47723D004B20CE /* GLTFTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GLTFTypes.swift; sourceTree = "<group>"; };
 		DD10459B1F4772E3004B20CE /* GLTFErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GLTFErrors.swift; sourceTree = "<group>"; };
+		DD2E982D1F4CF5B800D47C89 /* ExtensionList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionList.swift; sourceTree = "<group>"; };
+		DD2E98301F4CF6FA00D47C89 /* GLTFKHRMaterialsCommon_GLTFKHRMaterialsCommon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GLTFKHRMaterialsCommon_GLTFKHRMaterialsCommon.swift; sourceTree = "<group>"; };
 		DD634F9C1F4A2D90008886AD /* GLTFFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GLTFFunctions.swift; sourceTree = "<group>"; };
 		DD83924C1F466C2D006A1CAC /* GLTFSceneKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = GLTFSceneKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD83924F1F466C2D006A1CAC /* GLTFSceneKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GLTFSceneKit.h; sourceTree = "<group>"; };
@@ -152,6 +156,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		DD2E982B1F4CF55400D47C89 /* extensions */ = {
+			isa = PBXGroup;
+			children = (
+				DD2E982D1F4CF5B800D47C89 /* ExtensionList.swift */,
+				DD2E982F1F4CF6FA00D47C89 /* KHR_materials_common */,
+			);
+			path = extensions;
+			sourceTree = "<group>";
+		};
+		DD2E982F1F4CF6FA00D47C89 /* KHR_materials_common */ = {
+			isa = PBXGroup;
+			children = (
+				DD2E98301F4CF6FA00D47C89 /* GLTFKHRMaterialsCommon_GLTFKHRMaterialsCommon.swift */,
+			);
+			path = KHR_materials_common;
+			sourceTree = "<group>";
+		};
 		DD8392421F466C2D006A1CAC = {
 			isa = PBXGroup;
 			children = (
@@ -237,6 +258,7 @@
 				DDE6FD5A1F466F2000CB11D6 /* GLTFSkin.swift */,
 				DDE6FD3F1F466F2000CB11D6 /* GLTFTexture.swift */,
 				DDE6FD411F466F2000CB11D6 /* GLTFTextureInfo.swift */,
+				DD2E982B1F4CF55400D47C89 /* extensions */,
 			);
 			path = schema;
 			sourceTree = "<group>";
@@ -408,10 +430,12 @@
 				DDE6FD701F466F3600CB11D6 /* GLTFGlTF.swift in Sources */,
 				DD10459A1F47723D004B20CE /* GLTFTypes.swift in Sources */,
 				DD10459C1F4772E3004B20CE /* GLTFErrors.swift in Sources */,
+				DD2E982E1F4CF5B800D47C89 /* ExtensionList.swift in Sources */,
 				DDE6FD611F466F3600CB11D6 /* GLTFAccessorSparse.swift in Sources */,
 				DDE6FD621F466F3600CB11D6 /* GLTFAccessorSparseIndices.swift in Sources */,
 				DDE6FD7F1F466F3600CB11D6 /* GLTFTexture.swift in Sources */,
 				DDE6FD7E1F466F3600CB11D6 /* GLTFSkin.swift in Sources */,
+				DD2E98311F4CF98600D47C89 /* GLTFKHRMaterialsCommon_GLTFKHRMaterialsCommon.swift in Sources */,
 				DDE6FD631F466F3600CB11D6 /* GLTFAccessorSparseValues.swift in Sources */,
 				DDE6FD781F466F3600CB11D6 /* GLTFMaterialPbrMetallicRoughness.swift in Sources */,
 				DDE6FD761F466F3600CB11D6 /* GLTFMaterialNormalTextureInfo.swift in Sources */,

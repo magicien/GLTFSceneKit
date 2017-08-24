@@ -24,10 +24,12 @@ public class GLTFUnarchiver {
     private var scenes: [SCNScene?] = []
     private var cameras: [SCNCamera?] = []
     private var nodes: [SCNNode?] = []
-    private var animationChannels: [[Any?]?] = [] // SCNAcnimation
+    //private var animationChannels: [[Any?]?] = [] // SCNAcnimation
+    private var animationChannels: [[CAAnimation?]?] = []
     private var animationSamplers: [[CAKeyframeAnimation?]?] = []
     private var meshes: [SCNNode?] = []
     private var accessors: [Any?] = []
+    private var durations: [CFTimeInterval?] = []
     private var bufferViews: [Data?] = []
     private var buffers: [Data?] = []
     private var materials: [SCNMaterial?] = []
@@ -59,7 +61,10 @@ public class GLTFUnarchiver {
     
     public init(data: Data, extensions: [String:Codable.Type]? = nil) throws {
         let decoder = JSONDecoder()
-        decoder.userInfo[GLTFExtensionCodingUserInfoKey] = extensions
+        var _extensions = extensionList
+        extensions?.forEach { (ext) in _extensions[ext.key] = ext.value }
+        
+        decoder.userInfo[GLTFExtensionCodingUserInfoKey] = _extensions
         var jsonData = data
         
         let magic: UInt32 = data.subdata(in: 0..<4).withUnsafeBytes { $0.pointee }
@@ -117,12 +122,13 @@ public class GLTFUnarchiver {
         }
         
         if let animations = self.json.animations {
-            if #available(OSX 10.13, *) {
-                self.animationChannels = [[SCNAnimation?]?](repeating: nil, count: animations.count)
+            //if #available(OSX 10.13, *) {
+               // self.animationChannels = [[SCNAnimation?]?](repeating: nil, count: animations.count)
+            self.animationChannels = [[CAAnimation?]?](repeating: nil, count: animations.count)
                 self.animationSamplers = [[CAKeyframeAnimation?]?](repeating: nil, count: animations.count)
-            } else {
-                print("GLTFAnimation is not supported for this OS version.")
-            }
+            //} else {
+            //    print("GLTFAnimation is not supported for this OS version.")
+            //}
         }
         
         if let meshes = self.json.meshes {
@@ -131,6 +137,7 @@ public class GLTFUnarchiver {
         
         if let accessors = self.json.accessors {
             self.accessors = [Any?](repeating: nil, count: accessors.count)
+            self.durations = [CFTimeInterval?](repeating: nil, count: accessors.count)
         }
         
         if let bufferViews = self.json.bufferViews {
@@ -300,14 +307,33 @@ public class GLTFUnarchiver {
         let buffer = try self.loadBuffer(index: glBufferView.buffer)
         let bufferView = buffer.subdata(in: glBufferView.byteOffset..<glBufferView.byteOffset + glBufferView.byteLength)
         
-        //print("bufferView.count: \(bufferView.count)")
-        //print("glBufferView.byteLength: \(glBufferView.byteLength)")
-        //print("glBufferView.byteOffset: \(glBufferView.byteOffset)")
-        
         self.bufferViews[index] = bufferView
         
         glBufferView.didLoad(by: bufferView, unarchiver: self)
         return bufferView
+    }
+    
+    private func iterateBufferView(index: Int, offset: Int, stride: Int, count: Int, block: @escaping (UnsafeRawPointer) -> Void) throws {
+        guard count > 0 else { return }
+        
+        let bufferView = try self.loadBufferView(index: index)
+        let glBufferView = self.json.bufferViews![index]
+        var byteStride = stride
+        if let glByteStride = glBufferView.byteStride {
+            byteStride = glByteStride
+        }
+        
+        guard glBufferView.byteOffset + offset + byteStride * count <= glBufferView.byteLength else {
+            throw GLTFUnarchiveError.DataInconsistent("iterateBufferView: byteOffset (\(glBufferView.byteOffset)) + offset (\(offset)) + byteStride (\(byteStride)) * count (\(count)) shoule be equal or less than byteLength (\(glBufferView.byteLength)))")
+        }
+        
+        bufferView.withUnsafeBytes { (pointer: UnsafePointer<UInt8>) in
+            var p = pointer.advanced(by: glBufferView.byteOffset + offset)
+            for _ in 0..<count {
+                block(UnsafeRawPointer(p))
+                p = p.advanced(by: byteStride)
+            }
+        }
     }
     
     private func getDataStride(ofBufferViewIndex index: Int) throws -> Int? {
@@ -400,7 +426,7 @@ public class GLTFUnarchiver {
             bufferView = Data(count: dataSize)
         }
         
-        /*
+        
         print("==================================================")
         print("semantic: \(semantic)")
         print("vectorCount: \(vectorCount)")
@@ -413,7 +439,7 @@ public class GLTFUnarchiver {
         print("padding: \(padding)")
         print("dataOffset + dataStride * vectorCount - padding: \(dataOffset + dataStride * vectorCount - padding)")
         print("==================================================")
-        */
+        
         
         #if SEEMS_TO_HAVE_VALIDATE_VERTEX_ATTRIBUTE_BUG
             // Metal validateVertexAttribute function seems to have a bug, so dateOffset must be 0.
@@ -440,6 +466,7 @@ public class GLTFUnarchiver {
                 indices[i] = UInt16(i)
             }
             let geometryElement = SCNGeometryElement(indices: indices, primitiveType: primitiveType)
+            print("count: \(geometryElement.primitiveCount)")
             return geometryElement
         }
         
@@ -552,6 +579,8 @@ public class GLTFUnarchiver {
                 
                 let n = createNormal(v0, v1, v2)
                 
+                print("normal: \(n.x), \(n.y), \(n.z)")
+                
                 normals[i0] = add(normals[i0], n)
                 normals[i1] = add(normals[i1], n)
                 normals[i2] = add(normals[i2], n)
@@ -573,30 +602,174 @@ public class GLTFUnarchiver {
         return normalSource
     }
     
-    private func loadKeyframeAccessor(index: Int, interpolation: String) throws -> CAKeyframeAnimation {
+    private func loadKeyTimeAccessor(index: Int) throws -> ([NSNumber], CFTimeInterval) {
         guard index < self.accessors.count else {
-            throw GLTFUnarchiveError.DataInconsistent("loadKeyframeAccessor: out of index: \(index) < \(self.accessors.count)")
+            throw GLTFUnarchiveError.DataInconsistent("loadKeyTimeAccessor: out of index: \(index) < \(self.accessors.count)")
         }
         
-        if let accessor = self.accessors[index] as? CAKeyframeAnimation {
-            return accessor
+        if let accessor = self.accessors[index] as? [NSNumber] {
+            return (accessor, self.durations[index]!)
         }
         if self.accessors[index] != nil {
-            throw GLTFUnarchiveError.DataInconsistent("loadKeyframeAccessor: the accessor \(index) is not CAKeyframeAnimation")
+            throw GLTFUnarchiveError.DataInconsistent("loadKeyTimeAccessor: the accessor \(index) is not [Float]")
         }
         
         guard let accessors = self.json.accessors else {
-            throw GLTFUnarchiveError.DataInconsistent("loadIndexAccessor: accessors is not defined")
+            throw GLTFUnarchiveError.DataInconsistent("loadKeyTimeAccessor: accessors is not defined")
         }
         let glAccessor = accessors[index]
         
+        guard let usesFloatComponents = usesFloatComponentsMap[glAccessor.componentType] else {
+            throw GLTFUnarchiveError.NotSupported("loadKeyTimeAccessor: user defined accessor.componentType is not supported")
+        }
+        if !usesFloatComponents {
+            throw GLTFUnarchiveError.DataInconsistent("loadKeyTimeAccessor: not Float keyTime accessor")
+        }
         
+        guard let componentsPerVector = componentsPerVectorMap[glAccessor.type] else {
+            throw GLTFUnarchiveError.NotSupported("loadKeyTimeAccessor: user defined accessor.type is not supported")
+        }
+        if componentsPerVector != 1 {
+            throw GLTFUnarchiveError.DataInconsistent("loadKeyTimeAccessor: accessor type must be SCALAR")
+        }
         
+        guard let bytesPerComponent = bytesPerComponentMap[glAccessor.componentType] else {
+            throw GLTFUnarchiveError.NotSupported("loadndexIAccessor: user defined accessor.componentType is not supported")
+        }
         
+        let dataOffset = glAccessor.byteOffset
         
-        return CAKeyframeAnimation()
+        var bufferView: Data
+        var dataStride: Int = bytesPerComponent
+        if let bufferViewIndex = glAccessor.bufferView {
+            let bv = try self.loadBufferView(index: bufferViewIndex)
+            bufferView = bv
+            if let ds = try self.getDataStride(ofBufferViewIndex: bufferViewIndex) {
+                dataStride = ds
+            }
+        } else {
+            let dataSize = dataStride * glAccessor.count
+            bufferView = Data(count: dataSize)
+        }
+        
+        /*
+        var floatArray = [NSNumber](repeating: 0, count: glAccessor.count)
+        bufferView.withUnsafeBytes { (s: UnsafePointer<UInt8>) in
+            var p = s.advanced(by: glAccessor.byteOffset)
+            for i in 0..<glAccessor.count {
+                let value: Float32 = UnsafePointer<Float32>.withMemoryRebound(p).pointee
+                floatArray[i] = NSNumber(value: value)
+                p = p.advanced(by: dataStride)
+            }
+        }
+        */
+        let (keyTimeArray, duration) = createKeyTimeArray(from: bufferView, stride: dataStride, count: glAccessor.count)
+        
+        for keyTime in keyTimeArray {
+            print("keyTime: \(keyTime)")
+        }
+        self.accessors[index] = keyTimeArray
+        self.durations[index] = duration
+        
+        return (keyTimeArray, duration)
     }
+    
+    private func loadValueAccessor(index: Int) throws -> [Any] {
+        guard index < self.accessors.count else {
+            throw GLTFUnarchiveError.DataInconsistent("loadValueAccessor: out of index: \(index) < \(self.accessors.count)")
+        }
         
+        if let accessor = self.accessors[index] as? [Any] {
+            return accessor
+        }
+        if self.accessors[index] != nil {
+            throw GLTFUnarchiveError.DataInconsistent("loadValueAccessor: the accessor \(index) is not [Float]")
+        }
+        
+        guard let accessors = self.json.accessors else {
+            throw GLTFUnarchiveError.DataInconsistent("loadValueAccessor: accessors is not defined")
+        }
+        let glAccessor = accessors[index]
+        
+        guard let bufferViewIndex = glAccessor.bufferView else {
+            throw GLTFUnarchiveError.DataInconsistent("loadValueAccessor: bufferView is not defined")
+        }
+        
+        /*
+        guard let usesFloatComponents = usesFloatComponentsMap[glAccessor.componentType] else {
+            throw GLTFUnarchiveError.NotSupported("loadValueAccessor: user defined accessor.componentType is not supported")
+        }
+        if usesFloatComponents {
+            throw GLTFUnarchiveError.DataInconsistent("loadValueAccessor: not Float keyTime accessor")
+        }
+        
+        guard let componentsPerVector = componentsPerVectorMap[glAccessor.type] else {
+            throw GLTFUnarchiveError.NotSupported("loadValueAccessor: user defined accessor.type is not supported")
+        }
+        if componentsPerVector != 1 {
+            throw GLTFUnarchiveError.DataInconsistent("loadValueAccessor: accessor type must be SCALAR")
+        }
+        
+        guard let bytesPerComponent = bytesPerComponentMap[glAccessor.componentType] else {
+            throw GLTFUnarchiveError.NotSupported("loadValueAccessor: user defined accessor.componentType is not supported")
+        }
+        */
+        
+        let dataOffset = glAccessor.byteOffset
+        let bytesPerComponent = bytesPerComponentMap[glAccessor.componentType]!
+        let componentsPerVector = componentsPerVectorMap[glAccessor.type]!
+        let dataStride = bytesPerComponent * componentsPerVector
+        
+        /*
+        var bufferView: Data
+        var dataStride: Int = bytesPerComponent
+        if let bufferViewIndex = glAccessor.bufferView {
+            let bv = try self.loadBufferView(index: bufferViewIndex)
+            bufferView = bv
+            if let ds = try self.getDataStride(ofBufferViewIndex: bufferViewIndex) {
+                dataStride = ds
+            }
+        } else {
+            let dataSize = dataStride * glAccessor.count
+            bufferView = Data(count: dataSize)
+        }
+        */
+        
+        //let valueArray = self.createValueArray(of: glAccessor)
+        if glAccessor.type == "SCALAR" {
+            print("SCALAR!!!!")
+            var valueArray = [NSNumber]()
+            valueArray.reserveCapacity(glAccessor.count)
+            try self.iterateBufferView(index: bufferViewIndex, offset: dataOffset, stride: dataStride, count: glAccessor.count) { (p) in
+                // TODO: it could be BYTE, UNSIGNED_BYTE, ...
+                let value = p.load(fromByteOffset: 0, as: Float.self)
+                print("value: \(value)")
+                valueArray.append(NSNumber(value: value))
+            }
+            
+            self.accessors[index] = valueArray
+            return valueArray
+            
+        }
+        
+        var valueArray = [NSValue]()
+        valueArray.reserveCapacity(glAccessor.count)
+        if glAccessor.type == "VEC4" {
+            print("VEC4!!!!")
+            try self.iterateBufferView(index: bufferViewIndex, offset: dataOffset, stride: dataStride, count: glAccessor.count) { (p) in
+                let x = p.load(fromByteOffset: 0, as: Float.self)
+                let y = p.load(fromByteOffset: 4, as: Float.self)
+                let z = p.load(fromByteOffset: 8, as: Float.self)
+                let w = p.load(fromByteOffset: 12, as: Float.self)
+                let v = SCNVector4(x, y, z, w)
+                
+                print("value: \(x), \(y), \(z), \(w)")
+                valueArray.append(NSValue(scnVector4: v))
+            }
+        }
+        return valueArray
+    }
+    
     private func loadImage(index: Int) throws -> Image {
         guard index < self.images.count else {
             throw GLTFUnarchiveError.DataInconsistent("loadImage: out of index: \(index) < \(self.images.count)")
@@ -846,7 +1019,7 @@ public class GLTFUnarchiver {
         }
         
         if let mesh = self.meshes[index] {
-            return mesh
+            return mesh.clone()
         }
         
         guard let meshes = self.json.meshes else {
@@ -922,13 +1095,51 @@ public class GLTFUnarchiver {
         return node
     }
     
-    @available(OSX 10.13, *)
-    private func loadAnimation(index: Int, channel: Int) throws -> SCNAnimation {
+    private func loadAnimationSampler(index: Int, sampler: Int) throws -> CAKeyframeAnimation {
+        guard index < self.animationSamplers.count else {
+            throw GLTFUnarchiveError.DataInconsistent("loadAnimationSampler: out of index: \(index) < \(self.animationSamplers.count)")
+        }
+        
+        if let animationSamplers = self.animationSamplers[index] {
+            if let animation = animationSamplers[sampler] {
+                return animation.copy() as! CAKeyframeAnimation
+            }
+        }
+        
+        guard let animations = self.json.animations else {
+            throw GLTFUnarchiveError.DataInconsistent("loadAnimationSampler: animations is not defined")
+        }
+        let glAnimation = animations[index]
+        
+        guard sampler < glAnimation.samplers.count else {
+            throw GLTFUnarchiveError.DataInconsistent("loadAnimationSampler: out of index: sampler \(sampler) < \(glAnimation.samplers.count)")
+        }
+        let glSampler = glAnimation.samplers[sampler]
+        
+        let animation = CAKeyframeAnimation()
+        
+        // LINEAR, STEP, CATMULLROMSPLINE, CUBICSPLINE
+        let (keyTimes, duration) = try self.loadKeyTimeAccessor(index: glSampler.input)
+        //let timingFunctions =
+        let values = try self.loadValueAccessor(index: glSampler.output)
+            
+        animation.keyTimes = keyTimes
+        animation.values = values
+        animation.repeatCount = .infinity
+        animation.duration = duration
+        //animation.timingFunctions = timingFunctions
+        
+        return animation
+    }
+    
+    //@available(OSX 10.13, *)
+    //private func loadAnimation(index: Int, channel: Int) throws -> SCNAnimation {
+    private func loadAnimation(index: Int, channel: Int) throws -> CAAnimation {
         guard index < self.animationChannels.count else {
             throw GLTFUnarchiveError.DataInconsistent("loadAnimation: out of index: \(index) < \(self.animationChannels.count)")
         }
         
-        if let animationChannels = self.animationChannels[index] as? [SCNAnimation?] {
+        if let animationChannels = self.animationChannels[index] {
             if let animation = animationChannels[channel] {
                 return animation
             }
@@ -938,7 +1149,6 @@ public class GLTFUnarchiver {
             throw GLTFUnarchiveError.DataInconsistent("loadAnimation: animations is not defined")
         }
         let glAnimation = animations[index]
-        
         
         guard channel < glAnimation.channels.count else {
             throw GLTFUnarchiveError.DataInconsistent("loadAnimation: out of index: channel \(channel) < \(glAnimation.channels.count)")
@@ -951,42 +1161,42 @@ public class GLTFUnarchiver {
         }
         let node = try self.loadNode(index: nodeIndex)
         let keyPath = glAnimation.channels[channel].target.path
-        let animation = CAKeyframeAnimation(keyPath: keyPath)
+        //let animation = CAKeyframeAnimation(keyPath: keyPath)
         
         // Animation Sampler
         let samplerIndex = glChannel.sampler
         
+        /*
         guard samplerIndex < glAnimation.samplers.count else {
             throw GLTFUnarchiveError.DataInconsistent("loadAnimation: out of index: sampler \(samplerIndex) < \(glAnimation.samplers.count)")
         }
         let glSampler = glAnimation.samplers[samplerIndex]
+        */
+        let animation = try self.loadAnimationSampler(index: index, sampler: samplerIndex)
+        animation.keyPath = keyPathMap[keyPath]
         
-        animation.values = []
-        animation.keyTimes = []
-        animation.timingFunctions = []
+        //let scnAnimation = SCNAnimation(caAnimation: animation)
+        //node.addAnimation(scnAnimation, forKey: keyPath)
+        node.addAnimation(animation, forKey: keyPath)
         
-        // LINEAR, STEP, CATMULLROMSPLINE, CUBICSPLINE
-        
-        
-        
-        
-        let scnAnimation = SCNAnimation(caAnimation: animation)
-        node.addAnimation(scnAnimation, forKey: keyPath)
-        
-        glAnimation.didLoad(by: scnAnimation, unarchiver: self)
-        return scnAnimation
+        //glAnimation.didLoad(by: scnAnimation, unarchiver: self)
+        glAnimation.didLoad(by: animation, unarchiver: self)
+        //return scnAnimation
+        return animation
     }
     
-    @available(OSX 10.13, *)
+    //@available(OSX 10.13, *)
     private func loadAnimation(forNode index: Int) throws {
         guard let animations = self.json.animations else { return }
         
+        let node = try self.loadNode(index: index)
         for i in 0..<animations.count {
             let animation = animations[i]
             for j in 0..<animation.channels.count {
                 let channel = animation.channels[j]
                 if channel.target.node == index {
-                    _ = try self.loadAnimation(index: i, channel: j)
+                    let animation = try self.loadAnimation(index: i, channel: j)
+                    node.addAnimation(animation, forKey: nil)
                 }
             }
         }
@@ -1044,9 +1254,9 @@ public class GLTFUnarchiver {
             }
         }
         
-        if #available(OSX 10.13, *) {
+        //if #available(OSX 10.13, *) {
             try self.loadAnimation(forNode: index)
-        }
+        //}
         
         glNode.didLoad(by: scnNode, unarchiver: self)
         return scnNode

@@ -80,21 +80,25 @@ func createVertexArray(from source: SCNGeometrySource) throws -> [SCNVector3] {
 }
 
 func createIndexArray(from element: SCNGeometryElement) -> [Int] {
-    var indices = [Int](repeating: 0, count: element.primitiveCount)
+    //var indices = [Int](repeating: 0, count: element.primitiveCount)
+    let indexCount = element.primitiveCount * 3  // FIXME: check primitiveType
+    var indices = [Int]()
+    indices.reserveCapacity(indexCount)
     if element.bytesPerIndex == 2 {
         element.data.withUnsafeBytes { (p: UnsafePointer<UInt16>) in
             var index = 0
             let step = 2
-            for i in 0..<element.primitiveCount {
-                indices[i] = Int(p[index])
-                index += step
+            for i in 0..<indexCount {
+                //indices[i] = Int(p[index])
+                //index += step
+                indices.append(Int(p[i]))
             }
         }
     } else if element.bytesPerIndex == 4 {
         element.data.withUnsafeBytes { (p: UnsafePointer<UInt32>) in
             var index = 0
             let step = 4
-            for i in 0..<element.primitiveCount {
+            for i in 0..<indexCount {
                 indices[i] = Int(p[index])
                 index += step
             }
@@ -103,7 +107,7 @@ func createIndexArray(from element: SCNGeometryElement) -> [Int] {
         element.data.withUnsafeBytes { (p: UnsafePointer<UInt64>) in
             var index = 0
             let step = 8
-            for i in 0..<element.primitiveCount {
+            for i in 0..<indexCount {
                 indices[i] = Int(p[index])
                 index += step
             }
@@ -112,6 +116,30 @@ func createIndexArray(from element: SCNGeometryElement) -> [Int] {
     
     return indices
 }
+
+func createKeyTimeArray(from data: Data, stride: Int, count: Int) -> ([NSNumber], CFTimeInterval) {
+    assert(stride == 4) // TODO: implement for other strides
+    guard count > 0 else { return ([], 0) }
+    
+    //var floatArray = [Float32]()
+    //floatArray.reserveCapacity(count)
+    var floatArray = [Float32](repeating: 0.0, count: count)
+    _ = floatArray.withUnsafeMutableBufferPointer {
+        data.copyBytes(to: $0, from: data.startIndex..<data.startIndex + count * 4)
+    }
+    let duration = Float(floatArray.last!)
+    
+    let numberArray: [NSNumber] = floatArray.map { NSNumber(value: $0 / duration) }
+    return (numberArray, CFTimeInterval(duration))
+}
+
+/*
+func createValueArray<T>(from data: Data, stride: Int, count: Int, type: T.Type) -> [T] {
+    var arr = [T]()
+    arr.reserveCapacity(count)
+    return arr
+}
+ */
 
 func createColor(_ color: [Float]) -> SKColor {
     let c: [CGFloat] = color.map { CGFloat($0) }
@@ -166,3 +194,12 @@ func loadImage(from data: Data) -> Image? {
     #endif
     return Image(data: data)
 }
+
+/*
+func getStride(of accessor: GLTFAccessor) -> Int {
+    let bytesPerComponent = bytesPerComponentMap[accessor.componentType]
+    let componentsPerVector = componentsPerVectorMap[accessor.type]
+    return bytesPerComponent * componentsPerVector
+}
+*/
+ 

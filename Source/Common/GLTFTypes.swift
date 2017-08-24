@@ -95,6 +95,13 @@ let wrapModeMap: [Int: SCNWrapMode] = [
     GLTF_REPEAT: SCNWrapMode.repeat
 ]
 
+let keyPathMap: [String: String] = [
+    "translation": "position",
+    "rotation": "orientation",
+    "scale": "scale",
+    "weights": "weights[0]"
+]
+
 #if os(macOS)
     typealias Image = NSImage
 #elseif os(iOS) || os(tvOS) || os(watchOS)
@@ -124,4 +131,5 @@ extension GLTFPropertyProtocol {
         }
     }
 }
+
 
