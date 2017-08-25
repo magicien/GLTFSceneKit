@@ -35,6 +35,7 @@ public class GLTFUnarchiver {
     private var materials: [SCNMaterial?] = []
     private var textures: [SCNMaterialProperty?] = []
     private var images: [Image?] = []
+    private var maxAnimationDuration: CFTimeInterval = 0.0
     
     #if !os(watchOS)
         private var workingAnimationGroup: CAAnimationGroup! = nil
@@ -664,11 +665,11 @@ public class GLTFUnarchiver {
             }
         }
         */
-        let (keyTimeArray, duration) = createKeyTimeArray(from: bufferView, stride: dataStride, count: glAccessor.count)
+        let (keyTimeArray, duration) = createKeyTimeArray(from: bufferView, offset: dataOffset, stride: dataStride, count: glAccessor.count)
         
-        //for keyTime in keyTimeArray {
-        //    print("keyTime: \(keyTime)")
-        //}
+        for keyTime in keyTimeArray {
+            print("keyTime: \(keyTime)")
+        }
         self.accessors[index] = keyTimeArray
         self.durations[index] = duration
         
@@ -756,7 +757,19 @@ public class GLTFUnarchiver {
         
         var valueArray = [NSValue]()
         valueArray.reserveCapacity(glAccessor.count)
-        if glAccessor.type == "VEC4" {
+        if glAccessor.type == "VEC3" {
+            print("VEC3!!!!")
+            try self.iterateBufferView(index: bufferViewIndex, offset: dataOffset, stride: dataStride, count: glAccessor.count) { (p) in
+                let x = p.load(fromByteOffset: 0, as: Float32.self)
+                let y = p.load(fromByteOffset: 4, as: Float32.self)
+                let z = p.load(fromByteOffset: 8, as: Float32.self)
+                let v = SCNVector3(x, y, z)
+                
+                print("value: \(x), \(y), \(z)")
+                valueArray.append(NSValue(scnVector3: v))
+            }
+        }
+        else if glAccessor.type == "VEC4" {
             //print("VEC4!!!!")
             try self.iterateBufferView(index: bufferViewIndex, offset: dataOffset, stride: dataStride, count: glAccessor.count) { (p) in
                 let x = p.load(fromByteOffset: 0, as: Float32.self)
@@ -1151,14 +1164,15 @@ public class GLTFUnarchiver {
         return node
     }
     
-    private func loadAnimationSampler(index: Int, sampler: Int) throws -> CAKeyframeAnimation {
+    private func loadAnimationSampler(index: Int, sampler: Int) throws -> CAAnimationGroup {
         guard index < self.animationSamplers.count else {
             throw GLTFUnarchiveError.DataInconsistent("loadAnimationSampler: out of index: \(index) < \(self.animationSamplers.count)")
         }
         
         if let animationSamplers = self.animationSamplers[index] {
             if let animation = animationSamplers[sampler] {
-                return animation.copy() as! CAKeyframeAnimation
+                //return animation.copy() as! CAKeyframeAnimation
+                return animation.copy() as! CAAnimationGroup
             }
         } else {
             self.animationSamplers[index] = [CAAnimation?]()
@@ -1192,9 +1206,17 @@ public class GLTFUnarchiver {
         animation.duration = duration
         //animation.timingFunctions = timingFunctions
         
-        self.animationSamplers[index]![sampler] = animation
+        let group = CAAnimationGroup()
+        group.animations = [animation]
+        group.duration = self.maxAnimationDuration
+        group.repeatCount = .infinity
         
-        return animation
+        print("animation: \(duration), group: \(self.maxAnimationDuration)")
+        //self.animationSamplers[index]![sampler] = animation
+        self.animationSamplers[index]![sampler] = group
+        
+        //return animation
+        return group
     }
     
     private func loadWeightAnimationsSampler(index: Int, sampler: Int, paths: [String]) throws -> CAAnimationGroup {
@@ -1291,7 +1313,6 @@ public class GLTFUnarchiver {
         let node = try self.loadNode(index: nodeIndex)
         let keyPath = glAnimation.channels[channel].target.path
         //let animation = CAKeyframeAnimation(keyPath: keyPath)
-        
         // Animation Sampler
         let samplerIndex = glChannel.sampler
         
@@ -1308,9 +1329,30 @@ public class GLTFUnarchiver {
             }
             animation = try self.loadWeightAnimationsSampler(index: index, sampler: samplerIndex, paths: weightPaths)
         } else {
-            let keyframeAnimation = try self.loadAnimationSampler(index: index, sampler: samplerIndex)
-            keyframeAnimation.keyPath = keyPathMap[keyPath]
-            animation = keyframeAnimation
+            //let keyframeAnimation = try self.loadAnimationSampler(index: index, sampler: samplerIndex)
+            let group = try self.loadAnimationSampler(index: index, sampler: samplerIndex)
+            let keyframeAnimation = group.animations![0] as! CAKeyframeAnimation
+            guard let animationKeyPath = keyPathMap[keyPath] else {
+                throw GLTFUnarchiveError.NotSupported("loadAnimation: animation key \(keyPath) is not supported")
+            }
+            keyframeAnimation.keyPath = animationKeyPath
+            //animation = keyframeAnimation
+            animation = group
+            
+            print("keyPath: \(animationKeyPath)")
+            if animationKeyPath == "position" {
+                if let keyTimes = keyframeAnimation.keyTimes {
+                    for keyTime in keyTimes {
+                        print("position keyTime: \(keyTime)")
+                    }
+                }
+                if let values = keyframeAnimation.values as? [NSValue] {
+                    for value in values {
+                        let v = value.scnVector3Value
+                        print("position value: \(v.x), \(v.y), \(v.z)")
+                    }
+                }
+            }
         }
         
         //let scnAnimation = SCNAnimation(caAnimation: animation)
@@ -1339,6 +1381,26 @@ public class GLTFUnarchiver {
                 }
             }
         }
+    }
+    
+    private func getMaxAnimationDuration() throws -> CFTimeInterval {
+        guard let animations = self.json.animations else { return 0.0 }
+        guard let accessors = self.json.accessors else { return 0.0 }
+        var duration: CFTimeInterval = 0.0
+        for animation in animations {
+            for sampler in animation.samplers {
+                let accessor = accessors[sampler.input]
+                if let max = accessor.max {
+                    guard max.count == 1 else {
+                        throw GLTFUnarchiveError.DataInconsistent("getMaxAnimationDuration: keyTime must be SCALAR type")
+                    }
+                    if CFTimeInterval(max[0]) > duration {
+                        duration = CFTimeInterval(max[0])
+                    }
+                }
+            }
+        }
+        return duration
     }
     
     private func loadNode(index: Int) throws -> SCNNode {
@@ -1434,6 +1496,8 @@ public class GLTFUnarchiver {
         }
         let glScene = scenes[index]
         let scnScene = SCNScene()
+        
+        self.maxAnimationDuration = try self.getMaxAnimationDuration()
         
         if let name = glScene.name {
             scnScene.setValue(name, forKey: "name")

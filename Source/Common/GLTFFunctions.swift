@@ -117,7 +117,7 @@ func createIndexArray(from element: SCNGeometryElement) -> [Int] {
     return indices
 }
 
-func createKeyTimeArray(from data: Data, stride: Int, count: Int) -> ([NSNumber], CFTimeInterval) {
+func createKeyTimeArray(from data: Data, offset: Int, stride: Int, count: Int) -> ([NSNumber], CFTimeInterval) {
     assert(stride == 4) // TODO: implement for other strides
     guard count > 0 else { return ([], 0) }
     
@@ -125,9 +125,13 @@ func createKeyTimeArray(from data: Data, stride: Int, count: Int) -> ([NSNumber]
     //floatArray.reserveCapacity(count)
     var floatArray = [Float32](repeating: 0.0, count: count)
     _ = floatArray.withUnsafeMutableBufferPointer {
-        data.copyBytes(to: $0, from: data.startIndex..<data.startIndex + count * 4)
+        data.copyBytes(to: $0, from: data.startIndex + offset..<data.startIndex + offset + count * 4)
     }
     let duration = Float(floatArray.last!)
+    print("duration: \(duration)")
+    for val in floatArray {
+        print("dur val: \(val)")
+    }
     
     let numberArray: [NSNumber] = floatArray.map { NSNumber(value: $0 / duration) }
     return (numberArray, CFTimeInterval(duration))

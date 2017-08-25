@@ -98,8 +98,7 @@ let wrapModeMap: [Int: SCNWrapMode] = [
 let keyPathMap: [String: String] = [
     "translation": "position",
     "rotation": "orientation",
-    "scale": "scale",
-    "weights": "weights[0]"
+    "scale": "scale"
 ]
 
 #if os(macOS)
