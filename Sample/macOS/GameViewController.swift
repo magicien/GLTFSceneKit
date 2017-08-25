@@ -74,17 +74,20 @@ class GameViewController: NSViewController {
     }
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        if keyPath == "pointOfView" {
-            if let change = change {
-                if let cameraNode = change[.newKey] as? SCNNode {
-                    if let index = self.cameraNodes.index(of: cameraNode) {
-                        self.cameraSelect.selectItem(at: index)
-                    } else {
-                        self.cameraSelect.selectItem(withTag: self.defaultCameraTag)
+        // It must use the main thread to change the UI.
+        DispatchQueue.main.async {
+            if keyPath == "pointOfView" {
+                if let change = change {
+                    if let cameraNode = change[.newKey] as? SCNNode {
+                        if let index = self.cameraNodes.index(of: cameraNode) {
+                            self.cameraSelect.selectItem(at: index)
+                        } else {
+                            self.cameraSelect.selectItem(withTag: self.defaultCameraTag)
+                        }
                     }
                 }
+                
             }
-            
         }
     }
     
