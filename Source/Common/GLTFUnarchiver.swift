@@ -24,6 +24,7 @@ public class GLTFUnarchiver {
     private var scenes: [SCNScene?] = []
     private var cameras: [SCNCamera?] = []
     private var nodes: [SCNNode?] = []
+    private var skins: [SCNSkinner?] = []
     //private var animationChannels: [[Any?]?] = [] // SCNAcnimation
     private var animationChannels: [[CAAnimation?]?] = []
     private var animationSamplers: [[CAAnimation?]?] = []
@@ -120,6 +121,10 @@ public class GLTFUnarchiver {
         
         if let nodes = self.json.nodes {
             self.nodes = [SCNNode?](repeating: nil, count: nodes.count)
+        }
+        
+        if let skins = self.json.skins {
+            self.skins = [SCNSkinner?](repeating: nil, count: skins.count)
         }
         
         if let animations = self.json.animations {
@@ -323,8 +328,8 @@ public class GLTFUnarchiver {
         if let glByteStride = glBufferView.byteStride {
             byteStride = glByteStride
         }
+        print("iterateBufferView: byteStride: \(byteStride)")
         
-        //guard glBufferView.byteOffset + offset + byteStride * count <= glBufferView.byteLength else {
         guard offset + byteStride * count <= glBufferView.byteLength else {
             throw GLTFUnarchiveError.DataInconsistent("iterateBufferView: offset (\(offset)) + byteStride (\(byteStride)) * count (\(count)) shoule be equal or less than byteLength (\(glBufferView.byteLength)))")
         }
@@ -758,7 +763,7 @@ public class GLTFUnarchiver {
         var valueArray = [NSValue]()
         valueArray.reserveCapacity(glAccessor.count)
         if glAccessor.type == "VEC3" {
-            print("VEC3!!!!")
+            print("VEC3!!!! index: \(index), stride: \(dataStride)")
             try self.iterateBufferView(index: bufferViewIndex, offset: dataOffset, stride: dataStride, count: glAccessor.count) { (p) in
                 let x = p.load(fromByteOffset: 0, as: Float32.self)
                 let y = p.load(fromByteOffset: 4, as: Float32.self)
@@ -770,7 +775,7 @@ public class GLTFUnarchiver {
             }
         }
         else if glAccessor.type == "VEC4" {
-            //print("VEC4!!!!")
+            print("VEC4!!!! index: \(index), stride: \(dataStride)")
             try self.iterateBufferView(index: bufferViewIndex, offset: dataOffset, stride: dataStride, count: glAccessor.count) { (p) in
                 let x = p.load(fromByteOffset: 0, as: Float32.self)
                 let y = p.load(fromByteOffset: 4, as: Float32.self)
@@ -778,7 +783,7 @@ public class GLTFUnarchiver {
                 let w = p.load(fromByteOffset: 12, as: Float32.self)
                 let v = SCNVector4(x, y, z, w)
                 
-                //print("value: \(x), \(y), \(z), \(w)")
+                print("value: \(x), \(y), \(z), \(w)")
                 valueArray.append(NSValue(scnVector4: v))
             }
         }
@@ -1170,7 +1175,7 @@ public class GLTFUnarchiver {
         }
         
         if let animationSamplers = self.animationSamplers[index] {
-            if let animation = animationSamplers[sampler] {
+            if animationSamplers.count > sampler, let animation = animationSamplers[sampler] {
                 //return animation.copy() as! CAKeyframeAnimation
                 return animation.copy() as! CAAnimationGroup
             }
@@ -1211,7 +1216,7 @@ public class GLTFUnarchiver {
         group.duration = self.maxAnimationDuration
         group.repeatCount = .infinity
         
-        print("animation: \(duration), group: \(self.maxAnimationDuration)")
+        print("index: \(index), sampler: \(sampler), animation: \(duration), group: \(self.maxAnimationDuration)")
         //self.animationSamplers[index]![sampler] = animation
         self.animationSamplers[index]![sampler] = group
         
@@ -1403,6 +1408,138 @@ public class GLTFUnarchiver {
         return duration
     }
     
+    private func loadInverseBindMatrices(index: Int) throws -> [NSValue] {
+        guard index < self.accessors.count else {
+            throw GLTFUnarchiveError.DataInconsistent("loadInverseBindMatrices: out of index: \(index) < \(self.accessors.count)")
+        }
+        
+        if let accessor = self.accessors[index] as? [NSValue] {
+            return accessor
+        }
+        if self.accessors[index] != nil {
+            throw GLTFUnarchiveError.DataInconsistent("loadInverseBindMatrices: the accessor \(index) is not [SCNMatrix4]")
+        }
+        guard let accessors = self.json.accessors else {
+            throw GLTFUnarchiveError.DataInconsistent("loadInverseBindMatrices: accessors is not defined")
+        }
+        let glAccessor = accessors[index]
+        
+        let vectorCount = glAccessor.count
+        guard let usesFloatComponents = usesFloatComponentsMap[glAccessor.componentType] else {
+            throw GLTFUnarchiveError.NotSupported("loadInverseBindMatrices: user defined accessor.componentType is not supported")
+        }
+        guard glAccessor.type == "MAT4" else {
+            throw GLTFUnarchiveError.DataInconsistent("loadInverseBindMatrices: type must be MAT4: \(glAccessor.type)")
+        }
+        guard let componentsPerVector = componentsPerVectorMap[glAccessor.type] else {
+            throw GLTFUnarchiveError.NotSupported("loadInverseBindMatrices: user defined accessor.type is not supported")
+        }
+        guard let bytesPerComponent = bytesPerComponentMap[glAccessor.componentType] else {
+            throw GLTFUnarchiveError.NotSupported("loadInverseBindMatrices: user defined accessor.componentType is not supported")
+        }
+        let dataOffset = glAccessor.byteOffset
+        
+        var bufferView: Data
+        var dataStride: Int = bytesPerComponent * componentsPerVector
+        var padding = 0
+        var matrices = [NSValue]()
+        guard let bufferViewIndex = glAccessor.bufferView else {
+            for _ in 0..<vectorCount {
+                matrices.append(NSValue(caTransform3D: SCNMatrix4Identity))
+            }
+            self.accessors[index] = matrices
+            
+            glAccessor.didLoad(by: matrices, unarchiver: self)
+            
+            return matrices
+        }
+        
+        try self.iterateBufferView(index: bufferViewIndex, offset: dataOffset, stride: dataStride, count: glAccessor.count) { (p) in
+            // TODO: it could be BYTE, UNSIGNED_BYTE, ...
+            var values = [Float]()
+            for i in 0..<16 {
+                let value = p.load(fromByteOffset: i*4, as: Float.self)
+                values.append(value)
+            }
+            let v: [CGFloat] = values.map { CGFloat($0) }
+            let matrix = SCNMatrix4.init(
+                m11: v[0], m12: v[1], m13: v[2], m14: v[3],
+                m21: v[4], m22: v[5], m23: v[6], m24: v[7],
+                m31: v[8], m32: v[9], m33: v[10], m34: v[11],
+                m41: v[12], m42: v[13], m43: v[14], m44: v[15])
+            matrices.append(NSValue(caTransform3D: matrix))
+        }
+        
+        self.accessors[index] = matrices
+        
+        glAccessor.didLoad(by: matrices, unarchiver: self)
+        
+        return matrices
+    }
+    
+    private func loadSkin(index: Int, meshNode: SCNNode) throws -> SCNSkinner {
+        guard index < self.skins.count else {
+            throw GLTFUnarchiveError.DataInconsistent("loadSkin: out of index: \(index) < \(self.skins.count)")
+        }
+        
+        if let skin = self.skins[index] {
+            return skin
+        }
+        
+        guard let skins = self.json.skins else {
+            throw GLTFUnarchiveError.DataInconsistent("loadSkin: 'skins' is not defined")
+        }
+        let glSkin = skins[index]
+        
+        var joints = [SCNNode]()
+        for joint in glSkin.joints {
+            let node = try self.loadNode(index: joint)
+            joints.append(node)
+        }
+        
+        var boneInverseBindTransforms: [NSValue]?
+        if let inverseBindMatrices = glSkin.inverseBindMatrices {
+            boneInverseBindTransforms = try self.loadInverseBindMatrices(index: inverseBindMatrices)
+        }
+        
+        var baseNode: SCNNode?
+        if let skeleton = glSkin.skeleton {
+            baseNode = try self.loadNode(index: skeleton)
+        }
+        
+        var boneWeights: SCNGeometrySource?
+        var boneIndices: SCNGeometrySource?
+        var baseGeometry: SCNGeometry?
+        var skeleton: SCNNode?
+        for primitive in meshNode.childNodes {
+            if let weights = primitive.geometry?.sources(for: .boneWeights) {
+                boneWeights = weights[0]
+                
+                baseGeometry = primitive.geometry!
+                guard let joints = primitive.geometry?.sources(for: .boneIndices) else {
+                    throw GLTFUnarchiveError.DataInconsistent("loadSkin: JOINTS_0 is not defined")
+                }
+                boneIndices = joints[0]
+                skeleton = primitive
+            }
+        }
+        guard let _boneWeights = boneWeights else {
+            throw GLTFUnarchiveError.DataInconsistent("loadSkin: WEIGHTS_0 is not defined")
+        }
+        guard let _boneIndices = boneIndices else {
+            throw GLTFUnarchiveError.DataInconsistent("loadSkin: JOINTS_0 is not defined")
+        }
+                
+        let skinner = SCNSkinner(baseGeometry: baseGeometry, bones: joints, boneInverseBindTransforms: boneInverseBindTransforms, boneWeights: _boneWeights, boneIndices: _boneIndices)
+        skinner.skeleton = skeleton
+        skeleton?.skinner = skinner
+        
+        self.skins[index] = skinner
+        glSkin.didLoad(by: skinner, unarchiver: self)
+        
+        return skinner
+    }
+    
     private func loadNode(index: Int) throws -> SCNNode {
         guard index < self.nodes.count else {
             throw GLTFUnarchiveError.DataInconsistent("loadNode: out of index: \(index) < \(self.nodes.count)")
@@ -1426,7 +1563,6 @@ public class GLTFUnarchiver {
             scnNode.camera = try self.loadCamera(index: camera)
         }
         if let mesh = glNode.mesh {
-            //scnNode.geometry = try self.loadMesh(index: mesh)
             let meshNode = try self.loadMesh(index: mesh)
             scnNode.addChildNode(meshNode)
             
@@ -1441,6 +1577,11 @@ public class GLTFUnarchiver {
                 }
             }
             scnNode.setValue(weightPaths, forUndefinedKey: "weightPaths")
+            
+            if let skin = glNode.skin {
+                let skinner = try self.loadSkin(index: skin, meshNode: meshNode)
+                //scnNode.skinner = skinner
+            }
         }
         
         if let matrix = glNode._matrix {
@@ -1454,12 +1595,10 @@ public class GLTFUnarchiver {
             scnNode.position = createVector3(glNode.translation)
         }
         
-        if let skin = glNode.skin {
-            // load skin
-        }
         if let weights = glNode.weights {
             // load weights
         }
+        
         if let children = glNode.children {
             for child in children {
                 let scnChild = try self.loadNode(index: child)
@@ -1467,9 +1606,7 @@ public class GLTFUnarchiver {
             }
         }
         
-        //if #available(OSX 10.13, *) {
-            try self.loadAnimation(forNode: index)
-        //}
+        try self.loadAnimation(forNode: index)
         
         glNode.didLoad(by: scnNode, unarchiver: self)
         return scnNode
