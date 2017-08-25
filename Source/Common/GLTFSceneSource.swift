@@ -56,4 +56,15 @@ public class GLTFSceneSource : SCNSceneSource {
     public override func scene(options: [SCNSceneSource.LoadingOption : Any]? = nil) throws -> SCNScene {
         return try self.loader.loadScene()
     }
+    
+    /*
+    public func cameraNodes() -> [SCNNode] {
+        var cameraNodes = [SCNNode]()
+        
+        let scene = try self.loader.loadScene()
+        scene.rootNode.childNodes
+        
+        return cameraNodes
+    }
+     */
 }

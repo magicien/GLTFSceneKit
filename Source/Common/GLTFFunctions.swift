@@ -167,6 +167,12 @@ func createVector4(_ vector: [Float]) -> SCNVector4 {
     return SCNVector4(x: v[0], y: v[1], z: v[2], w: v[3])
 }
 
+func createVector4ForOrientation(_ vector: [Float]) -> SCNVector4 {
+    let v: [CGFloat] = vector.map { CGFloat($0) }
+    assert(v.count >= 4)
+    return SCNVector4(x: v[0], y: v[1], z: v[2], w: -v[3])
+}
+
 func createMatrix4(_ matrix: [Float]) -> SCNMatrix4 {
     let m: [CGFloat] = matrix.map { CGFloat($0) }
     assert(m.count >= 16)

@@ -14,6 +14,10 @@ class GameViewController: NSViewController {
     
     @IBOutlet weak var gameView: GameView!
     @IBOutlet weak var openFileButton: NSButton!
+    @IBOutlet weak var cameraSelect: NSPopUpButton!
+    
+    var cameraNodes: [SCNNode] = []
+    let defaultCameraTag: Int = 99
     
     override func awakeFromNib(){
         super.awakeFromNib()
@@ -37,37 +41,51 @@ class GameViewController: NSViewController {
         
         // configure the view
         self.gameView!.backgroundColor = NSColor.black
+        
+        self.gameView!.addObserver(self, forKeyPath: "pointOfView", options: [.new], context: nil)
     }
     
     func setScene(_ scene: SCNScene) {
-        // create and add a camera to the scene
-        /*
-        let cameraNode = SCNNode()
-        cameraNode.camera = SCNCamera()
-        scene.rootNode.addChildNode(cameraNode)
- 
-        // place the camera
-        cameraNode.position = SCNVector3(x: 0, y: 0, z: 15)
-        */
-        
-        /*
-        // create and add a light to the scene
-        let lightNode = SCNNode()
-        lightNode.light = SCNLight()
-        lightNode.light!.type = .omni
-        lightNode.position = SCNVector3(x: 0, y: 10, z: 10)
-        scene.rootNode.addChildNode(lightNode)
-        
-        // create and add an ambient light to the scene
-        let ambientLightNode = SCNNode()
-        ambientLightNode.light = SCNLight()
-        ambientLightNode.light!.type = .ambient
-        ambientLightNode.light!.color = NSColor.darkGray
-        scene.rootNode.addChildNode(ambientLightNode)
-        */
+        // update camera names
+        self.cameraNodes = scene.rootNode.childNodes(passingTest: { (node, finish) -> Bool in
+            return node.camera != nil
+        })
         
         // set the scene to the view
         self.gameView!.scene = scene
+        
+        // set the camera menu
+        self.cameraSelect.menu?.removeAllItems()
+        if self.cameraNodes.count > 0 {
+            self.cameraSelect.removeAllItems()
+            let titles = self.cameraNodes.map { $0.camera?.name ?? "untitled" }
+            for title in titles {
+                self.cameraSelect.menu?.addItem(withTitle: title, action: nil, keyEquivalent: "")
+            }
+            self.gameView!.pointOfView = self.cameraNodes[0]
+        }
+        
+        let defaultCameraItem = NSMenuItem(title: "SCNViewFreeCamera", action: nil, keyEquivalent: "")
+        defaultCameraItem.tag = self.defaultCameraTag
+        defaultCameraItem.isEnabled = false
+        self.cameraSelect.menu?.addItem(defaultCameraItem)
+        
+        self.cameraSelect.autoenablesItems = false
+    }
+    
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if keyPath == "pointOfView" {
+            if let change = change {
+                if let cameraNode = change[.newKey] as? SCNNode {
+                    if let index = self.cameraNodes.index(of: cameraNode) {
+                        self.cameraSelect.selectItem(at: index)
+                    } else {
+                        self.cameraSelect.selectItem(withTag: self.defaultCameraTag)
+                    }
+                }
+            }
+            
+        }
     }
     
     @IBAction func openFileButtonClicked(_ sender: Any) {
@@ -89,6 +107,12 @@ class GameViewController: NSViewController {
                 }
             }
         }
+    }
+    
+    @IBAction func selectCamera(_ sender: Any) {
+        let index = self.cameraSelect.indexOfSelectedItem
+        let cameraNode = self.cameraNodes[index]
+        self.gameView!.pointOfView = cameraNode
     }
 }
 

@@ -681,7 +681,7 @@ public class GLTFUnarchiver {
         return (keyTimeArray, duration)
     }
     
-    private func loadValueAccessor(index: Int) throws -> [Any] {
+    private func loadValueAccessor(index: Int, flipW: Bool = false) throws -> [Any] {
         guard index < self.accessors.count else {
             throw GLTFUnarchiveError.DataInconsistent("loadValueAccessor: out of index: \(index) < \(self.accessors.count)")
         }
@@ -781,7 +781,7 @@ public class GLTFUnarchiver {
                 let y = p.load(fromByteOffset: 4, as: Float32.self)
                 let z = p.load(fromByteOffset: 8, as: Float32.self)
                 let w = p.load(fromByteOffset: 12, as: Float32.self)
-                let v = SCNVector4(x, y, z, w)
+                let v = SCNVector4(x, y, z, flipW ? -w : w)
                 
                 print("value: \(x), \(y), \(z), \(w)")
                 valueArray.append(NSValue(scnVector4: v))
@@ -1026,6 +1026,8 @@ public class GLTFUnarchiver {
         
         material.isDoubleSided = glMaterial.doubleSided
         
+        print("doubleSided: \(material.isDoubleSided)")
+        
         // TODO: use glMaterial.alphaCutOff
         // TODO: use glMaterial.alphaMode
         
@@ -1169,7 +1171,7 @@ public class GLTFUnarchiver {
         return node
     }
     
-    private func loadAnimationSampler(index: Int, sampler: Int) throws -> CAAnimationGroup {
+    private func loadAnimationSampler(index: Int, sampler: Int, flipW: Bool = false) throws -> CAAnimationGroup {
         guard index < self.animationSamplers.count else {
             throw GLTFUnarchiveError.DataInconsistent("loadAnimationSampler: out of index: \(index) < \(self.animationSamplers.count)")
         }
@@ -1203,7 +1205,7 @@ public class GLTFUnarchiver {
         // LINEAR, STEP, CATMULLROMSPLINE, CUBICSPLINE
         let (keyTimes, duration) = try self.loadKeyTimeAccessor(index: glSampler.input)
         //let timingFunctions =
-        let values = try self.loadValueAccessor(index: glSampler.output)
+        let values = try self.loadValueAccessor(index: glSampler.output, flipW: flipW)
             
         animation.keyTimes = keyTimes
         animation.values = values
@@ -1334,8 +1336,10 @@ public class GLTFUnarchiver {
             }
             animation = try self.loadWeightAnimationsSampler(index: index, sampler: samplerIndex, paths: weightPaths)
         } else {
+            let flipW = false
+            //let flipW = keyPath == "rotation"
             //let keyframeAnimation = try self.loadAnimationSampler(index: index, sampler: samplerIndex)
-            let group = try self.loadAnimationSampler(index: index, sampler: samplerIndex)
+            let group = try self.loadAnimationSampler(index: index, sampler: samplerIndex, flipW: flipW)
             let keyframeAnimation = group.animations![0] as! CAKeyframeAnimation
             guard let animationKeyPath = keyPathMap[keyPath] else {
                 throw GLTFUnarchiveError.NotSupported("loadAnimation: animation key \(keyPath) is not supported")
@@ -1590,7 +1594,7 @@ public class GLTFUnarchiver {
                 throw GLTFUnarchiveError.DataInconsistent("loadNode: both matrix and rotation/scale/translation are defined")
             }
         } else {
-            scnNode.orientation = createVector4(glNode.rotation)
+            scnNode.orientation = createVector4ForOrientation(glNode.rotation)
             scnNode.scale = createVector3(glNode.scale)
             scnNode.position = createVector3(glNode.translation)
         }

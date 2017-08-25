@@ -660,7 +660,7 @@
                     </menu>
                 </menuItem>
             </items>
-            <point key="canvasLocation" x="72" y="-266"/>
+            <point key="canvasLocation" x="-6" y="-410"/>
         </menu>
         <window title="GLTFSceneKitSample" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" id="371">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
@@ -668,6 +668,7 @@
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="335" y="390" width="640" height="480"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
+            <value key="minSize" type="size" width="424" height="250"/>
             <view key="contentView" id="372">
                 <rect key="frame" x="0.0" y="0.0" width="640" height="480"/>
                 <autoresizingMask key="autoresizingMask"/>
@@ -687,6 +688,27 @@
                             <action selector="openFileButtonClicked:" target="z44-Lp-cgU" id="rzH-ou-AC6"/>
                         </connections>
                     </button>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="77a-MU-eue">
+                        <rect key="frame" x="18" y="19" width="71" height="22"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Camera : " id="ypN-LY-mxu">
+                            <font key="font" metaFont="system" size="14"/>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aei-Vu-BZz" userLabel="Camera Select">
+                        <rect key="frame" x="93" y="17" width="196" height="26"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="TJA-DT-Ieb">
+                            <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="menu"/>
+                            <menu key="menu" id="dau-1s-Ege"/>
+                        </popUpButtonCell>
+                        <connections>
+                            <action selector="selectCamera:" target="z44-Lp-cgU" id="vT6-c6-8FT"/>
+                        </connections>
+                    </popUpButton>
                 </subviews>
                 <constraints>
                     <constraint firstItem="536" firstAttribute="leading" secondItem="372" secondAttribute="leading" id="541"/>
@@ -695,7 +717,7 @@
                     <constraint firstItem="536" firstAttribute="trailing" secondItem="372" secondAttribute="trailing" id="544"/>
                 </constraints>
             </view>
-            <point key="canvasLocation" x="84" y="46"/>
+            <point key="canvasLocation" x="-42" y="-202"/>
         </window>
         <customObject id="494" customClass="AppDelegate" customModule="GLTFSceneKitSample" customModuleProvider="target">
             <connections>
@@ -705,6 +727,7 @@
         <customObject id="420" customClass="NSFontManager"/>
         <viewController id="z44-Lp-cgU" customClass="GameViewController" customModule="GLTFSceneKitSample" customModuleProvider="target">
             <connections>
+                <outlet property="cameraSelect" destination="aei-Vu-BZz" id="H3h-Dw-Oan"/>
                 <outlet property="gameView" destination="536" id="No3-Ct-Xwn"/>
                 <outlet property="openFileButton" destination="vnK-Gi-HZT" id="e2g-l0-PJF"/>
                 <outlet property="view" destination="372" id="bTQ-MN-Ejh"/>
