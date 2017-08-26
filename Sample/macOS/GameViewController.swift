@@ -40,7 +40,7 @@ class GameViewController: NSViewController {
         self.gameView!.showsStatistics = true
         
         // configure the view
-        self.gameView!.backgroundColor = NSColor.black
+        self.gameView!.backgroundColor = NSColor.gray
         
         self.gameView!.addObserver(self, forKeyPath: "pointOfView", options: [.new], context: nil)
     }

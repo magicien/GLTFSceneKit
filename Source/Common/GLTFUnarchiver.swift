@@ -433,7 +433,6 @@ public class GLTFUnarchiver {
             bufferView = Data(count: dataSize)
         }
         
-        /*
         print("==================================================")
         print("semantic: \(semantic)")
         print("vectorCount: \(vectorCount)")
@@ -446,7 +445,18 @@ public class GLTFUnarchiver {
         print("padding: \(padding)")
         print("dataOffset + dataStride * vectorCount - padding: \(dataOffset + dataStride * vectorCount - padding)")
         print("==================================================")
-        */
+        
+        // DEBUG
+        if semantic == .texcoord {
+            bufferView.withUnsafeBytes { (p: UnsafePointer<Float32>) in
+                for i in 0..<vectorCount {
+                    let index = (i * dataStride + dataOffset) / 4
+                    let i1 = p[index + 0]
+                    let i2 = p[index + 1]
+                    print("\(i): \(i1), \(i2)")
+                }
+            }
+        }
         
         #if SEEMS_TO_HAVE_VALIDATE_VERTEX_ATTRIBUTE_BUG
             // Metal validateVertexAttribute function seems to have a bug, so dateOffset must be 0.
@@ -908,6 +918,10 @@ public class GLTFUnarchiver {
         
         if let sampler = glTexture.sampler {
             try self.setSampler(index: sampler, to: texture)
+        } else {
+            // set default values
+            texture.wrapS = .repeat
+            texture.wrapT = .repeat
         }
         
         self.textures[index] = texture
@@ -1016,12 +1030,10 @@ public class GLTFUnarchiver {
         
         if let emissiveTexture = glMaterial.emissiveTexture {
             if material.lightingModel == .physicallyBased {
-                try self.setTexture(index: emissiveTexture.index, to: material.selfIllumination)
-                material.selfIllumination.mappingChannel = emissiveTexture.texCoord
-            } else {
-                try self.setTexture(index: emissiveTexture.index, to: material.emission)
-                material.emission.mappingChannel = emissiveTexture.texCoord
+                material.selfIllumination.contents = nil
             }
+            try self.setTexture(index: emissiveTexture.index, to: material.emission)
+            material.emission.mappingChannel = emissiveTexture.texCoord
         }
         
         material.isDoubleSided = glMaterial.doubleSided
