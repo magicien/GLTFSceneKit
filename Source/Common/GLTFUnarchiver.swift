@@ -934,8 +934,6 @@ public class GLTFUnarchiver {
         property.mappingChannel = texture.mappingChannel
         if #available(OSX 10.13, *) {
             property.textureComponents = texture.textureComponents
-        } else {
-            // Fallback on earlier versions
         }
     }
     
@@ -985,18 +983,20 @@ public class GLTFUnarchiver {
                 // TODO: multiply metalness/roughness and the textures
                 try self.setTexture(index: metallicTexture.index, to: material.metalness)
                 material.metalness.mappingChannel = metallicTexture.texCoord
-                if #available(OSX 10.13, *) {
-                    material.metalness.textureComponents = .blue
-                } else {
-                    // Fallback on earlier versions
-                }
                 
                 try self.setTexture(index: metallicTexture.index, to: material.roughness)
                 material.roughness.mappingChannel = metallicTexture.texCoord
+                
                 if #available(OSX 10.13, *) {
+                    material.metalness.textureComponents = .blue
                     material.roughness.textureComponents = .green
                 } else {
                     // Fallback on earlier versions
+                    if let image = material.metalness.contents as? NSImage {
+                        let (metalness, roughness) = try getMetallicRoughnessTexture(from: image)
+                        material.metalness.contents = metalness
+                        material.roughness.contents = roughness
+                    }
                 }
             }
         }
@@ -1026,10 +1026,15 @@ public class GLTFUnarchiver {
         
         material.isDoubleSided = glMaterial.doubleSided
         
-        print("doubleSided: \(material.isDoubleSided)")
-        
-        // TODO: use glMaterial.alphaCutOff
-        // TODO: use glMaterial.alphaMode
+        switch glMaterial.alphaMode {
+        case "OPAQUE":
+            material.blendMode = .replace
+        case "BLEND":
+            material.blendMode = .alpha
+        default:
+            // TODO: implement "MASK" with glMaterial.alphaCutOff
+            throw GLTFUnarchiveError.NotSupported("loadMaterial: alphaMode \(glMaterial.alphaMode) is not supported")
+        }
         
         glMaterial.didLoad(by: material, unarchiver: self)
         return material
@@ -1511,34 +1516,45 @@ public class GLTFUnarchiver {
             baseNode = try self.loadNode(index: skeleton)
         }
         
-        var boneWeights: SCNGeometrySource?
-        var boneIndices: SCNGeometrySource?
-        var baseGeometry: SCNGeometry?
-        var skeleton: SCNNode?
+        //var boneWeights: SCNGeometrySource?
+        //var boneIndices: SCNGeometrySource?
+        //var baseGeometry: SCNGeometry?
+        //var skeleton: SCNNode?
+        var _skinner: SCNSkinner?
         for primitive in meshNode.childNodes {
             if let weights = primitive.geometry?.sources(for: .boneWeights) {
-                boneWeights = weights[0]
+                let boneWeights = weights[0]
                 
-                baseGeometry = primitive.geometry!
-                guard let joints = primitive.geometry?.sources(for: .boneIndices) else {
+                let baseGeometry = primitive.geometry!
+                guard let _joints = primitive.geometry?.sources(for: .boneIndices) else {
                     throw GLTFUnarchiveError.DataInconsistent("loadSkin: JOINTS_0 is not defined")
                 }
-                boneIndices = joints[0]
-                skeleton = primitive
+                let boneIndices = _joints[0]
+                //skeleton = primitive
+                let skinner = SCNSkinner(baseGeometry: baseGeometry, bones: joints, boneInverseBindTransforms: boneInverseBindTransforms, boneWeights: boneWeights, boneIndices: boneIndices)
+                skinner.skeleton = primitive
+                primitive.skinner = skinner
+                _skinner = skinner
             }
         }
+        /*
         guard let _boneWeights = boneWeights else {
             throw GLTFUnarchiveError.DataInconsistent("loadSkin: WEIGHTS_0 is not defined")
         }
         guard let _boneIndices = boneIndices else {
             throw GLTFUnarchiveError.DataInconsistent("loadSkin: JOINTS_0 is not defined")
         }
-                
+        
         let skinner = SCNSkinner(baseGeometry: baseGeometry, bones: joints, boneInverseBindTransforms: boneInverseBindTransforms, boneWeights: _boneWeights, boneIndices: _boneIndices)
         skinner.skeleton = skeleton
         skeleton?.skinner = skinner
         
         self.skins[index] = skinner
+         */
+        guard let skinner = _skinner else {
+            throw GLTFUnarchiveError.DataInconsistent("loadSkin: skinner is not defined")
+        }
+        
         glSkin.didLoad(by: skinner, unarchiver: self)
         
         return skinner
@@ -1594,7 +1610,8 @@ public class GLTFUnarchiver {
                 throw GLTFUnarchiveError.DataInconsistent("loadNode: both matrix and rotation/scale/translation are defined")
             }
         } else {
-            scnNode.orientation = createVector4ForOrientation(glNode.rotation)
+            //scnNode.orientation = createVector4ForOrientation(glNode.rotation)
+            scnNode.orientation = createVector4(glNode.rotation)
             scnNode.scale = createVector3(glNode.scale)
             scnNode.position = createVector3(glNode.translation)
         }

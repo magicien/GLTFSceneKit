@@ -212,4 +212,97 @@ func getStride(of accessor: GLTFAccessor) -> Int {
     return bytesPerComponent * componentsPerVector
 }
 */
- 
+
+func getMetallicRoughnessTexture(from image: NSImage) throws -> (NSImage, NSImage) {
+    var rect = CGRect(x: 0, y: 0, width: image.size.width, height: image.size.height)
+    guard let cgImage = image.cgImage(forProposedRect: &rect, context: nil, hints: nil) else {
+        throw GLTFUnarchiveError.Unknown("getMetallicRoughnessTexture: failed to create CGImage")
+    }
+    let (metalCGImage, roughCGImage) = try getMetallicRoughnessTexture(from: cgImage)
+    let metalImage = NSImage(cgImage: metalCGImage, size: rect.size)
+    let roughImage = NSImage(cgImage: roughCGImage, size: rect.size)
+    return (metalImage, roughImage)
+}
+
+func getMetallicRoughnessTexture(from image: CGImage) throws -> (CGImage, CGImage) {
+    let w = image.width
+    let h = image.height
+    let rect = CGRect(x: 0, y: 0, width: w, height: h)
+    let bitsPerComponent = 8
+    let componentsPerPixel = 4 // RGBA
+    let srcBytesPerPixel = bitsPerComponent * componentsPerPixel / 8
+    let colorSpace = CGColorSpaceCreateDeviceRGB()
+    let srcDataSize = w * h * srcBytesPerPixel
+    let rawPtr: UnsafeMutableRawPointer = malloc(srcDataSize)
+    defer { free(rawPtr) }
+    
+    let dstBytesPerPixel = bitsPerComponent / 8
+    let dstDataSize = w * h * dstBytesPerPixel
+    let metalRawPtr: UnsafeMutableRawPointer = malloc(dstDataSize)
+    defer { free(metalRawPtr) }
+    let roughRawPtr: UnsafeMutableRawPointer = malloc(dstDataSize)
+    defer { free(roughRawPtr) }
+    
+    guard let context = CGContext(data: rawPtr, width: w, height: h, bitsPerComponent: bitsPerComponent, bytesPerRow: srcBytesPerPixel * w, space: colorSpace, bitmapInfo: CGImageAlphaInfo.noneSkipLast.rawValue) else {
+        throw GLTFUnarchiveError.Unknown("getMetallicRoughnessTexture: failed to make textures")
+    }
+    context.draw(image, in: rect)
+    
+    let ptr = rawPtr.bindMemory(to: UInt8.self, capacity: srcDataSize)
+    let metalPtr = metalRawPtr.bindMemory(to: UInt8.self, capacity: dstDataSize)
+    let roughPtr = roughRawPtr.bindMemory(to: UInt8.self, capacity: dstDataSize)
+    var srcPos = 0
+    var dstPos = 0
+    for _ in 0..<h {
+        for _ in 0..<w {
+            metalPtr[dstPos] = ptr[srcPos + 2] // blue
+            roughPtr[dstPos] = ptr[srcPos + 1] // green
+            srcPos += srcBytesPerPixel
+            dstPos += dstBytesPerPixel
+        }
+    }
+    let dstColorSpace = CGColorSpaceCreateDeviceGray()
+    
+    let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.none.rawValue)
+    guard let metalData = CFDataCreate(nil, metalPtr, dstDataSize) else {
+        throw GLTFUnarchiveError.Unknown("getMetallicRoughnessTexture: failed to make metalData")
+    }
+    guard let metalProvider = CGDataProvider(data: metalData) else {
+        throw GLTFUnarchiveError.Unknown("getMetallicRoughnessTexture: failed to make metalProvider")
+    }
+    guard let metalImage = CGImage(
+        width: w, height: h,
+        bitsPerComponent: bitsPerComponent,
+        bitsPerPixel: bitsPerComponent,
+        bytesPerRow: w * dstBytesPerPixel,
+        space: dstColorSpace,
+        bitmapInfo: bitmapInfo,
+        provider: metalProvider,
+        decode: nil,
+        shouldInterpolate: false,
+        intent: CGColorRenderingIntent.defaultIntent) else {
+        throw GLTFUnarchiveError.Unknown("getMetallicRoughnessTexture: failed to make metalImage")
+    }
+    
+    guard let roughData = CFDataCreate(nil, roughPtr, dstDataSize) else {
+        throw GLTFUnarchiveError.Unknown("getMetallicRoughnessTexture: failed to make roughData")
+    }
+    guard let roughProvider = CGDataProvider(data: roughData) else {
+        throw GLTFUnarchiveError.Unknown("getMetallicRoughnessTexture: failed to make roughProvider")
+    }
+    guard let roughImage = CGImage(
+        width: w, height: h,
+        bitsPerComponent: bitsPerComponent,
+        bitsPerPixel: bitsPerComponent,
+        bytesPerRow: w * dstBytesPerPixel,
+        space: dstColorSpace,
+        bitmapInfo: bitmapInfo,
+        provider: roughProvider,
+        decode: nil,
+        shouldInterpolate: false,
+        intent: CGColorRenderingIntent.defaultIntent) else {
+        throw GLTFUnarchiveError.Unknown("getMetallicRoughnessTexture: failed to make roughImage")
+    }
+    
+    return (metalImage, roughImage)
+}

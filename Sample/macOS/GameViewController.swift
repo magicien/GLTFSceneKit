@@ -74,19 +74,16 @@ class GameViewController: NSViewController {
     }
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        // It must use the main thread to change the UI.
-        DispatchQueue.main.async {
-            if keyPath == "pointOfView" {
-                if let change = change {
-                    if let cameraNode = change[.newKey] as? SCNNode {
-                        if let index = self.cameraNodes.index(of: cameraNode) {
-                            self.cameraSelect.selectItem(at: index)
-                        } else {
-                            self.cameraSelect.selectItem(withTag: self.defaultCameraTag)
-                        }
+        if keyPath == "pointOfView", let change = change {
+            if let cameraNode = change[.newKey] as? SCNNode {
+                // It must use the main thread to change the UI.
+                DispatchQueue.main.async {
+                    if let index = self.cameraNodes.index(of: cameraNode) {
+                        self.cameraSelect.selectItem(at: index)
+                    } else {
+                        self.cameraSelect.selectItem(withTag: self.defaultCameraTag)
                     }
                 }
-                
             }
         }
     }
@@ -97,7 +94,7 @@ class GameViewController: NSViewController {
         openPanel.canChooseDirectories = false
         openPanel.allowsMultipleSelection = false
         openPanel.allowedFileTypes = ["gltf", "glb"]
-        openPanel.message = "choose glTF file"
+        openPanel.message = "Choose glTF file"
         openPanel.begin { (response) in
             if response == .OK {
                 guard let url = openPanel.url else { return }
