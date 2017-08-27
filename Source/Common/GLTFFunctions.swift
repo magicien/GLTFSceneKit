@@ -19,11 +19,11 @@ func sub(_ v0: SCNVector3, _ v1: SCNVector3) -> SCNVector3 {
     return SCNVector3(v0.x - v1.x, v0.y - v1.y, v0.z - v1.z)
 }
 
-func mul(_ v: SCNVector3, _ n: CGFloat) -> SCNVector3 {
+func mul(_ v: SCNVector3, _ n: SCNFloat) -> SCNVector3 {
     return SCNVector3(v.x * n, v.y * n, v.z * n)
 }
 
-func div(_ v: SCNVector3, _ n: CGFloat) -> SCNVector3 {
+func div(_ v: SCNVector3, _ n: SCNFloat) -> SCNVector3 {
     return mul(v, 1.0 / n)
 }
 
@@ -31,14 +31,14 @@ func cross(_ v0: SCNVector3, _ v1: SCNVector3) -> SCNVector3 {
     return SCNVector3(v0.y * v1.z - v0.z * v1.y, v0.z * v1.x - v0.x * v1.z, v0.x * v1.y - v0.y * v1.x)
 }
 
-func length(_ v: SCNVector3) -> CGFloat {
+func length(_ v: SCNVector3) -> SCNFloat {
     let l2 = v.x * v.x + v.y * v.y + v.z * v.z
     #if os(macOS)
         // CGFloat = Double
         return sqrt(l2)
     #else
         // CGFloat = Float
-        return sqrtf(l2)
+        return SCNFloat(sqrtf(l2))
     #endif    
 }
 
@@ -86,8 +86,8 @@ func createIndexArray(from element: SCNGeometryElement) -> [Int] {
     indices.reserveCapacity(indexCount)
     if element.bytesPerIndex == 2 {
         element.data.withUnsafeBytes { (p: UnsafePointer<UInt16>) in
-            var index = 0
-            let step = 2
+            //var index = 0
+            //let step = 2
             for i in 0..<indexCount {
                 //indices[i] = Int(p[index])
                 //index += step
@@ -96,20 +96,22 @@ func createIndexArray(from element: SCNGeometryElement) -> [Int] {
         }
     } else if element.bytesPerIndex == 4 {
         element.data.withUnsafeBytes { (p: UnsafePointer<UInt32>) in
-            var index = 0
-            let step = 4
+            //var index = 0
+            //let step = 4
             for i in 0..<indexCount {
-                indices[i] = Int(p[index])
-                index += step
+                //indices[i] = Int(p[index])
+                //index += step
+                indices.append(Int(p[i]))
             }
         }
     } else if element.bytesPerIndex == 8 {
         element.data.withUnsafeBytes { (p: UnsafePointer<UInt64>) in
-            var index = 0
-            let step = 8
+            //var index = 0
+            //let step = 8
             for i in 0..<indexCount {
-                indices[i] = Int(p[index])
-                index += step
+                //indices[i] = Int(p[index])
+                //index += step
+                indices.append(Int(p[i]))
             }
         }
     }
@@ -156,25 +158,25 @@ func createGrayColor(white: Float) -> SKColor {
 }
 
 func createVector3(_ vector: [Float]) -> SCNVector3 {
-    let v: [CGFloat] = vector.map { CGFloat($0) }
+    let v: [SCNFloat] = vector.map { SCNFloat($0) }
     assert(v.count >= 3)
     return SCNVector3(x: v[0], y: v[1], z: v[2])
 }
 
 func createVector4(_ vector: [Float]) -> SCNVector4 {
-    let v: [CGFloat] = vector.map { CGFloat($0) }
+    let v: [SCNFloat] = vector.map { SCNFloat($0) }
     assert(v.count >= 4)
     return SCNVector4(x: v[0], y: v[1], z: v[2], w: v[3])
 }
 
 func createVector4ForOrientation(_ vector: [Float]) -> SCNVector4 {
-    let v: [CGFloat] = vector.map { CGFloat($0) }
+    let v: [SCNFloat] = vector.map { SCNFloat($0) }
     assert(v.count >= 4)
     return SCNVector4(x: v[0], y: v[1], z: v[2], w: -v[3])
 }
 
 func createMatrix4(_ matrix: [Float]) -> SCNMatrix4 {
-    let m: [CGFloat] = matrix.map { CGFloat($0) }
+    let m: [SCNFloat] = matrix.map { SCNFloat($0) }
     assert(m.count >= 16)
     return SCNMatrix4(
         m11: m[0], m12: m[1], m13: m[2], m14: m[3],
@@ -183,12 +185,13 @@ func createMatrix4(_ matrix: [Float]) -> SCNMatrix4 {
         m41: m[12], m42: m[13], m43: m[14], m44: m[15])
 }
 
-func loadImage(from url: URL) throws -> Image? {
+func loadImageFile(from url: URL) throws -> Image? {
     let data = try Data.init(contentsOf: url)
-    return loadImage(from: data)
+    return try loadImageData(from: data)
 }
 
-func loadImage(from data: Data) -> Image? {
+//func loadImageData(from data: Data) throws -> CGImage? {
+func loadImageData(from data: Data) throws -> Image? {
     #if SEEMS_TO_HAVE_PNG_LOADING_BUG
         let magic: UInt64 = data.subdata(in: 0..<8).withUnsafeBytes { $0.pointee }
         if magic == 0x0A1A0A0D474E5089 {
@@ -198,8 +201,13 @@ func loadImage(from data: Data) -> Image? {
                 print("loadImage error: cannot create CGImage")
                 return nil
             }
-            let imageSize = CGSize(width: cgImage.width, height: cgImage.height)
-            return NSImage(cgImage: cgImage, size: imageSize)
+            #if os(macOS)
+                let imageSize = CGSize(width: cgImage.width, height: cgImage.height)
+                return NSImage(cgImage: cgImage, size: imageSize)
+            #else
+                // FIXME: this workaround doesn't work for iOS...
+                return UIImage(cgImage: cgImage)
+            #endif
         }
     #endif
     return Image(data: data)
@@ -213,16 +221,28 @@ func getStride(of accessor: GLTFAccessor) -> Int {
 }
 */
 
-func getMetallicRoughnessTexture(from image: NSImage) throws -> (NSImage, NSImage) {
-    var rect = CGRect(x: 0, y: 0, width: image.size.width, height: image.size.height)
-    guard let cgImage = image.cgImage(forProposedRect: &rect, context: nil, hints: nil) else {
-        throw GLTFUnarchiveError.Unknown("getMetallicRoughnessTexture: failed to create CGImage")
+#if os(macOS)
+    func getMetallicRoughnessTexture(from image: NSImage) throws -> (NSImage, NSImage) {
+        var rect = CGRect(x: 0, y: 0, width: image.size.width, height: image.size.height)
+        guard let cgImage = image.cgImage(forProposedRect: &rect, context: nil, hints: nil) else {
+            throw GLTFUnarchiveError.Unknown("getMetallicRoughnessTexture: failed to create CGImage")
+        }
+        let (metalCGImage, roughCGImage) = try getMetallicRoughnessTexture(from: cgImage)
+        let metalImage = NSImage(cgImage: metalCGImage, size: rect.size)
+        let roughImage = NSImage(cgImage: roughCGImage, size: rect.size)
+        return (metalImage, roughImage)
     }
-    let (metalCGImage, roughCGImage) = try getMetallicRoughnessTexture(from: cgImage)
-    let metalImage = NSImage(cgImage: metalCGImage, size: rect.size)
-    let roughImage = NSImage(cgImage: roughCGImage, size: rect.size)
-    return (metalImage, roughImage)
-}
+#else
+    func getMetallicRoughnessTexture(from image: UIImage) throws -> (UIImage, UIImage) {
+        guard let cgImage = image.cgImage else {
+            throw GLTFUnarchiveError.Unknown("getMetallicRoughnessTexture: failed to create CGImage")
+        }
+        let (metalCGImage, roughCGImage) = try getMetallicRoughnessTexture(from: cgImage)
+        let metalImage = UIImage(cgImage: metalCGImage)
+        let roughImage = UIImage(cgImage: roughCGImage)
+        return (metalImage, roughImage)
+    }
+#endif
 
 func getMetallicRoughnessTexture(from image: CGImage) throws -> (CGImage, CGImage) {
     let w = image.width

@@ -611,7 +611,7 @@ public class GLTFUnarchiver {
         }
         for i in 0..<normals.count {
             if counts[i] != 0 {
-                normals[i] = normalize(div(normals[i], CGFloat(counts[i])))
+                normals[i] = normalize(div(normals[i], SCNFloat(counts[i])))
             }
         }
         
@@ -820,14 +820,14 @@ public class GLTFUnarchiver {
                 guard let data = Data(base64Encoded: base64Str) else {
                     throw GLTFUnarchiveError.Unknown("loadImage: cannot convert the base64 string to Data")
                 }
-                image = GLTFSceneKit.loadImage(from: data)
+                image = try loadImageData(from: data)
             } else {
                 let url = URL(fileURLWithPath: uri, relativeTo: self.directoryPath)
-                image = try GLTFSceneKit.loadImage(from: url)
+                image = try loadImageFile(from: url)
             }
         } else if let bufferViewIndex = glImage.bufferView {
             let bufferView = try self.loadBufferView(index: bufferViewIndex)
-            image = GLTFSceneKit.loadImage(from: bufferView)
+            image = try loadImageData(from: bufferView)
         }
         
         guard let _image = image else {
@@ -1006,7 +1006,7 @@ public class GLTFUnarchiver {
                     material.roughness.textureComponents = .green
                 } else {
                     // Fallback on earlier versions
-                    if let image = material.metalness.contents as? NSImage {
+                    if let image = material.metalness.contents as? Image {
                         let (metalness, roughness) = try getMetallicRoughnessTexture(from: image)
                         material.metalness.contents = metalness
                         material.roughness.contents = roughness
@@ -1112,7 +1112,7 @@ public class GLTFUnarchiver {
             }
  */
             var sources = try self.loadAttributes(primitive.attributes)
-            var vertexSource = sources.first { $0.semantic == .vertex }
+            let vertexSource = sources.first { $0.semantic == .vertex }
             var normalSource = sources.first { $0.semantic == .normal }
             
             var elements = [SCNGeometryElement]()
@@ -1460,13 +1460,13 @@ public class GLTFUnarchiver {
         }
         let dataOffset = glAccessor.byteOffset
         
-        var bufferView: Data
-        var dataStride: Int = bytesPerComponent * componentsPerVector
-        var padding = 0
+        //var bufferView: Data
+        let dataStride: Int = bytesPerComponent * componentsPerVector
+        //var padding = 0
         var matrices = [NSValue]()
         guard let bufferViewIndex = glAccessor.bufferView else {
             for _ in 0..<vectorCount {
-                matrices.append(NSValue(caTransform3D: SCNMatrix4Identity))
+                matrices.append(NSValue(scnMatrix4: SCNMatrix4Identity))
             }
             self.accessors[index] = matrices
             
@@ -1482,13 +1482,13 @@ public class GLTFUnarchiver {
                 let value = p.load(fromByteOffset: i*4, as: Float.self)
                 values.append(value)
             }
-            let v: [CGFloat] = values.map { CGFloat($0) }
-            let matrix = SCNMatrix4.init(
+            let v: [SCNFloat] = values.map { SCNFloat($0) }
+            let matrix = SCNMatrix4(
                 m11: v[0], m12: v[1], m13: v[2], m14: v[3],
                 m21: v[4], m22: v[5], m23: v[6], m24: v[7],
                 m31: v[8], m32: v[9], m33: v[10], m34: v[11],
                 m41: v[12], m42: v[13], m43: v[14], m44: v[15])
-            matrices.append(NSValue(caTransform3D: matrix))
+            matrices.append(NSValue(scnMatrix4: matrix))
         }
         
         self.accessors[index] = matrices
@@ -1523,9 +1523,9 @@ public class GLTFUnarchiver {
             boneInverseBindTransforms = try self.loadInverseBindMatrices(index: inverseBindMatrices)
         }
         
-        var baseNode: SCNNode?
+        //var baseNode: SCNNode?
         if let skeleton = glSkin.skeleton {
-            baseNode = try self.loadNode(index: skeleton)
+            _ = try self.loadNode(index: skeleton)
         }
         
         //var boneWeights: SCNGeometrySource?
@@ -1611,7 +1611,7 @@ public class GLTFUnarchiver {
             scnNode.setValue(weightPaths, forUndefinedKey: "weightPaths")
             
             if let skin = glNode.skin {
-                let skinner = try self.loadSkin(index: skin, meshNode: meshNode)
+                _ = try self.loadSkin(index: skin, meshNode: meshNode)
                 //scnNode.skinner = skinner
             }
         }
