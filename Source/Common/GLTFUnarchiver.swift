@@ -981,6 +981,17 @@ public class GLTFUnarchiver {
         let material = SCNMaterial()
         self.materials[index] = material
         
+        material.setValue(1.0, forKey: "baseColorFactorR")
+        material.setValue(1.0, forKey: "baseColorFactorG")
+        material.setValue(1.0, forKey: "baseColorFactorB")
+        material.setValue(1.0, forKey: "baseColorFactorA")
+        material.setValue(1.0, forKey: "metallicFactor")
+        material.setValue(1.0, forKey: "roughnessFactor")
+        material.setValue(glMaterial.emissiveFactor[0], forKey: "emissiveFactorR")
+        material.setValue(glMaterial.emissiveFactor[1], forKey: "emissiveFactorG")
+        material.setValue(glMaterial.emissiveFactor[2], forKey: "emissiveFactorB")
+        material.setValue(glMaterial.alphaCutoff, forKey: "alphaCutoff")
+        
         if let pbr = glMaterial.pbrMetallicRoughness {
             material.lightingModel = .physicallyBased
             material.diffuse.contents = createColor(pbr.baseColorFactor)
@@ -988,19 +999,18 @@ public class GLTFUnarchiver {
             material.roughness.contents = createGrayColor(white: pbr.roughnessFactor)
             
             if let baseTexture = pbr.baseColorTexture {
-                // TODO: multiply baseColorFactor and the diffuse texture
                 try self.setTexture(index: baseTexture.index, to: material.diffuse)
                 material.diffuse.mappingChannel = baseTexture.texCoord
                 
-                let baseColorFactor = createVector4(pbr.baseColorFactor)
-                material.setValue(NSValue(scnVector4: baseColorFactor), forKey: "baseColorFactor")
-                print("baseColorFactor: \(baseColorFactor)")
-            } else {
-                material.setValue(NSValue(scnVector4: SCNVector4(1, 1, 1, 1)), forKey: "baseColorFactor")
+                //let baseColorFactor = createVector4(pbr.baseColorFactor)
+                //material.setValue(NSValue(scnVector4: baseColorFactor), forKeyPath: "baseColorFactor")
+                material.setValue(pbr.baseColorFactor[0], forKey: "baseColorFactorR")
+                material.setValue(pbr.baseColorFactor[1], forKey: "baseColorFactorG")
+                material.setValue(pbr.baseColorFactor[2], forKey: "baseColorFactorB")
+                material.setValue(pbr.baseColorFactor[3], forKey: "baseColorFactorA")
             }
             
             if let metallicTexture = pbr.metallicRoughnessTexture {
-                // TODO: multiply metalness/roughness and the textures
                 try self.setTexture(index: metallicTexture.index, to: material.metalness)
                 material.metalness.mappingChannel = metallicTexture.texCoord
                 
@@ -1020,21 +1030,12 @@ public class GLTFUnarchiver {
                 }
                 
                 let metallicFactor = pbr.metallicFactor
-                material.setValue(NSNumber(value: metallicFactor), forKey: "metallicFactor")
-                print("metallicFactor: \(metallicFactor)")
+                material.setValue(metallicFactor, forKey: "metallicFactor")
                 
                 let roughnessFactor = pbr.roughnessFactor
-                material.setValue(NSNumber(value: roughnessFactor), forKey: "roughnessFactor")
-                print("roughnessFactor: \(roughnessFactor)")                
-            } else {
-                material.setValue(NSNumber(value: 1.0), forKey: "metallicFactor")
-                material.setValue(NSNumber(value: 1.0), forKey: "roughnessFactor")
+                material.setValue(roughnessFactor, forKey: "roughnessFactor")
             }
             
-            
-            material.shaderModifiers = [
-                .surface: try! String(contentsOf: URL(fileURLWithPath: Bundle(for: GLTFUnarchiver.self).path(forResource: "GLTFShaderModifierSurface", ofType: "shader")!), encoding: String.Encoding.utf8)
-            ]
         }
         
         if let normalTexture = glMaterial.normalTexture {
@@ -1060,13 +1061,25 @@ public class GLTFUnarchiver {
         
         material.isDoubleSided = glMaterial.doubleSided
         
+        material.shaderModifiers = [
+            .surface: try! String(contentsOf: URL(fileURLWithPath: Bundle(for: GLTFUnarchiver.self).path(forResource: "GLTFShaderModifierSurface", ofType: "shader")!), encoding: String.Encoding.utf8)
+        ]
+        #if SEEMS_TO_HAVE_DOUBLESIDED_BUG
+            if material.isDoubleSided {
+                material.shaderModifiers = [
+                    .surface: try! String(contentsOf: URL(fileURLWithPath: Bundle(for: GLTFUnarchiver.self).path(forResource: "GLTFShaderModifierSurface_doubleSidedWorkaround", ofType: "shader")!), encoding: String.Encoding.utf8)
+                ]
+            }
+        #endif
+
         switch glMaterial.alphaMode {
         case "OPAQUE":
             material.blendMode = .replace
         case "BLEND":
             material.blendMode = .alpha
+        case "MASK":
+            material.shaderModifiers![.fragment] = try! String(contentsOf: URL(fileURLWithPath: Bundle(for: GLTFUnarchiver.self).path(forResource: "GLTFShaderModifierFragment_alphaCutoff", ofType: "shader")!), encoding: String.Encoding.utf8)
         default:
-            // TODO: implement "MASK" with glMaterial.alphaCutOff
             throw GLTFUnarchiveError.NotSupported("loadMaterial: alphaMode \(glMaterial.alphaMode) is not supported")
         }
         

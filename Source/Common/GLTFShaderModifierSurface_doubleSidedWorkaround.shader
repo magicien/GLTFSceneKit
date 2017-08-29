@@ -1,5 +1,5 @@
 //
-//  GLTFShaderModifierSurface.shader
+//  GLTFShaderModifierSurface_doubleSidedWorkaround.shader
 //  GLTFSceneKit
 //
 //  Created by magicien on 2017/08/29.
@@ -20,7 +20,17 @@ float emissiveFactorB;
 
 #pragma body
 
+/*
+_surface.diffuse *= baseColorFactor;
+_surface.metalness *= metallicFactor;
+_surface.roughness *= roughnessFactor;
+_surface.emission *= emissiveFactor;
+*/
 _surface.diffuse *= float4(baseColorFactorR, baseColorFactorG, baseColorFactorB, baseColorFactorA);
 _surface.metalness *= metallicFactor;
 _surface.roughness *= roughnessFactor;
 _surface.emission.rgb *= float3(emissiveFactorR, emissiveFactorG, emissiveFactorB);
+
+if(_surface.normal.z < 0){
+    _surface.normal *= -1.0;
+}
