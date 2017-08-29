@@ -33,6 +33,8 @@ class GameViewController: NSViewController {
         
         self.setScene(scene)
         
+        self.gameView!.autoenablesDefaultLighting = true
+        
         // allows the user to manipulate the camera
         self.gameView!.allowsCameraControl = true
         

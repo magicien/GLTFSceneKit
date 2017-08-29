@@ -991,6 +991,12 @@ public class GLTFUnarchiver {
                 // TODO: multiply baseColorFactor and the diffuse texture
                 try self.setTexture(index: baseTexture.index, to: material.diffuse)
                 material.diffuse.mappingChannel = baseTexture.texCoord
+                
+                let baseColorFactor = createVector4(pbr.baseColorFactor)
+                material.setValue(NSValue(scnVector4: baseColorFactor), forKey: "baseColorFactor")
+                print("baseColorFactor: \(baseColorFactor)")
+            } else {
+                material.setValue(NSValue(scnVector4: SCNVector4(1, 1, 1, 1)), forKey: "baseColorFactor")
             }
             
             if let metallicTexture = pbr.metallicRoughnessTexture {
@@ -1012,7 +1018,23 @@ public class GLTFUnarchiver {
                         material.roughness.contents = roughness
                     }
                 }
+                
+                let metallicFactor = pbr.metallicFactor
+                material.setValue(NSNumber(value: metallicFactor), forKey: "metallicFactor")
+                print("metallicFactor: \(metallicFactor)")
+                
+                let roughnessFactor = pbr.roughnessFactor
+                material.setValue(NSNumber(value: roughnessFactor), forKey: "roughnessFactor")
+                print("roughnessFactor: \(roughnessFactor)")                
+            } else {
+                material.setValue(NSNumber(value: 1.0), forKey: "metallicFactor")
+                material.setValue(NSNumber(value: 1.0), forKey: "roughnessFactor")
             }
+            
+            
+            material.shaderModifiers = [
+                .surface: try! String(contentsOf: URL(fileURLWithPath: Bundle(for: GLTFUnarchiver.self).path(forResource: "GLTFShaderModifierSurface", ofType: "shader")!), encoding: String.Encoding.utf8)
+            ]
         }
         
         if let normalTexture = glMaterial.normalTexture {

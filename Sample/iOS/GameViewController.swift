@@ -44,34 +44,6 @@ class GameViewController: UIViewController {
     }
     
     func setScene(_ scene: SCNScene) {
-        // update camera names
-        /*
-        self.cameraNodes = scene.rootNode.childNodes(passingTest: { (node, finish) -> Bool in
-            return node.camera != nil
-        })
-        
-        // set the scene to the view
-        self.gameView!.scene = scene
-        
-        // set the camera menu
-        self.cameraSelect.menu?.removeAllItems()
-        if self.cameraNodes.count > 0 {
-            self.cameraSelect.removeAllItems()
-            let titles = self.cameraNodes.map { $0.camera?.name ?? "untitled" }
-            for title in titles {
-                self.cameraSelect.menu?.addItem(withTitle: title, action: nil, keyEquivalent: "")
-            }
-            self.gameView!.pointOfView = self.cameraNodes[0]
-        }
-        
-        let defaultCameraItem = NSMenuItem(title: "SCNViewFreeCamera", action: nil, keyEquivalent: "")
-        defaultCameraItem.tag = self.defaultCameraTag
-        defaultCameraItem.isEnabled = false
-        self.cameraSelect.menu?.addItem(defaultCameraItem)
-        
-        self.cameraSelect.autoenablesItems = false
-         */
-        
         // set the scene to the view
         self.gameView!.scene = scene        
     }
