@@ -44,7 +44,6 @@ struct GLTFKHRMaterialsPbrSpecularGlossiness_GLTFKHRMaterialsPbrSpecularGlossine
         guard let data = self.data else { return }
         guard let material = object as? SCNMaterial else { return }
         
-        // FIXME: use specularFactor, specularGlossinessTexture
         material.lightingModel = .physicallyBased
         
         if let diffuseTexture = data.diffuseTexture {
@@ -79,20 +78,20 @@ struct GLTFKHRMaterialsPbrSpecularGlossiness_GLTFKHRMaterialsPbrSpecularGlossine
             material.setValue(data.specularFactor[0], forKey: "specularFactorR")
             material.setValue(data.specularFactor[1], forKey: "specularFactorG")
             material.setValue(data.specularFactor[2], forKey: "specularFactorB")
+            material.setValue(data.glossinessFactor, forKey: "glossinessFactor")
         } else {
             material.specular.contents = createColor([
                 data.specularFactor[0],
                 data.specularFactor[1],
                 data.specularFactor[2],
-                1.0
+                data.glossinessFactor
             ])
             
             material.setValue(1.0, forKey: "specularFactorR")
             material.setValue(1.0, forKey: "specularFactorG")
             material.setValue(1.0, forKey: "specularFactorB")
+            material.setValue(1.0, forKey: "glossinessFactor")
         }
-
-        material.roughness.contents = createGrayColor(white: (1.0 - data.glossinessFactor))
 
         material.shaderModifiers = [
             .surface: try! String(contentsOf: URL(fileURLWithPath: Bundle(for: GLTFUnarchiver.self).path(forResource: "GLTFShaderModifierSurface_pbrSpecularGlossiness", ofType: "shader")!), encoding: String.Encoding.utf8)
