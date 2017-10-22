@@ -433,6 +433,7 @@ public class GLTFUnarchiver {
             bufferView = Data(count: dataSize)
         }
         
+        /*
         print("==================================================")
         print("semantic: \(semantic)")
         print("vectorCount: \(vectorCount)")
@@ -445,18 +446,7 @@ public class GLTFUnarchiver {
         print("padding: \(padding)")
         print("dataOffset + dataStride * vectorCount - padding: \(dataOffset + dataStride * vectorCount - padding)")
         print("==================================================")
-        
-        // DEBUG
-        if semantic == .texcoord {
-            bufferView.withUnsafeBytes { (p: UnsafePointer<Float32>) in
-                for i in 0..<vectorCount {
-                    let index = (i * dataStride + dataOffset) / 4
-                    let i1 = p[index + 0]
-                    let i2 = p[index + 1]
-                    print("\(i): \(i1), \(i2)")
-                }
-            }
-        }
+        */
         
         #if SEEMS_TO_HAVE_VALIDATE_VERTEX_ATTRIBUTE_BUG
             // Metal validateVertexAttribute function seems to have a bug, so dateOffset must be 0.
@@ -596,8 +586,6 @@ public class GLTFUnarchiver {
                 
                 let n = createNormal(v0, v1, v2)
                 
-                print("normal: \(n.x), \(n.y), \(n.z)")
-                
                 normals[i0] = add(normals[i0], n)
                 normals[i1] = add(normals[i1], n)
                 normals[i2] = add(normals[i2], n)
@@ -682,9 +670,6 @@ public class GLTFUnarchiver {
         */
         let (keyTimeArray, duration) = createKeyTimeArray(from: bufferView, offset: dataOffset, stride: dataStride, count: glAccessor.count)
         
-        for keyTime in keyTimeArray {
-            print("keyTime: \(keyTime)")
-        }
         self.accessors[index] = keyTimeArray
         self.durations[index] = duration
         
@@ -754,7 +739,6 @@ public class GLTFUnarchiver {
         
         //let valueArray = self.createValueArray(of: glAccessor)
         if glAccessor.type == "SCALAR" {
-            //print("SCALAR!!!!")
             var valueArray = [NSNumber]()
             valueArray.reserveCapacity(glAccessor.count)
             try self.iterateBufferView(index: bufferViewIndex, offset: dataOffset, stride: dataStride, count: glAccessor.count) { (p) in
@@ -773,19 +757,16 @@ public class GLTFUnarchiver {
         var valueArray = [NSValue]()
         valueArray.reserveCapacity(glAccessor.count)
         if glAccessor.type == "VEC3" {
-            print("VEC3!!!! index: \(index), stride: \(dataStride)")
             try self.iterateBufferView(index: bufferViewIndex, offset: dataOffset, stride: dataStride, count: glAccessor.count) { (p) in
                 let x = p.load(fromByteOffset: 0, as: Float32.self)
                 let y = p.load(fromByteOffset: 4, as: Float32.self)
                 let z = p.load(fromByteOffset: 8, as: Float32.self)
                 let v = SCNVector3(x, y, z)
                 
-                print("value: \(x), \(y), \(z)")
                 valueArray.append(NSValue(scnVector3: v))
             }
         }
         else if glAccessor.type == "VEC4" {
-            print("VEC4!!!! index: \(index), stride: \(dataStride)")
             try self.iterateBufferView(index: bufferViewIndex, offset: dataOffset, stride: dataStride, count: glAccessor.count) { (p) in
                 let x = p.load(fromByteOffset: 0, as: Float32.self)
                 let y = p.load(fromByteOffset: 4, as: Float32.self)
@@ -793,7 +774,6 @@ public class GLTFUnarchiver {
                 let w = p.load(fromByteOffset: 12, as: Float32.self)
                 let v = SCNVector4(x, y, z, flipW ? -w : w)
                 
-                print("value: \(x), \(y), \(z), \(w)")
                 valueArray.append(NSValue(scnVector4: v))
             }
         }
@@ -930,7 +910,7 @@ public class GLTFUnarchiver {
         return texture
     }
     
-    private func setTexture(index: Int, to property: SCNMaterialProperty) throws {
+    func setTexture(index: Int, to property: SCNMaterialProperty) throws {
         let texture = try self.loadTexture(index: index)
         guard let contents = texture.contents else {
             throw GLTFUnarchiveError.DataInconsistent("setTexture: contents of texture \(index) is nil")

@@ -20,12 +20,6 @@ float emissiveFactorB;
 
 #pragma body
 
-/*
-_surface.diffuse *= baseColorFactor;
-_surface.metalness *= metallicFactor;
-_surface.roughness *= roughnessFactor;
-_surface.emission *= emissiveFactor;
-*/
 _surface.diffuse *= float4(baseColorFactorR, baseColorFactorG, baseColorFactorB, baseColorFactorA);
 _surface.metalness *= metallicFactor;
 _surface.roughness *= roughnessFactor;
