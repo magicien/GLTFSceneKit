@@ -55,6 +55,8 @@
 		DD3EB0A51F524826009F32D2 /* GLTFSceneKit_iOS.h in Headers */ = {isa = PBXBuildFile; fileRef = DD3EB0A31F52480D009F32D2 /* GLTFSceneKit_iOS.h */; };
 		DD3EB0A91F524D3D009F32D2 /* GLTFSceneKit_macOS.h in Headers */ = {isa = PBXBuildFile; fileRef = DD3EB0A81F524D28009F32D2 /* GLTFSceneKit_macOS.h */; };
 		DD634F9D1F4A2D90008886AD /* GLTFFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD634F9C1F4A2D90008886AD /* GLTFFunctions.swift */; };
+		DD8804E41FA7AC92009B4584 /* GLTFShaderModifierSurface_pbrSpecularGlossiness_texture_doubleSidedWorkaround.shader in Resources */ = {isa = PBXBuildFile; fileRef = DD8804E31FA7AC91009B4584 /* GLTFShaderModifierSurface_pbrSpecularGlossiness_texture_doubleSidedWorkaround.shader */; };
+		DD8804E51FA7AC92009B4584 /* GLTFShaderModifierSurface_pbrSpecularGlossiness_texture_doubleSidedWorkaround.shader in Resources */ = {isa = PBXBuildFile; fileRef = DD8804E31FA7AC91009B4584 /* GLTFShaderModifierSurface_pbrSpecularGlossiness_texture_doubleSidedWorkaround.shader */; };
 		DD9BFA7C1F9C0EC400542D5B /* GLTFKHRMaterialsPbrSpecularGlossiness_GLTFKHRMaterialsPbrSpecularGlossiness.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9BFA7B1F9C0EBB00542D5B /* GLTFKHRMaterialsPbrSpecularGlossiness_GLTFKHRMaterialsPbrSpecularGlossiness.swift */; };
 		DD9BFA7D1F9C0EC400542D5B /* GLTFKHRMaterialsPbrSpecularGlossiness_GLTFKHRMaterialsPbrSpecularGlossiness.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9BFA7B1F9C0EBB00542D5B /* GLTFKHRMaterialsPbrSpecularGlossiness_GLTFKHRMaterialsPbrSpecularGlossiness.swift */; };
 		DD9BFA821F9C20E900542D5B /* GLTFShaderModifierSurface.shader in Resources */ = {isa = PBXBuildFile; fileRef = DD071E031F55ED1200F00567 /* GLTFShaderModifierSurface.shader */; };
@@ -174,6 +176,7 @@
 		DD634F9C1F4A2D90008886AD /* GLTFFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GLTFFunctions.swift; sourceTree = "<group>"; };
 		DD83924C1F466C2D006A1CAC /* GLTFSceneKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = GLTFSceneKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD8392501F466C2D006A1CAC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DD8804E31FA7AC91009B4584 /* GLTFShaderModifierSurface_pbrSpecularGlossiness_texture_doubleSidedWorkaround.shader */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GLTFShaderModifierSurface_pbrSpecularGlossiness_texture_doubleSidedWorkaround.shader; sourceTree = "<group>"; };
 		DD99E8071F55FBA8003D380A /* GLTFShaderModifierSurface_doubleSidedWorkaround.shader */ = {isa = PBXFileReference; lastKnownFileType = text; path = GLTFShaderModifierSurface_doubleSidedWorkaround.shader; sourceTree = "<group>"; };
 		DD99E80A1F560099003D380A /* GLTFShaderModifierFragment_alphaCutoff.shader */ = {isa = PBXFileReference; lastKnownFileType = text; path = GLTFShaderModifierFragment_alphaCutoff.shader; sourceTree = "<group>"; };
 		DD9BFA7B1F9C0EBB00542D5B /* GLTFKHRMaterialsPbrSpecularGlossiness_GLTFKHRMaterialsPbrSpecularGlossiness.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GLTFKHRMaterialsPbrSpecularGlossiness_GLTFKHRMaterialsPbrSpecularGlossiness.swift; sourceTree = "<group>"; };
@@ -328,6 +331,7 @@
 			children = (
 				DD9BFA7B1F9C0EBB00542D5B /* GLTFKHRMaterialsPbrSpecularGlossiness_GLTFKHRMaterialsPbrSpecularGlossiness.swift */,
 				DD9BFA8A1F9C2DA000542D5B /* GLTFShaderModifierSurface_pbrSpecularGlossiness_doubleSidedWorkaround.shader */,
+				DD8804E31FA7AC91009B4584 /* GLTFShaderModifierSurface_pbrSpecularGlossiness_texture_doubleSidedWorkaround.shader */,
 				DD9BFA7E1F9C11EA00542D5B /* GLTFShaderModifierSurface_pbrSpecularGlossiness.shader */,
 			);
 			path = KHR_materials_pbrSpecularGlossiness;
@@ -555,7 +559,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0900;
-				LastUpgradeCheck = 0900;
+				LastUpgradeCheck = 0910;
 				ORGANIZATIONNAME = DarkHorse;
 				TargetAttributes = {
 					DD3EB0701F52476B009F32D2 = {
@@ -607,6 +611,7 @@
 				DD2930291F9C8E7C00216F1D /* GLTFShaderModifierSurface.shader in Resources */,
 				DD9BFA871F9C211A00542D5B /* GLTFShaderModifierSurface_doubleSidedWorkaround.shader in Resources */,
 				DD9BFA851F9C20FB00542D5B /* GLTFShaderModifierSurface_pbrSpecularGlossiness.shader in Resources */,
+				DD8804E51FA7AC92009B4584 /* GLTFShaderModifierSurface_pbrSpecularGlossiness_texture_doubleSidedWorkaround.shader in Resources */,
 				DD9BFA881F9C211E00542D5B /* GLTFShaderModifierFragment_alphaCutoff.shader in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -619,6 +624,7 @@
 				DD9BFA831F9C20ED00542D5B /* GLTFShaderModifierFragment_alphaCutoff.shader in Resources */,
 				DD9BFA891F9C220F00542D5B /* GLTFShaderModifierSurface_doubleSidedWorkaround.shader in Resources */,
 				DD9BFA841F9C20EF00542D5B /* GLTFShaderModifierSurface_pbrSpecularGlossiness.shader in Resources */,
+				DD8804E41FA7AC92009B4584 /* GLTFShaderModifierSurface_pbrSpecularGlossiness_texture_doubleSidedWorkaround.shader in Resources */,
 				DD9BFA8C1F9C2E2800542D5B /* GLTFShaderModifierSurface_pbrSpecularGlossiness_doubleSidedWorkaround.shader in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -809,6 +815,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = EF37D6UQZ9;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -832,6 +839,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = EF37D6UQZ9;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -872,6 +880,8 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
@@ -899,7 +909,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
@@ -930,6 +940,8 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
@@ -951,7 +963,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
@@ -977,7 +989,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = jp.0spec.GLTFSceneKit;
 				PRODUCT_NAME = GLTFSceneKit;
 				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG SEEMS_TO_HAVE_VALIDATE_VERTEX_ATTRIBUTE_BUG SEEMS_TO_HAVE_PNG_LOADING_BUG SEEMS_TO_HAVE_DOUBLESIDED_BUG";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG SEEMS_TO_HAVE_VALIDATE_VERTEX_ATTRIBUTE_BUG SEEMS_TO_HAVE_PNG_LOADING_BUG SEEMS_TO_HAVE_DOUBLESIDED_BUG SEEMS_TO_HAVE_SKINNER_VECTOR_TYPE_BUG";
 				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
@@ -999,7 +1011,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = jp.0spec.GLTFSceneKit;
 				PRODUCT_NAME = GLTFSceneKit;
 				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "SEEMS_TO_HAVE_PNG_LOADING_BUG SEEMS_TO_HAVE_VALIDATE_VERTEX_ATTRIBUTE_BUG SEEMS_TO_HAVE_DOUBLESIDED_BUG";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "SEEMS_TO_HAVE_PNG_LOADING_BUG SEEMS_TO_HAVE_VALIDATE_VERTEX_ATTRIBUTE_BUG SEEMS_TO_HAVE_DOUBLESIDED_BUG SEEMS_TO_HAVE_SKINNER_VECTOR_TYPE_BUG";
 				SWIFT_VERSION = 4.0;
 			};
 			name = Release;

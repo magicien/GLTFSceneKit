@@ -68,17 +68,23 @@ struct GLTFKHRMaterialsPbrSpecularGlossiness_GLTFKHRMaterialsPbrSpecularGlossine
         }
         
         if let specularGlossinesTexture = data.specularGlossinessTexture {
+            // Use a multiply texture as a specular texture
+            // because a specular texture is overwritten by a metalness texture for PBR.
             do {
-                try unarchiver.setTexture(index: specularGlossinesTexture.index, to: material.specular)
+                try unarchiver.setTexture(index: specularGlossinesTexture.index, to: material.multiply)
             } catch {
                 print("\(error.localizedDescription)")
             }
-            material.specular.mappingChannel = specularGlossinesTexture.texCoord
+            material.multiply.mappingChannel = specularGlossinesTexture.texCoord
 
             material.setValue(data.specularFactor[0], forKey: "specularFactorR")
             material.setValue(data.specularFactor[1], forKey: "specularFactorG")
             material.setValue(data.specularFactor[2], forKey: "specularFactorB")
             material.setValue(data.glossinessFactor, forKey: "glossinessFactor")
+            
+            material.shaderModifiers = [
+                .surface: try! String(contentsOf: URL(fileURLWithPath: Bundle(for: GLTFUnarchiver.self).path(forResource: "GLTFShaderModifierSurface_pbrSpecularGlossiness_texture_doubleSidedWorkaround", ofType: "shader")!), encoding: String.Encoding.utf8)
+            ]
         } else {
             material.specular.contents = createColor([
                 data.specularFactor[0],
@@ -91,19 +97,19 @@ struct GLTFKHRMaterialsPbrSpecularGlossiness_GLTFKHRMaterialsPbrSpecularGlossine
             material.setValue(1.0, forKey: "specularFactorG")
             material.setValue(1.0, forKey: "specularFactorB")
             material.setValue(1.0, forKey: "glossinessFactor")
-        }
 
-        material.shaderModifiers = [
-            .surface: try! String(contentsOf: URL(fileURLWithPath: Bundle(for: GLTFUnarchiver.self).path(forResource: "GLTFShaderModifierSurface_pbrSpecularGlossiness", ofType: "shader")!), encoding: String.Encoding.utf8)
-        ]
-        
-        #if SEEMS_TO_HAVE_DOUBLESIDED_BUG
-            if material.isDoubleSided {
-                material.shaderModifiers = [
-                    .surface: try! String(contentsOf: URL(fileURLWithPath: Bundle(for: GLTFUnarchiver.self).path(forResource: "GLTFShaderModifierSurface_pbrSpecularGlossiness_doubleSidedWorkaround", ofType: "shader")!), encoding: String.Encoding.utf8)
-                ]
-            }
-        #endif
+            material.shaderModifiers = [
+                .surface: try! String(contentsOf: URL(fileURLWithPath: Bundle(for: GLTFUnarchiver.self).path(forResource: "GLTFShaderModifierSurface_pbrSpecularGlossiness", ofType: "shader")!), encoding: String.Encoding.utf8)
+            ]
+            
+            #if SEEMS_TO_HAVE_DOUBLESIDED_BUG
+                if material.isDoubleSided {
+                    material.shaderModifiers = [
+                        .surface: try! String(contentsOf: URL(fileURLWithPath: Bundle(for: GLTFUnarchiver.self).path(forResource: "GLTFShaderModifierSurface_pbrSpecularGlossiness_doubleSidedWorkaround", ofType: "shader")!), encoding: String.Encoding.utf8)
+                    ]
+                }
+            #endif
+        }
     }
 }
 

@@ -2,7 +2,7 @@
 //  GLTFShaderModifierSurface_pbrSpecularGlossiness.shader
 //  GLTFSceneKit
 //
-//  Created by Yuki OHNO on 10/21/17.
+//  Created magicien on 10/21/17.
 //  Copyright © 2017 DarkHorse. All rights reserved.
 //
 
@@ -44,21 +44,4 @@ float emissiveFactorB;
 #pragma body
 
 float4 diffuse = _surface.diffuse * float4(diffuseFactorR, diffuseFactorG, diffuseFactorB, diffuseFactorA);
-float3 specular = _surface.specular.rgb * float3(specularFactorR, specularFactorG, specularFactorB);
-float invSpecular = 1.0 - fmax(fmax(specular.r, specular.g), specular.b);
-float metalness = calcMetalness(diffuse.rgb, specular, invSpecular);
-// It seems max number of arguments is 10, so omit glossinessFactor...
-// float roughness = 1.0 - _surface.specular.a * glossinessFactor;
-float roughness = 1.0 - _surface.specular.a;
-
-float3 baseColorFromDiffuse = diffuse.rgb * (invSpecular / invDielect / fmax(1.0 - metalness, epsilon));
-float3 baseColorFromSpecular = specular - dielectricSpecular * (1.0 - metalness) * (1.0 / fmax(metalness, epsilon));
-float3 baseColor = clamp(
-     mix(baseColorFromDiffuse, baseColorFromSpecular, metalness * metalness),
-     float3(0, 0, 0),
-     float3(1, 1, 1));
-
-_surface.diffuse = float4(baseColor, diffuse.a);
-_surface.metalness = metalness;
-_surface.roughness = roughness;
-_surface.emission.rgb *= float3(emissiveFactorR, emissiveFactorG, emissiveFactorB);
+float3 specular = _surface.specular.r * float3(specularFactorR, specularFactorG, specularFactorB);

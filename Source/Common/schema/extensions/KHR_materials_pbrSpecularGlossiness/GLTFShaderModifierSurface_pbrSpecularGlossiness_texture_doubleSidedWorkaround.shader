@@ -43,6 +43,11 @@ float emissiveFactorB;
 
 #pragma body
 
+// Use a multiply texture as a specular texture
+// because a specular texture is overwritten by a metalness texture for PBR.
+_surface.specular = _surface.multiply;
+_surface.multiply= float4(1, 1, 1, 1);
+
 float4 diffuse = _surface.diffuse * float4(diffuseFactorR, diffuseFactorG, diffuseFactorB, diffuseFactorA);
 float3 specular = _surface.specular.rgb * float3(specularFactorR, specularFactorG, specularFactorB);
 float invSpecular = 1.0 - fmax(fmax(specular.r, specular.g), specular.b);
@@ -54,9 +59,9 @@ float roughness = 1.0 - _surface.specular.a;
 float3 baseColorFromDiffuse = diffuse.rgb * (invSpecular / invDielect / fmax(1.0 - metalness, epsilon));
 float3 baseColorFromSpecular = specular - dielectricSpecular * (1.0 - metalness) * (1.0 / fmax(metalness, epsilon));
 float3 baseColor = clamp(
-     mix(baseColorFromDiffuse, baseColorFromSpecular, metalness * metalness),
-     float3(0, 0, 0),
-     float3(1, 1, 1));
+mix(baseColorFromDiffuse, baseColorFromSpecular, metalness * metalness),
+float3(0, 0, 0),
+float3(1, 1, 1));
 
 _surface.diffuse = float4(baseColor, diffuse.a);
 _surface.metalness = metalness;
