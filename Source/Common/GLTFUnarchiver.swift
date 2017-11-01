@@ -433,6 +433,7 @@ public class GLTFUnarchiver {
             bufferView = Data(count: dataSize)
         }
         
+        /*
         print("==================================================")
         print("semantic: \(semantic)")
         print("vectorCount: \(vectorCount)")
@@ -445,27 +446,58 @@ public class GLTFUnarchiver {
         print("padding: \(padding)")
         print("dataOffset + dataStride * vectorCount - padding: \(dataOffset + dataStride * vectorCount - padding)")
         print("==================================================")
-        
-        // DEBUG
-        if semantic == .texcoord {
-            bufferView.withUnsafeBytes { (p: UnsafePointer<Float32>) in
-                for i in 0..<vectorCount {
-                    let index = (i * dataStride + dataOffset) / 4
-                    let i1 = p[index + 0]
-                    let i2 = p[index + 1]
-                    print("\(i): \(i1), \(i2)")
-                }
-            }
-        }
+        */
         
         #if SEEMS_TO_HAVE_VALIDATE_VERTEX_ATTRIBUTE_BUG
             // Metal validateVertexAttribute function seems to have a bug, so dateOffset must be 0.
             bufferView = bufferView.subdata(in: dataOffset..<dataOffset + dataStride * vectorCount - padding)
+            
             let geometrySource = SCNGeometrySource(data: bufferView, semantic: semantic, vectorCount: vectorCount, usesFloatComponents: usesFloatComponents, componentsPerVector: componentsPerVector, bytesPerComponent: bytesPerComponent, dataOffset: 0, dataStride: dataStride)
+            
         #else
             let geometrySource = SCNGeometrySource(data: bufferView, semantic: semantic, vectorCount: vectorCount, usesFloatComponents: usesFloatComponents, componentsPerVector: componentsPerVector, bytesPerComponent: bytesPerComponent, dataOffset: dataOffset, dataStride: dataStride)
         #endif
+        
         self.accessors[index] = geometrySource
+        
+        #if SEEMS_TO_HAVE_SKINNER_VECTOR_TYPE_BUG
+            #if false
+            if semantic == .boneIndices {
+                if componentsPerVector == 4 && bytesPerComponent == 2 {
+                    #if false
+                    let device = MTLCreateSystemDefaultDevice()!
+                    bufferView.withUnsafeBytes { (ptr: UnsafePointer<UInt16>) in
+                        var uint4Data = [UInt32]()
+                        for i in 0..<vectorCount {
+                            uint4Data.append(UInt32(ptr[i]))
+                        }
+                        let dataSize = 4 * vectorCount
+                        let uint4Ptr = UnsafeRawPointer(uint4Data)
+                        //uint4Data.withUnsafeBytes { (uint4Ptr: UnsafePointer<UInt32>) in
+                            let buffer = device.makeBuffer(bytes: uint4Ptr, length: dataSize, options: [])!
+                            let source = SCNGeometrySource(buffer: buffer, vertexFormat: .uint4, semantic: .boneIndices, vertexCount: vectorCount, dataOffset: 0, dataStride: 4)
+                            self.accessors[index] = source
+                        //}
+                    }
+                    #endif
+                    bufferView.withUnsafeBytes { (ptr: UnsafePointer<UInt16>) in
+                        var uint4Data = [UInt32]()
+                        for i in 0..<(vectorCount * componentsPerVector) {
+                            uint4Data.append(UInt32(ptr[i]))
+                        }
+                        uint4Data.withUnsafeBufferPointer { (uint4Ptr: UnsafeBufferPointer<UInt32>) in
+                            let data = Data(buffer: uint4Ptr)
+                            let source = SCNGeometrySource(data: data, semantic: .boneIndices, vectorCount: vectorCount, usesFloatComponents: false, componentsPerVector: 4, bytesPerComponent: 4, dataOffset: 0, dataStride: 16)
+                            print("new source dataStride: \(source.dataStride)")
+                            self.accessors[index] = source
+                        }
+                    }
+                } else {
+                    fatalError("boneIndices not 4x2")
+                }
+            }
+                #endif
+        #endif
         
         glAccessor.didLoad(by: geometrySource, unarchiver: self)
         return geometrySource
@@ -483,7 +515,6 @@ public class GLTFUnarchiver {
                 indices[i] = UInt16(i)
             }
             let geometryElement = SCNGeometryElement(indices: indices, primitiveType: primitiveType)
-            print("count: \(geometryElement.primitiveCount)")
             return geometryElement
         }
         
@@ -596,8 +627,6 @@ public class GLTFUnarchiver {
                 
                 let n = createNormal(v0, v1, v2)
                 
-                print("normal: \(n.x), \(n.y), \(n.z)")
-                
                 normals[i0] = add(normals[i0], n)
                 normals[i1] = add(normals[i1], n)
                 normals[i2] = add(normals[i2], n)
@@ -682,9 +711,6 @@ public class GLTFUnarchiver {
         */
         let (keyTimeArray, duration) = createKeyTimeArray(from: bufferView, offset: dataOffset, stride: dataStride, count: glAccessor.count)
         
-        for keyTime in keyTimeArray {
-            print("keyTime: \(keyTime)")
-        }
         self.accessors[index] = keyTimeArray
         self.durations[index] = duration
         
@@ -754,7 +780,6 @@ public class GLTFUnarchiver {
         
         //let valueArray = self.createValueArray(of: glAccessor)
         if glAccessor.type == "SCALAR" {
-            //print("SCALAR!!!!")
             var valueArray = [NSNumber]()
             valueArray.reserveCapacity(glAccessor.count)
             try self.iterateBufferView(index: bufferViewIndex, offset: dataOffset, stride: dataStride, count: glAccessor.count) { (p) in
@@ -773,19 +798,16 @@ public class GLTFUnarchiver {
         var valueArray = [NSValue]()
         valueArray.reserveCapacity(glAccessor.count)
         if glAccessor.type == "VEC3" {
-            print("VEC3!!!! index: \(index), stride: \(dataStride)")
             try self.iterateBufferView(index: bufferViewIndex, offset: dataOffset, stride: dataStride, count: glAccessor.count) { (p) in
                 let x = p.load(fromByteOffset: 0, as: Float32.self)
                 let y = p.load(fromByteOffset: 4, as: Float32.self)
                 let z = p.load(fromByteOffset: 8, as: Float32.self)
                 let v = SCNVector3(x, y, z)
                 
-                print("value: \(x), \(y), \(z)")
                 valueArray.append(NSValue(scnVector3: v))
             }
         }
         else if glAccessor.type == "VEC4" {
-            print("VEC4!!!! index: \(index), stride: \(dataStride)")
             try self.iterateBufferView(index: bufferViewIndex, offset: dataOffset, stride: dataStride, count: glAccessor.count) { (p) in
                 let x = p.load(fromByteOffset: 0, as: Float32.self)
                 let y = p.load(fromByteOffset: 4, as: Float32.self)
@@ -793,7 +815,6 @@ public class GLTFUnarchiver {
                 let w = p.load(fromByteOffset: 12, as: Float32.self)
                 let v = SCNVector4(x, y, z, flipW ? -w : w)
                 
-                print("value: \(x), \(y), \(z), \(w)")
                 valueArray.append(NSValue(scnVector4: v))
             }
         }
@@ -930,7 +951,7 @@ public class GLTFUnarchiver {
         return texture
     }
     
-    private func setTexture(index: Int, to property: SCNMaterialProperty) throws {
+    func setTexture(index: Int, to property: SCNMaterialProperty) throws {
         let texture = try self.loadTexture(index: index)
         guard let contents = texture.contents else {
             throw GLTFUnarchiveError.DataInconsistent("setTexture: contents of texture \(index) is nil")
@@ -981,12 +1002,12 @@ public class GLTFUnarchiver {
         let material = SCNMaterial()
         self.materials[index] = material
         
-        material.setValue(1.0, forKey: "baseColorFactorR")
-        material.setValue(1.0, forKey: "baseColorFactorG")
-        material.setValue(1.0, forKey: "baseColorFactorB")
-        material.setValue(1.0, forKey: "baseColorFactorA")
-        material.setValue(1.0, forKey: "metallicFactor")
-        material.setValue(1.0, forKey: "roughnessFactor")
+        material.setValue(Float(1.0), forKey: "baseColorFactorR")
+        material.setValue(Float(1.0), forKey: "baseColorFactorG")
+        material.setValue(Float(1.0), forKey: "baseColorFactorB")
+        material.setValue(Float(1.0), forKey: "baseColorFactorA")
+        material.setValue(Float(1.0), forKey: "metallicFactor")
+        material.setValue(Float(1.0), forKey: "roughnessFactor")
         material.setValue(glMaterial.emissiveFactor[0], forKey: "emissiveFactorR")
         material.setValue(glMaterial.emissiveFactor[1], forKey: "emissiveFactorG")
         material.setValue(glMaterial.emissiveFactor[2], forKey: "emissiveFactorB")
@@ -1270,7 +1291,7 @@ public class GLTFUnarchiver {
         group.duration = self.maxAnimationDuration
         group.repeatCount = .infinity
         
-        print("index: \(index), sampler: \(sampler), animation: \(duration), group: \(self.maxAnimationDuration)")
+        //print("index: \(index), sampler: \(sampler), animation: \(duration), group: \(self.maxAnimationDuration)")
         //self.animationSamplers[index]![sampler] = animation
         self.animationSamplers[index]![sampler] = group
         
@@ -1400,6 +1421,7 @@ public class GLTFUnarchiver {
             //animation = keyframeAnimation
             animation = group
             
+            /*
             print("keyPath: \(animationKeyPath)")
             if animationKeyPath == "position" {
                 if let keyTimes = keyframeAnimation.keyTimes {
@@ -1414,6 +1436,7 @@ public class GLTFUnarchiver {
                     }
                 }
             }
+             */
         }
         
         //let scnAnimation = SCNAnimation(caAnimation: animation)
@@ -1576,7 +1599,44 @@ public class GLTFUnarchiver {
                 guard let _joints = primitive.geometry?.sources(for: .boneIndices) else {
                     throw GLTFUnarchiveError.DataInconsistent("loadSkin: JOINTS_0 is not defined")
                 }
-                let boneIndices = _joints[0]
+                var boneIndices = _joints[0]
+                print("boneIndices dataStride: \(boneIndices.dataStride)")
+                
+                #if SEEMS_TO_HAVE_SKINNER_VECTOR_TYPE_BUG
+                    #if false
+                    if _joints[0].dataStride == 8 {
+                        let device = MTLCreateSystemDefaultDevice()!
+                        let numComponents = _joints[0].vectorCount * _joints[0].componentsPerVector
+                        _joints[0].data.withUnsafeBytes { (ptr: UnsafePointer<UInt16>) in
+                            var uint4Data = [UInt32]()
+                            for i in 0..<numComponents {
+                                uint4Data.append(UInt32(ptr[i]))
+                            }
+                            let dataSize = 4 * numComponents
+                            let uint4Ptr = UnsafeRawPointer(uint4Data)
+                            let buffer = device.makeBuffer(bytes: uint4Ptr, length: dataSize, options: [])!
+                            let source = SCNGeometrySource(buffer: buffer, vertexFormat: .uint4, semantic: .boneIndices, vertexCount: _joints[0].vectorCount, dataOffset: 0, dataStride: 4)
+                            boneIndices = source
+                        }
+                        /*
+                        _joints[0].data.withUnsafeBytes { (ptr: UnsafePointer<UInt16>) in
+                            var uint4Data = [UInt32]()
+                            let numComponents = _joints[0].vectorCount * _joints[0].componentsPerVector
+                            for i in 0..<numComponents {
+                                uint4Data.append(UInt32(ptr[i]))
+                            }
+                            uint4Data.withUnsafeBufferPointer { (uint4Ptr: UnsafeBufferPointer<UInt32>) in
+                                let data = Data(buffer: uint4Ptr)
+                                let source = SCNGeometrySource(data: data, semantic: .boneIndices, vectorCount: _joints[0].vectorCount, usesFloatComponents: false, componentsPerVector: 4, bytesPerComponent: 4, dataOffset: 0, dataStride: 16)
+                                print("new source dataStride: \(source.dataStride)")
+                                boneIndices = source
+                            }
+                        }
+                         */
+                    }
+                        #endif
+                #endif
+                
                 //skeleton = primitive
                 let skinner = SCNSkinner(baseGeometry: baseGeometry, bones: joints, boneInverseBindTransforms: boneInverseBindTransforms, boneWeights: boneWeights, boneIndices: boneIndices)
                 skinner.skeleton = primitive
