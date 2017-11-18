@@ -24,3 +24,7 @@ do {
   return
 }
 ```
+
+## See also
+
+[GLTFQuickLook](https://github.com/magicien/GLTFQuickLook) - QuickLook plugin for glTF files
