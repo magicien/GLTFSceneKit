@@ -12,6 +12,7 @@ pod 'GLTFSceneKit'
 
 ## Usage
 
+### Swift
 ```
 import GLTFSceneKit
 
@@ -22,6 +23,19 @@ do {
 } catch {
   print("\(error.localizedDescription)")
   return
+}
+```
+
+### Objective-C
+```
+@import GLTFSceneKit;
+
+GLTFSceneSource *source = [[GLTFSceneSource alloc] initWithURL:url options:nil];
+NSError *error;
+SCNScene *scene = [source sceneWithOptions:nil error:&error];
+if (error != nil) {
+  NSLog(@"%@", error);
+  return;
 }
 ```
 
