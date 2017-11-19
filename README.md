@@ -12,6 +12,7 @@ pod 'GLTFSceneKit'
 
 ## Usage
 
+### Swift
 ```
 import GLTFSceneKit
 
@@ -24,3 +25,20 @@ do {
   return
 }
 ```
+
+### Objective-C
+```
+@import GLTFSceneKit;
+
+GLTFSceneSource *source = [[GLTFSceneSource alloc] initWithURL:url options:nil];
+NSError *error;
+SCNScene *scene = [source sceneWithOptions:nil error:&error];
+if (error != nil) {
+  NSLog(@"%@", error);
+  return;
+}
+```
+
+## See also
+
+[GLTFQuickLook](https://github.com/magicien/GLTFQuickLook) - QuickLook plugin for glTF files
