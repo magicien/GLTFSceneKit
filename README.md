@@ -1,6 +1,8 @@
 # GLTFSceneKit
 glTF loader for SceneKit
 
+![ScreenShot](https://raw.githubusercontent.com/magicien/GLTFSceneKit/master/screenshot.png)
+
 ## Installation
 ### Using [CocoaPods](http://cocoapods.org/)
 
