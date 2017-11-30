@@ -3,7 +3,7 @@
 //  GLTFSceneKit
 //
 //  Created by magicien on 2017/08/17.
-//  Copyright © 2017年 DarkHorse. All rights reserved.
+//  Copyright © 2017 DarkHorse. All rights reserved.
 //
 
 import SceneKit
@@ -55,7 +55,15 @@ public class GLTFSceneSource : SCNSceneSource {
     }
     
     public override func scene(options: [SCNSceneSource.LoadingOption : Any]? = nil) throws -> SCNScene {
-        return try self.loader.loadScene()
+        let scene = try self.loader.loadScene()
+        #if SEEMS_TO_HAVE_SKINNER_VECTOR_TYPE_BUG
+            let sceneData = NSKeyedArchiver.archivedData(withRootObject: scene)
+            let source = SCNSceneSource(data: sceneData, options: nil)!
+            let newScene = source.scene(options: nil)!
+            return newScene
+        #else
+            return scene
+        #endif
     }
     
     /*

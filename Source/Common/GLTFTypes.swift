@@ -3,7 +3,7 @@
 //  GLTFSceneKit
 //
 //  Created by magicien on 2017/08/18.
-//  Copyright © 2017年 DarkHorse. All rights reserved.
+//  Copyright © 2017 DarkHorse. All rights reserved.
 //
 
 import SceneKit

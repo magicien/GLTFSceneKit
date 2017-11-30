@@ -55,7 +55,7 @@ class GameViewController: NSViewController {
         
         // set the scene to the view
         self.gameView!.scene = scene
-        
+
         // set the camera menu
         self.cameraSelect.menu?.removeAllItems()
         if self.cameraNodes.count > 0 {
