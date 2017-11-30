@@ -1060,8 +1060,8 @@ public class GLTFUnarchiver {
     
     private func loadAttributes(_ attributes: [String: GLTFGlTFid]) throws -> [SCNGeometrySource] {
         var sources = [SCNGeometrySource]()
-        
-        for (attribute, accessorIndex) in attributes {
+        // Sort attributes to keep correct semantic order
+        for (attribute, accessorIndex) in attributes.sorted(by: { $0.0 < $1.0 }) {
             if let semantic = attributeMap[attribute] {
                 let accessor = try self.loadVertexAccessor(index: accessorIndex, semantic: semantic)
                 sources.append(accessor)
