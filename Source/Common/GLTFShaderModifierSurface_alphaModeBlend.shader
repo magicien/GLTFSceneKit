@@ -2,7 +2,6 @@
 //  GLTFShaderModifierSurface.shader
 //  GLTFSceneKit
 //
-//  Created by Johanos on 2017/12/04.
 //  Created by Johanos [Wayfair NEXT] on 2017/12/04.
 //  Based on GLTFShaderModifierSurface.shader
 //
