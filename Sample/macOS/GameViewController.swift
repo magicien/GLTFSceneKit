@@ -24,7 +24,7 @@ class GameViewController: NSViewController {
         
         var scene: SCNScene
         do {
-            let sceneSource = try GLTFSceneSource(named: "art.scnassets/Box/glTF/Box.gltf")
+            let sceneSource = try GLTFSceneSource(named: "art.scnassets/GlassVase/Wayfair-GlassVase-BCHH2364.glb")
             scene = try sceneSource.scene()
         } catch {
             print("\(error.localizedDescription)")
@@ -66,6 +66,10 @@ class GameViewController: NSViewController {
             }
             self.gameView!.pointOfView = self.cameraNodes[0]
         }
+        
+        //to give nice reflections :)
+        scene.lightingEnvironment.contents = "art.scnassets/shinyRoom.jpg"
+        scene.lightingEnvironment.intensity = 2;
         
         let defaultCameraItem = NSMenuItem(title: "SCNViewFreeCamera", action: nil, keyEquivalent: "")
         defaultCameraItem.tag = self.defaultCameraTag

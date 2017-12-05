@@ -22,7 +22,7 @@ class GameViewController: UIViewController {
         
         var scene: SCNScene
         do {
-            let sceneSource = try GLTFSceneSource(named: "art.scnassets/Box/glTF/Box.gltf")
+            let sceneSource = try GLTFSceneSource(named: "art.scnassets/GlassVase/Wayfair-GlassVase-BCHH2364.glb")
             scene = try sceneSource.scene()
         } catch {
             print("\(error.localizedDescription)")
@@ -45,7 +45,10 @@ class GameViewController: UIViewController {
     
     func setScene(_ scene: SCNScene) {
         // set the scene to the view
-        self.gameView!.scene = scene        
+        self.gameView!.scene = scene
+        //to give nice reflections :)
+        scene.lightingEnvironment.contents = "art.scnassets/shinyRoom.jpg"
+        scene.lightingEnvironment.intensity = 2;
     }
     
     override var shouldAutorotate: Bool {
