@@ -1019,7 +1019,7 @@ public class GLTFUnarchiver {
         if let occlusionTexture = glMaterial.occlusionTexture {
             try self.setTexture(index: occlusionTexture.index, to: material.ambientOcclusion)
             material.ambientOcclusion.mappingChannel = occlusionTexture.texCoord
-            material.ambientOcclusion.intensity = CGFloat(occlusionTexture.strength * 1000.0) // Is it correct?
+            material.ambientOcclusion.intensity = CGFloat(occlusionTexture.strength)
         }
         
         if let emissiveTexture = glMaterial.emissiveTexture {
