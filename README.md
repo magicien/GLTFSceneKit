@@ -12,6 +12,10 @@ Add the following to your [Podfile](http://guides.cocoapods.org/using/the-podfil
 pod 'GLTFSceneKit'
 ```
 
+### Manually
+
+Download **GLTFSceneKit_vX.X.X.zip** from [Releases](https://github.com/magicien/GLTFSceneKit/releases/latest).
+
 ## Usage
 
 ### Swift
