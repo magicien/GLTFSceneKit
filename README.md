@@ -1,3 +1,5 @@
+[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
+
 # GLTFSceneKit
 glTF loader for SceneKit
 
@@ -10,6 +12,14 @@ Add the following to your [Podfile](http://guides.cocoapods.org/using/the-podfil
 
 ```rb
 pod 'GLTFSceneKit'
+```
+
+### Using [Carthage](https://github.com/Carthage/Carthage)
+
+Add the following to your [Cartfile](https://github.com/Carthage/Carthage/blob/master/Documentation/Artifacts.md#cartfile):
+
+```
+github "magicien/GLTFSceneKit" ~> <VERSION_YOU_MAKE>
 ```
 
 ### Manually
