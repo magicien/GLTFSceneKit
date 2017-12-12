@@ -19,7 +19,7 @@ pod 'GLTFSceneKit'
 Add the following to your [Cartfile](https://github.com/Carthage/Carthage/blob/master/Documentation/Artifacts.md#cartfile):
 
 ```
-github "magicien/GLTFSceneKit" ~> <VERSION_YOU_MAKE>
+github "magicien/GLTFSceneKit" ~> 0.1.3
 ```
 
 ### Manually
