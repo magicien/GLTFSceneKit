@@ -884,6 +884,8 @@ public class GLTFUnarchiver {
         let image = try self.loadImage(index: sourceIndex)
         
         let texture = SCNMaterialProperty(contents: image)
+        // enable Texture filtering sample so we get less aliasing when they are farther away
+        texture.mipFilter = .linear
         
         // TODO: retain glTexture.name somewhere
         
