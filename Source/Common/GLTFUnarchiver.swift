@@ -15,6 +15,7 @@ let glbMagic = 0x46546C67 // "glTF"
 let chunkTypeJSON = 0x4E4F534A // "JSON"
 let chunkTypeBIN = 0x004E4942 // "BIN"
 
+@available(iOS 11.0, *)
 public class GLTFUnarchiver {
     private var directoryPath: URL? = nil
     private var json: GLTFGlTF! = nil
@@ -479,7 +480,7 @@ public class GLTFUnarchiver {
             return geometryElement
         }
         
-        if source.vectorCount <= 0xFFFFFFFF {
+        if source.vectorCount <= 0xFFFFFFFF as UInt32 {
             var indices = [UInt32](repeating: 0, count: source.vectorCount)
             for i in 0..<source.vectorCount {
                 indices[i] = UInt32(i)

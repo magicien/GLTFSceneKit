@@ -5,6 +5,7 @@
 import Foundation
 import SceneKit
 
+@available(iOS 11.0, *)
 struct GLTFKHRMaterialsPbrSpecularGlossiness_GLTFKHRMaterialsPbrSpecularGlossinessExtension: GLTFCodable {
     struct GLTFKHRMaterialsPbrSpecularGlossiness_GLTFKHRMaterialsPbrSpecularGlossiness: Codable {
         let _diffuseFactor: [Float]?

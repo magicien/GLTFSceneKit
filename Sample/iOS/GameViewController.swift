@@ -11,6 +11,7 @@ import QuartzCore
 import SceneKit
 import GLTFSceneKit
 
+@available(iOS 11.0, *)
 class GameViewController: UIViewController {
     
     var gameView: SCNView? {
