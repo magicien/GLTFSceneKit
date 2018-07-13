@@ -571,7 +571,7 @@
 					};
 					DD83924B1F466C2D006A1CAC = {
 						CreatedOnToolsVersion = 9.0;
-						ProvisioningStyle = Manual;
+						ProvisioningStyle = Automatic;
 					};
 					DDB221D91F525D6E002CFA4D = {
 						CreatedOnToolsVersion = 9.0;
