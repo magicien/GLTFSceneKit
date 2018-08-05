@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		49356777211575F600F3C28F /* GLTFVRM_VRM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49356776211575F600F3C28F /* GLTFVRM_VRM.swift */; };
+		49356778211575F600F3C28F /* GLTFVRM_VRM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49356776211575F600F3C28F /* GLTFVRM_VRM.swift */; };
 		9DA74DB61FD5F8D9007F0749 /* GLTFShaderModifierSurface_alphaModeBlend.shader in Resources */ = {isa = PBXBuildFile; fileRef = 9DA74DB31FD5F54F007F0749 /* GLTFShaderModifierSurface_alphaModeBlend.shader */; };
 		9DA74DB71FD5FBAC007F0749 /* GLTFShaderModifierSurface_alphaModeBlend.shader in Resources */ = {isa = PBXBuildFile; fileRef = 9DA74DB31FD5F54F007F0749 /* GLTFShaderModifierSurface_alphaModeBlend.shader */; };
 		DD10459A1F47723D004B20CE /* GLTFTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1045991F47723D004B20CE /* GLTFTypes.swift */; };
@@ -166,6 +168,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		49356776211575F600F3C28F /* GLTFVRM_VRM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GLTFVRM_VRM.swift; path = Source/Common/schema/extensions/VRM/GLTFVRM_VRM.swift; sourceTree = SOURCE_ROOT; };
 		9DA74DB31FD5F54F007F0749 /* GLTFShaderModifierSurface_alphaModeBlend.shader */ = {isa = PBXFileReference; lastKnownFileType = text; path = GLTFShaderModifierSurface_alphaModeBlend.shader; sourceTree = "<group>"; };
 		DD071E031F55ED1200F00567 /* GLTFShaderModifierSurface.shader */ = {isa = PBXFileReference; lastKnownFileType = text; path = GLTFShaderModifierSurface.shader; sourceTree = "<group>"; };
 		DD1045991F47723D004B20CE /* GLTFTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GLTFTypes.swift; sourceTree = "<group>"; };
@@ -272,12 +275,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		49356775211573F500F3C28F /* VRM */ = {
+			isa = PBXGroup;
+			children = (
+				49356776211575F600F3C28F /* GLTFVRM_VRM.swift */,
+			);
+			path = VRM;
+			sourceTree = "<group>";
+		};
 		DD2E982B1F4CF55400D47C89 /* extensions */ = {
 			isa = PBXGroup;
 			children = (
 				DD2E982D1F4CF5B800D47C89 /* ExtensionList.swift */,
 				DD2E982F1F4CF6FA00D47C89 /* KHR_materials_common */,
 				DD9BFA7A1F9C0EBB00542D5B /* KHR_materials_pbrSpecularGlossiness */,
+				49356775211573F500F3C28F /* VRM */,
 			);
 			path = extensions;
 			sourceTree = "<group>";
@@ -571,7 +583,7 @@
 					};
 					DD83924B1F466C2D006A1CAC = {
 						CreatedOnToolsVersion = 9.0;
-						ProvisioningStyle = Manual;
+						ProvisioningStyle = Automatic;
 					};
 					DDB221D91F525D6E002CFA4D = {
 						CreatedOnToolsVersion = 9.0;
@@ -669,6 +681,7 @@
 				DD3EB0841F524783009F32D2 /* GLTFCamera.swift in Sources */,
 				DD3EB0791F524783009F32D2 /* GLTFAccessor.swift in Sources */,
 				DD3EB0821F524783009F32D2 /* GLTFBuffer.swift in Sources */,
+				49356778211575F600F3C28F /* GLTFVRM_VRM.swift in Sources */,
 				DD3EB08C1F524783009F32D2 /* GLTFGlTFProperty.swift in Sources */,
 				DD3EB09D1F524790009F32D2 /* GLTFSceneSource.swift in Sources */,
 				DD3EB08B1F524783009F32D2 /* GLTFGlTFid.swift in Sources */,
@@ -717,6 +730,7 @@
 				DDE6FD6B1F466F3600CB11D6 /* GLTFCamera.swift in Sources */,
 				DDE6FD601F466F3600CB11D6 /* GLTFAccessor.swift in Sources */,
 				DDE6FD691F466F3600CB11D6 /* GLTFBuffer.swift in Sources */,
+				49356777211575F600F3C28F /* GLTFVRM_VRM.swift in Sources */,
 				DDE6FD731F466F3600CB11D6 /* GLTFGlTFProperty.swift in Sources */,
 				DDE6FD721F466F3600CB11D6 /* GLTFGlTFid.swift in Sources */,
 				DDE6FD701F466F3600CB11D6 /* GLTFGlTF.swift in Sources */,
