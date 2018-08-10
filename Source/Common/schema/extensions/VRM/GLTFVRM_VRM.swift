@@ -158,9 +158,11 @@ public struct GLTFVRM_GLTFVRMExtension: GLTFCodable {
             
             guard let orgMaterial = nodes[0].geometry?.material(named: material.name) else { return }
             
+            /*
             orgMaterial.shaderModifiers = [
                 .surface: try! String(contentsOf: URL(fileURLWithPath: Bundle(for: GLTFUnarchiver.self).path(forResource: "GLTFShaderModifierSurface_pbrSpecularGlossiness_texture_doubleSidedWorkaround", ofType: "shader")!), encoding: String.Encoding.utf8)
             ]
+            */
         }
     }
 }
