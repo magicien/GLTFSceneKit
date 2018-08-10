@@ -5,8 +5,8 @@
 import Foundation
 import SceneKit
 
-struct GLTFVRM_GLTFVRMExtension: GLTFCodable {
-    struct GLTFVRM_VRM: Codable {
+public struct GLTFVRM_GLTFVRMExtension: GLTFCodable {
+    public struct GLTFVRM_VRM: Codable {
         let exportVersion: String?
         let meta: GLTFVRM_GLTFVRMMeta
         let humanoid: GLTFVRM_GLTFVRMHumanoid
@@ -16,7 +16,7 @@ struct GLTFVRM_GLTFVRMExtension: GLTFCodable {
         let materialProperties: [GLTFVRM_GLTFVRMMaterialProperties]
     }
     
-    struct GLTFVRM_GLTFVRMMeta: Codable {
+    public struct GLTFVRM_GLTFVRMMeta: Codable {
         let title: String
         let version: String
         let author: String
@@ -32,7 +32,7 @@ struct GLTFVRM_GLTFVRMExtension: GLTFCodable {
         let otherLicenseUrl: String
     }
     
-    struct GLTFVRM_GLTFVRMHumanoid: Codable {
+    public struct GLTFVRM_GLTFVRMHumanoid: Codable {
         let humanBones: [GLTFVRM_GLTFVRMHumanBone]
         let armStretch: Float
         let legStretch: Float
@@ -44,13 +44,13 @@ struct GLTFVRM_GLTFVRMExtension: GLTFCodable {
         let hasTranslationDoF: Bool
     }
     
-    struct GLTFVRM_GLTFVRMHumanBone: Codable {
+    public struct GLTFVRM_GLTFVRMHumanBone: Codable {
         let bone: String
         let node: GLTFGlTFid
         let useDefaultValues: Bool
     }
     
-    struct GLTFVRM_GLTFVRMFirstperson: Codable {
+    public struct GLTFVRM_GLTFVRMFirstperson: Codable {
         let firstPersonBone: Int
         let firstPersonBoneOffset: GLTFVRM_GLTFVRMVec3
         let meshAnnotations: [GLTFVRM_GLTFVRMMeshAnnotation]
@@ -61,44 +61,44 @@ struct GLTFVRM_GLTFVRMExtension: GLTFCodable {
         let lookAtVerticalUp: GLTFVRM_GLTFVRMDegreeMap
     }
     
-    struct GLTFVRM_GLTFVRMMeshAnnotation: Codable {
+    public struct GLTFVRM_GLTFVRMMeshAnnotation: Codable {
         let mesh: GLTFGlTFid
         let firstPersonFlag: String
     }
     
-    struct GLTFVRM_GLTFVRMDegreeMap: Codable {
+    public struct GLTFVRM_GLTFVRMDegreeMap: Codable {
         let curve: [Float]?
         let xRange: Float
         let yRange: Float
     }
     
-    struct GLTFVRM_GLTFVRMBlendShapeMaster: Codable {
+    public struct GLTFVRM_GLTFVRMBlendShapeMaster: Codable {
         let blendShapeGroups: [GLTFVRM_GLTFVRMBlendShapeGroup]
     }
     
-    struct GLTFVRM_GLTFVRMBlendShapeGroup: Codable {
+    public struct GLTFVRM_GLTFVRMBlendShapeGroup: Codable {
         let name: String
         let presetName: String
         let binds: [GLTFVRM_GLTFVRMBind]
         let materialValues: [GLTFVRM_GLTFVRMMaterialValue]
     }
     
-    struct GLTFVRM_GLTFVRMBind: Codable {
+    public struct GLTFVRM_GLTFVRMBind: Codable {
         let mesh: GLTFGlTFid
         let index: Int
         let weight: Float
     }
     
-    struct GLTFVRM_GLTFVRMMaterialValue: Codable {
+    public struct GLTFVRM_GLTFVRMMaterialValue: Codable {
         
     }
     
-    struct GLTFVRM_GLTFVRMSecondaryAnimation: Codable {
+    public struct GLTFVRM_GLTFVRMSecondaryAnimation: Codable {
         let boneGroups: [GLTFVRM_GLTFVRMBoneGroup]
         let colliderGroups: [GLTFVRM_GLTFVRMColliderGroup]
     }
     
-    struct GLTFVRM_GLTFVRMBoneGroup: Codable {
+    public struct GLTFVRM_GLTFVRMBoneGroup: Codable {
         let comment: String
         let stiffiness: Float
         let gravityPower: Float
@@ -110,17 +110,17 @@ struct GLTFVRM_GLTFVRMExtension: GLTFCodable {
         let colliderGroups: [GLTFGlTFid]
     }
     
-    struct GLTFVRM_GLTFVRMColliderGroup: Codable {
+    public struct GLTFVRM_GLTFVRMColliderGroup: Codable {
         let node: GLTFGlTFid
         let colliders: [GLTFVRM_GLTFVRMCollider]
     }
     
-    struct GLTFVRM_GLTFVRMCollider: Codable {
+    public struct GLTFVRM_GLTFVRMCollider: Codable {
         let offset: GLTFVRM_GLTFVRMVec3
         let radius: Float
     }
     
-    struct GLTFVRM_GLTFVRMMaterialProperties: Codable {
+    public struct GLTFVRM_GLTFVRMMaterialProperties: Codable {
         let name: String
         let shader: String
         let renderQueue: Int
@@ -129,22 +129,39 @@ struct GLTFVRM_GLTFVRMExtension: GLTFCodable {
         let tagMap: [String: String]
     }
     
-    struct GLTFVRM_GLTFVRMVec3: Codable {
+    public struct GLTFVRM_GLTFVRMVec3: Codable {
         let x: Float
         let y: Float
         let z: Float
     }
     
-    let data: GLTFVRM_VRM?
+    public let data: GLTFVRM_VRM?
     
     enum CodingKeys: String, CodingKey {
         case data = "VRM"
     }
     
-    func didLoad(by object: Any, unarchiver: GLTFUnarchiver) {
+    public func didLoad(by object: Any, unarchiver: GLTFUnarchiver) {
         guard let data = self.data else { return }
+        guard let scene = object as? SCNScene else { return }
         
         // TODO: Implement
+        data.materialProperties.forEach { material in
+            let nodes = scene.rootNode.childNodes(passingTest: { node, finish in
+                if node.geometry?.material(named: material.name) != nil {
+                    return true
+                }
+                return false
+            })
+            print("material nodes count: \(nodes.count)")
+            if nodes.count == 0 { return }
+            
+            guard let orgMaterial = nodes[0].geometry?.material(named: material.name) else { return }
+            
+            orgMaterial.shaderModifiers = [
+                .surface: try! String(contentsOf: URL(fileURLWithPath: Bundle(for: GLTFUnarchiver.self).path(forResource: "GLTFShaderModifierSurface_pbrSpecularGlossiness_texture_doubleSidedWorkaround", ofType: "shader")!), encoding: String.Encoding.utf8)
+            ]
+        }
     }
 }
 

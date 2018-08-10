@@ -952,6 +952,7 @@ public class GLTFUnarchiver {
         let material = SCNMaterial()
         self.materials[index] = material
         
+        material.name = glMaterial.name
         material.setValue(Float(1.0), forKey: "baseColorFactorR")
         material.setValue(Float(1.0), forKey: "baseColorFactorG")
         material.setValue(Float(1.0), forKey: "baseColorFactorB")
@@ -1686,6 +1687,9 @@ public class GLTFUnarchiver {
         self.scenes[index] = scnScene
         
         glScene.didLoad(by: scnScene, unarchiver: self)
+        
+        self.json.didLoad(by: scnScene, unarchiver: self)
+        
         return scnScene
     }
     
