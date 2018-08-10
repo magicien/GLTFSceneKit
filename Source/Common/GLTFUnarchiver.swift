@@ -1530,7 +1530,7 @@ public class GLTFUnarchiver {
                 guard let _joints = primitive.geometry?.sources(for: .boneIndices) else {
                     throw GLTFUnarchiveError.DataInconsistent("loadSkin: JOINTS_0 is not defined")
                 }
-                var boneIndices = _joints[0]
+                let boneIndices = _joints[0]
                 print("boneIndices dataStride: \(boneIndices.dataStride)")
                 
                 #if SEEMS_TO_HAVE_SKINNER_VECTOR_TYPE_BUG
