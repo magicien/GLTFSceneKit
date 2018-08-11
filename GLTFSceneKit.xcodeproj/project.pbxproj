@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4914BC8A211F5222006FB1C0 /* GLTFShaderModifierSurface_VRMUnlitTexture.shader in Resources */ = {isa = PBXBuildFile; fileRef = 4914BC89211F5222006FB1C0 /* GLTFShaderModifierSurface_VRMUnlitTexture.shader */; };
-		4914BC8B211F5222006FB1C0 /* GLTFShaderModifierSurface_VRMUnlitTexture.shader in Resources */ = {isa = PBXBuildFile; fileRef = 4914BC89211F5222006FB1C0 /* GLTFShaderModifierSurface_VRMUnlitTexture.shader */; };
+		4914BC8A211F5222006FB1C0 /* GLTFShaderModifierFragment_VRMUnlitTexture.shader in Resources */ = {isa = PBXBuildFile; fileRef = 4914BC89211F5222006FB1C0 /* GLTFShaderModifierFragment_VRMUnlitTexture.shader */; };
+		4914BC8B211F5222006FB1C0 /* GLTFShaderModifierFragment_VRMUnlitTexture.shader in Resources */ = {isa = PBXBuildFile; fileRef = 4914BC89211F5222006FB1C0 /* GLTFShaderModifierFragment_VRMUnlitTexture.shader */; };
 		492D0F972118A1270005F340 /* GLTFShaderModifierSurface_VRMMToon.shader in Sources */ = {isa = PBXBuildFile; fileRef = 492D0F962118A1270005F340 /* GLTFShaderModifierSurface_VRMMToon.shader */; };
 		492D0F982118A1270005F340 /* GLTFShaderModifierSurface_VRMMToon.shader in Sources */ = {isa = PBXBuildFile; fileRef = 492D0F962118A1270005F340 /* GLTFShaderModifierSurface_VRMMToon.shader */; };
 		49356777211575F600F3C28F /* GLTFVRM_VRM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49356776211575F600F3C28F /* GLTFVRM_VRM.swift */; };
@@ -172,7 +172,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		4914BC89211F5222006FB1C0 /* GLTFShaderModifierSurface_VRMUnlitTexture.shader */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GLTFShaderModifierSurface_VRMUnlitTexture.shader; sourceTree = "<group>"; };
+		4914BC89211F5222006FB1C0 /* GLTFShaderModifierFragment_VRMUnlitTexture.shader */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GLTFShaderModifierFragment_VRMUnlitTexture.shader; sourceTree = "<group>"; };
 		492D0F962118A1270005F340 /* GLTFShaderModifierSurface_VRMMToon.shader */ = {isa = PBXFileReference; lastKnownFileType = text; path = GLTFShaderModifierSurface_VRMMToon.shader; sourceTree = "<group>"; };
 		49356776211575F600F3C28F /* GLTFVRM_VRM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GLTFVRM_VRM.swift; path = Source/Common/schema/extensions/VRM/GLTFVRM_VRM.swift; sourceTree = SOURCE_ROOT; };
 		9DA74DB31FD5F54F007F0749 /* GLTFShaderModifierSurface_alphaModeBlend.shader */ = {isa = PBXFileReference; lastKnownFileType = text; path = GLTFShaderModifierSurface_alphaModeBlend.shader; sourceTree = "<group>"; };
@@ -286,7 +286,7 @@
 			children = (
 				49356776211575F600F3C28F /* GLTFVRM_VRM.swift */,
 				492D0F962118A1270005F340 /* GLTFShaderModifierSurface_VRMMToon.shader */,
-				4914BC89211F5222006FB1C0 /* GLTFShaderModifierSurface_VRMUnlitTexture.shader */,
+				4914BC89211F5222006FB1C0 /* GLTFShaderModifierFragment_VRMUnlitTexture.shader */,
 			);
 			path = VRM;
 			sourceTree = "<group>";
@@ -634,7 +634,7 @@
 			files = (
 				9DA74DB71FD5FBAC007F0749 /* GLTFShaderModifierSurface_alphaModeBlend.shader in Resources */,
 				DD9BFA8B1F9C2E2800542D5B /* GLTFShaderModifierSurface_pbrSpecularGlossiness_doubleSidedWorkaround.shader in Resources */,
-				4914BC8B211F5222006FB1C0 /* GLTFShaderModifierSurface_VRMUnlitTexture.shader in Resources */,
+				4914BC8B211F5222006FB1C0 /* GLTFShaderModifierFragment_VRMUnlitTexture.shader in Resources */,
 				DD2930291F9C8E7C00216F1D /* GLTFShaderModifierSurface.shader in Resources */,
 				DD9BFA871F9C211A00542D5B /* GLTFShaderModifierSurface_doubleSidedWorkaround.shader in Resources */,
 				DD9BFA851F9C20FB00542D5B /* GLTFShaderModifierSurface_pbrSpecularGlossiness.shader in Resources */,
@@ -649,7 +649,7 @@
 			files = (
 				9DA74DB61FD5F8D9007F0749 /* GLTFShaderModifierSurface_alphaModeBlend.shader in Resources */,
 				DD9BFA821F9C20E900542D5B /* GLTFShaderModifierSurface.shader in Resources */,
-				4914BC8A211F5222006FB1C0 /* GLTFShaderModifierSurface_VRMUnlitTexture.shader in Resources */,
+				4914BC8A211F5222006FB1C0 /* GLTFShaderModifierFragment_VRMUnlitTexture.shader in Resources */,
 				DD9BFA831F9C20ED00542D5B /* GLTFShaderModifierFragment_alphaCutoff.shader in Resources */,
 				DD9BFA891F9C220F00542D5B /* GLTFShaderModifierSurface_doubleSidedWorkaround.shader in Resources */,
 				DD9BFA841F9C20EF00542D5B /* GLTFShaderModifierSurface_pbrSpecularGlossiness.shader in Resources */,

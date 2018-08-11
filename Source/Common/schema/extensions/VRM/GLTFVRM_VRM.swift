@@ -129,6 +129,14 @@ struct GLTFVRM_GLTFVRMExtension: GLTFCodable {
         let tagMap: [String: String]
     }
     
+    enum GLTFVRM_GLTFVRMShaderName: String {
+        case unlitTexture = "VRM/UnlitTexture"
+        case unlitCutout = "VRM/UnlitCutout"
+        case unlitTransparent = "VRM/UnlitTransparent"
+        case unlitTransparentZWrite = "VRM/UnlitTransparentZWrite"
+        case mToon = "VRM/MToon"
+    }
+    
     struct GLTFVRM_GLTFVRMVec3: Codable {
         let x: Float
         let y: Float
@@ -162,8 +170,10 @@ struct GLTFVRM_GLTFVRMExtension: GLTFCodable {
                 
                 guard let orgMaterial = node.geometry?.material(named: material.name) else { return }
                 orgMaterial.shaderModifiers = [
-                    .surface: try! String(contentsOf: URL(fileURLWithPath: Bundle(for: GLTFUnarchiver.self).path(forResource: "GLTFShaderModifierSurface_VRMUnlitTexture", ofType: "shader")!), encoding: String.Encoding.utf8)
+                    .fragment: try! String(contentsOf: URL(fileURLWithPath: Bundle(for: GLTFUnarchiver.self).path(forResource: "GLTFShaderModifierFragment_VRMUnlitTexture", ofType: "shader")!), encoding: String.Encoding.utf8)
                 ]
+                
+                orgMaterial.blendMode = .alpha
             }
         }
     }

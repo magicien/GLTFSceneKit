@@ -1,5 +1,5 @@
 //
-//  GLTFShaderModifierSurface_VRMUnlitTexture.shader
+//  GLTFShaderModifierFragment_VRMUnlitTexture.shader
 //  GLTFSceneKit
 //
 //  Created magicien on 8/12/18.
@@ -10,5 +10,4 @@
 
 #pragma body
 
-_surface.roughness = 1;
-_surface.metalness = 0;
+_output.color = _surface.diffuse;
