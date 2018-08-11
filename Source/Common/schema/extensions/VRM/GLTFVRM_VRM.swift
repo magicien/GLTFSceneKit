@@ -145,7 +145,30 @@ struct GLTFVRM_GLTFVRMExtension: GLTFCodable {
         guard let data = self.data else { return }
         guard let scene = object as? SCNScene else { return }
 
-        let meta = data.meta
+        self.setMetadata(data.meta, to: scene)
+        
+        // TODO: Implement
+        data.materialProperties.forEach { material in
+            let nodes = scene.rootNode.childNodes(passingTest: { node, finish in
+                if node.geometry?.material(named: material.name) != nil {
+                    return true
+                }
+                return false
+            })
+            print("material nodes count: \(nodes.count)")
+            
+            nodes.forEach { node in
+                node.renderingOrder = material.renderQueue
+                
+                guard let orgMaterial = node.geometry?.material(named: material.name) else { return }
+                orgMaterial.shaderModifiers = [
+                    .surface: try! String(contentsOf: URL(fileURLWithPath: Bundle(for: GLTFUnarchiver.self).path(forResource: "GLTFShaderModifierSurface_VRMUnlitTexture", ofType: "shader")!), encoding: String.Encoding.utf8)
+                ]
+            }
+        }
+    }
+    
+    func setMetadata(_ meta: GLTFVRM_GLTFVRMMeta, to scene: SCNScene) {
         let dict: [String:Any] = [
             "title": meta.title,
             "author": meta.author,
@@ -160,28 +183,8 @@ struct GLTFVRM_GLTFVRMExtension: GLTFCodable {
             "otherPermissionUrl": meta.otherPermissionUrl,
             "licenseName": meta.licenseName,
             "otherLicenseUrl": meta.otherLicenseUrl
-            ]
+        ]
         scene.setValue(dict, forKey: "VRMMeta")
-        
-        // TODO: Implement
-        data.materialProperties.forEach { material in
-            let nodes = scene.rootNode.childNodes(passingTest: { node, finish in
-                if node.geometry?.material(named: material.name) != nil {
-                    return true
-                }
-                return false
-            })
-            print("material nodes count: \(nodes.count)")
-            if nodes.count == 0 { return }
-            
-            guard let orgMaterial = nodes[0].geometry?.material(named: material.name) else { return }
-            
-            /*
-            orgMaterial.shaderModifiers = [
-                .surface: try! String(contentsOf: URL(fileURLWithPath: Bundle(for: GLTFUnarchiver.self).path(forResource: "GLTFShaderModifierSurface_pbrSpecularGlossiness_texture_doubleSidedWorkaround", ofType: "shader")!), encoding: String.Encoding.utf8)
-            ]
-            */
-        }
     }
 }
 
