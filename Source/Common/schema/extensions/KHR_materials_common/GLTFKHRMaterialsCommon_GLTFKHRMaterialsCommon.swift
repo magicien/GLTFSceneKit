@@ -5,7 +5,7 @@
 import Foundation
 import SceneKit
 
-@available(iOS 11.0, *)
+@available(iOS 10.0, *)
 struct GLTFKHRMaterialsCommon_GLTFKHRMaterialsCommonExtension: GLTFCodable {
     struct GLTFKHRMaterialsCommon_GLTFKHRMaterialsCommon: Codable {
         struct MaterialsCommon: Codable {

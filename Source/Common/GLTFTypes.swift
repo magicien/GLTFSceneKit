@@ -108,7 +108,7 @@ let keyPathMap: [String: String] = [
     typealias Image = UIImage
 #endif
 
-@available(iOS 11.0, *)
+@available(iOS 10.0, *)
 public protocol GLTFCodable: Codable {
     func didLoad(by object: Any, unarchiver: GLTFUnarchiver)
 }
@@ -121,7 +121,7 @@ protocol GLTFPropertyProtocol: GLTFCodable {
     var extras: GLTFExtras? { get }
 }
 
-@available(iOS 11.0, *)
+@available(iOS 10.0, *)
 extension GLTFPropertyProtocol {
     func didLoad(by object: Any, unarchiver: GLTFUnarchiver) {
         if let extensions = self.extensions?.extensions {

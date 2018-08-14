@@ -9,7 +9,7 @@
 import SceneKit
 
 @objcMembers
-@available(iOS 11.0, *)
+@available(iOS 10.0, *)
 public class GLTFSceneSource : SCNSceneSource {
     private var loader: GLTFUnarchiver! = nil
     
