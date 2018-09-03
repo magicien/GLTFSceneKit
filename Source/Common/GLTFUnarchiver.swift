@@ -894,6 +894,7 @@ public class GLTFUnarchiver {
             // set default values
             texture.wrapS = .repeat
             texture.wrapT = .repeat
+            texture.mipFilter = .linear
         }
         
         self.textures[index] = texture
