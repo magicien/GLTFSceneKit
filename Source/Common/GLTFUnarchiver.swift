@@ -1163,7 +1163,6 @@ public class GLTFUnarchiver {
                     let accessor = self.json.accessors?[targetIndex]
                     
                     if let name = accessor?.name {
-                        print("geometry name: \(name)")
                         geometry.name = name
                     }
 
