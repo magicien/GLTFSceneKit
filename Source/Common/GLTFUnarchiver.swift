@@ -1160,9 +1160,8 @@ public class GLTFUnarchiver {
                     let target = targets[targetIndex]
                     let sources = try self.loadAttributes(target)
                     let geometry = SCNGeometry(sources: sources, elements: nil)
-                    let accessor = self.json.accessors?[targetIndex]
-                    
-                    if let name = accessor?.name {
+
+                    if let accessor = self.json.accessors?[target["POSITION"]!], let name = accessor.name {
                         geometry.name = name
                     }
 
