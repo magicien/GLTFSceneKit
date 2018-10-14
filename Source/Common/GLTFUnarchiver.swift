@@ -218,10 +218,10 @@ public class GLTFUnarchiver {
             guard let perspective = glCamera.perspective else {
                 throw GLTFUnarchiveError.DataInconsistent("loadCamera: perspective is not defined")
             }
-            camera.yFov = Double(perspective.yfov) * 180.0 / Double.pi
-            if let aspectRatio = perspective.aspectRatio {
-                camera.xFov = camera.yFov * Double(aspectRatio)
-            }
+
+            // SceneKit automatically calculates the viewing angle in the other direction to match
+            // the aspect ratio of the view displaying the scene
+            camera.fieldOfView = CGFloat(perspective.yfov * 180.0 / Float.pi)
             camera.zNear = Double(perspective.znear)
             camera.zFar = Double(perspective.zfar ?? Float.infinity)
             
@@ -1434,9 +1434,8 @@ public class GLTFUnarchiver {
             throw GLTFUnarchiveError.DataInconsistent("loadInverseBindMatrices: accessors is not defined")
         }
         let glAccessor = accessors[index]
-        
         let vectorCount = glAccessor.count
-        guard let usesFloatComponents = usesFloatComponentsMap[glAccessor.componentType] else {
+        guard usesFloatComponentsMap[glAccessor.componentType] != nil else {
             throw GLTFUnarchiveError.NotSupported("loadInverseBindMatrices: user defined accessor.componentType is not supported")
         }
         guard glAccessor.type == "MAT4" else {
@@ -1531,7 +1530,7 @@ public class GLTFUnarchiver {
                 guard let _joints = primitive.geometry?.sources(for: .boneIndices) else {
                     throw GLTFUnarchiveError.DataInconsistent("loadSkin: JOINTS_0 is not defined")
                 }
-                var boneIndices = _joints[0]
+                let boneIndices = _joints[0]
                 print("boneIndices dataStride: \(boneIndices.dataStride)")
                 
                 #if SEEMS_TO_HAVE_SKINNER_VECTOR_TYPE_BUG
@@ -1634,7 +1633,7 @@ public class GLTFUnarchiver {
             scnNode.position = createVector3(glNode.translation)
         }
         
-        if let weights = glNode.weights {
+        if glNode.weights != nil {
             // load weights
         }
         
