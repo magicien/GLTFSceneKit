@@ -1343,13 +1343,11 @@ public class GLTFUnarchiver {
         //let animation = CAKeyframeAnimation(keyPath: keyPath)
         // Animation Sampler
         let samplerIndex = glChannel.sampler
-        
-        /*
+
         guard samplerIndex < glAnimation.samplers.count else {
             throw GLTFUnarchiveError.DataInconsistent("loadAnimation: out of index: sampler \(samplerIndex) < \(glAnimation.samplers.count)")
         }
         let glSampler = glAnimation.samplers[samplerIndex]
-        */
         var animation: CAAnimation
         if keyPath == "weights" {
             guard let weightPaths = weightPaths else {
