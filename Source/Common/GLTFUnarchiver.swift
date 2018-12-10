@@ -35,14 +35,16 @@ public class GLTFUnarchiver {
     private var buffers: [Data?] = []
     private var materials: [SCNMaterial?] = []
     private var textures: [SCNMaterialProperty?] = []
-    private var images: [Image?] = []
+    // An array of Image or URL types
+    private var images: [Any?] = []
     private var maxAnimationDuration: CFTimeInterval = 0.0
+    private var embedExternalImages: Bool = true
     
     #if !os(watchOS)
         private var workingAnimationGroup: CAAnimationGroup! = nil
     #endif
     
-    convenience public init(path: String, extensions: [String:Codable.Type]? = nil) throws {
+    convenience public init(path: String, extensions: [String:Codable.Type]? = nil, embedExternalImages: Bool = true) throws {
         var url: URL?
         if let mainPath = Bundle.main.path(forResource: path, ofType: "") {
             url = URL(fileURLWithPath: mainPath)
@@ -52,16 +54,18 @@ public class GLTFUnarchiver {
         guard let _url = url else {
             throw URLError(.fileDoesNotExist)
         }
-        try self.init(url: _url, extensions: extensions)
+        try self.init(url: _url, extensions: extensions, embedExternalImages: embedExternalImages)
     }
     
-    convenience public init(url: URL, extensions: [String:Codable.Type]? = nil) throws {
+    convenience public init(url: URL, extensions: [String:Codable.Type]? = nil, embedExternalImages: Bool = true) throws {
         let data = try Data(contentsOf: url)
-        try self.init(data: data, extensions: extensions)
+        try self.init(data: data, extensions: extensions, embedExternalImages: embedExternalImages)
         self.directoryPath = url.deletingLastPathComponent()
     }
     
-    public init(data: Data, extensions: [String:Codable.Type]? = nil) throws {
+    public init(data: Data, extensions: [String:Codable.Type]? = nil, embedExternalImages: Bool = true) throws {
+        self.embedExternalImages = embedExternalImages
+        
         let decoder = JSONDecoder()
         var _extensions = extensionList
         extensions?.forEach { (ext) in _extensions[ext.key] = ext.value }
@@ -771,7 +775,8 @@ public class GLTFUnarchiver {
         return valueArray
     }
     
-    private func loadImage(index: Int) throws -> Image {
+    // Returns either an Image or a URL
+    private func loadImage(index: Int) throws -> Any {
         guard index < self.images.count else {
             throw GLTFUnarchiveError.DataInconsistent("loadImage: out of index: \(index) < \(self.images.count)")
         }
@@ -785,7 +790,8 @@ public class GLTFUnarchiver {
         }
         let glImage = images[index]
         
-        var image: Image?
+        // An Image or a URL
+        var image: Any?
         if let uri = glImage.uri {
             if let base64Str = self.getBase64Str(from: uri) {
                 guard let data = Data(base64Encoded: base64Str) else {
@@ -794,7 +800,11 @@ public class GLTFUnarchiver {
                 image = try loadImageData(from: data)
             } else {
                 let url = URL(fileURLWithPath: uri, relativeTo: self.directoryPath)
-                image = try loadImageFile(from: url)
+                // Even if we shouldn't embed external images, try loading the image file for now
+                // TODO: figure out how to check if `url` exists on-disk rather than using `loadImageFile()` to do this
+                let loadedImage = try loadImageFile(from: url)
+                // Pass thru the image `url` instead of `loadedImage` when `self.embedExternalImages` is `false`
+                image = self.embedExternalImages ? loadedImage : uri
             }
         } else if let bufferViewIndex = glImage.bufferView {
             let bufferView = try self.loadBufferView(index: bufferViewIndex)
