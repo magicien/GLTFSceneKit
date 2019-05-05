@@ -1162,6 +1162,11 @@ public class GLTFUnarchiver {
                     let target = targets[targetIndex]
                     let sources = try self.loadAttributes(target)
                     let geometry = SCNGeometry(sources: sources, elements: nil)
+
+                    if let accessor = self.json.accessors?[target["POSITION"]!], let name = accessor.name {
+                        geometry.name = name
+                    }
+
                     morpher.targets.append(geometry)
                     let weightPath = "childNodes[0].childNodes[\(i)].morpher.weights[\(targetIndex)]"
                     weightPaths.append(weightPath)
