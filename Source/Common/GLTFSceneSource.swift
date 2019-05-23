@@ -25,17 +25,18 @@ public class GLTFSceneSource : SCNSceneSource {
     }
     
     public override convenience init(url: URL, options: [SCNSceneSource.LoadingOption : Any]? = nil) {
-        self.init(url: url, options: options, extensions: nil)
-    }
-    
-    public convenience init(url: URL, options: [SCNSceneSource.LoadingOption : Any]?, extensions: [String:Codable.Type]?) {
         self.init()
-        
         do {
-            self.loader = try GLTFUnarchiver(url: url, extensions: extensions)
+            let loader = try GLTFUnarchiver(url: url, extensions: nil)
+            self.loader = loader
         } catch {
             print("\(error.localizedDescription)")
         }
+    }
+    
+    public convenience init(url: URL, options: [SCNSceneSource.LoadingOption : Any]?, extensions: [String:Codable.Type]?) throws {
+        self.init()
+        self.loader = try GLTFUnarchiver(url: url, extensions: extensions)
     }
     
     public override convenience init(data: Data, options: [SCNSceneSource.LoadingOption : Any]? = nil) {
@@ -58,23 +59,23 @@ public class GLTFSceneSource : SCNSceneSource {
     public override func scene(options: [SCNSceneSource.LoadingOption : Any]? = nil) throws -> SCNScene {
         let scene = try self.loader.loadScene()
         #if SEEMS_TO_HAVE_SKINNER_VECTOR_TYPE_BUG
-            let sceneData = NSKeyedArchiver.archivedData(withRootObject: scene)
-            let source = SCNSceneSource(data: sceneData, options: nil)!
-            let newScene = source.scene(options: nil)!
-            return newScene
+        let sceneData = NSKeyedArchiver.archivedData(withRootObject: scene)
+        let source = SCNSceneSource(data: sceneData, options: nil)!
+        let newScene = source.scene(options: nil)!
+        return newScene
         #else
-            return scene
+        return scene
         #endif
     }
     
     /*
-    public func cameraNodes() -> [SCNNode] {
-        var cameraNodes = [SCNNode]()
-        
-        let scene = try self.loader.loadScene()
-        scene.rootNode.childNodes
-        
-        return cameraNodes
-    }
+     public func cameraNodes() -> [SCNNode] {
+     var cameraNodes = [SCNNode]()
+     
+     let scene = try self.loader.loadScene()
+     scene.rootNode.childNodes
+     
+     return cameraNodes
+     }
      */
 }
