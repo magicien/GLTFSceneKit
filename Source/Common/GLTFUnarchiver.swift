@@ -68,7 +68,7 @@ public class GLTFUnarchiver {
         
         decoder.userInfo[GLTFExtensionCodingUserInfoKey] = _extensions
 
-        var _extras = [
+        let _extras = [
             "TargetNames": GLTFExtrasTargetNames.self
         ]
 
