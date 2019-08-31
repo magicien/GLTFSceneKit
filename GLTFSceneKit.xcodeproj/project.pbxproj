@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1213286D231A535600083524 /* GLTFExtrasTargetNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1213286C231A535600083524 /* GLTFExtrasTargetNames.swift */; };
+		12132870231A552900083524 /* GLTFExtrasTargetNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1213286C231A535600083524 /* GLTFExtrasTargetNames.swift */; };
 		9DA74DB61FD5F8D9007F0749 /* GLTFShaderModifierSurface_alphaModeBlend.shader in Resources */ = {isa = PBXBuildFile; fileRef = 9DA74DB31FD5F54F007F0749 /* GLTFShaderModifierSurface_alphaModeBlend.shader */; };
 		9DA74DB71FD5FBAC007F0749 /* GLTFShaderModifierSurface_alphaModeBlend.shader in Resources */ = {isa = PBXBuildFile; fileRef = 9DA74DB31FD5F54F007F0749 /* GLTFShaderModifierSurface_alphaModeBlend.shader */; };
 		DD10459A1F47723D004B20CE /* GLTFTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1045991F47723D004B20CE /* GLTFTypes.swift */; };
@@ -166,6 +168,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1213286C231A535600083524 /* GLTFExtrasTargetNames.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GLTFExtrasTargetNames.swift; sourceTree = "<group>"; };
 		9DA74DB31FD5F54F007F0749 /* GLTFShaderModifierSurface_alphaModeBlend.shader */ = {isa = PBXFileReference; lastKnownFileType = text; path = GLTFShaderModifierSurface_alphaModeBlend.shader; sourceTree = "<group>"; };
 		DD071E031F55ED1200F00567 /* GLTFShaderModifierSurface.shader */ = {isa = PBXFileReference; lastKnownFileType = text; path = GLTFShaderModifierSurface.shader; sourceTree = "<group>"; };
 		DD1045991F47723D004B20CE /* GLTFTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GLTFTypes.swift; sourceTree = "<group>"; };
@@ -416,6 +419,7 @@
 				DDE6FD3F1F466F2000CB11D6 /* GLTFTexture.swift */,
 				DDE6FD411F466F2000CB11D6 /* GLTFTextureInfo.swift */,
 				DD2E982B1F4CF55400D47C89 /* extensions */,
+				1213286C231A535600083524 /* GLTFExtrasTargetNames.swift */,
 			);
 			path = schema;
 			sourceTree = "<group>";
@@ -690,6 +694,7 @@
 				DD3EB09C1F524790009F32D2 /* GLTFUnarchiver.swift in Sources */,
 				DD3EB0861F524783009F32D2 /* GLTFCameraPerspective.swift in Sources */,
 				DD3EB09E1F524790009F32D2 /* GLTFTypes.swift in Sources */,
+				12132870231A552900083524 /* GLTFExtrasTargetNames.swift in Sources */,
 				DD3EB0931F524783009F32D2 /* GLTFMeshPrimitive.swift in Sources */,
 				DD3EB08E1F524783009F32D2 /* GLTFMaterial.swift in Sources */,
 				DD3EB0811F524783009F32D2 /* GLTFAsset.swift in Sources */,
@@ -738,6 +743,7 @@
 				DDE6FD6D1F466F3600CB11D6 /* GLTFCameraPerspective.swift in Sources */,
 				DDE6FD7A1F466F3600CB11D6 /* GLTFMeshPrimitive.swift in Sources */,
 				DDE6FD751F466F3600CB11D6 /* GLTFMaterial.swift in Sources */,
+				1213286D231A535600083524 /* GLTFExtrasTargetNames.swift in Sources */,
 				DDE6FD681F466F3600CB11D6 /* GLTFAsset.swift in Sources */,
 				DDE6FD671F466F3600CB11D6 /* GLTFAnimationSampler.swift in Sources */,
 				DDE6FD7C1F466F3600CB11D6 /* GLTFSampler.swift in Sources */,

@@ -67,6 +67,13 @@ public class GLTFUnarchiver {
         extensions?.forEach { (ext) in _extensions[ext.key] = ext.value }
         
         decoder.userInfo[GLTFExtensionCodingUserInfoKey] = _extensions
+
+        var _extras = [
+            "TargetNames": GLTFExtrasTargetNames.self
+        ]
+
+        decoder.userInfo[GLTFExtrasCodingUserInfoKey] = _extras
+
         var jsonData = data
         
         let magic: UInt32 = data.subdata(in: 0..<4).withUnsafeBytes { $0.pointee }
