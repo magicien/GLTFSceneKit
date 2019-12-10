@@ -453,8 +453,8 @@ public class GLTFUnarchiver {
             bufferView = bufferView.subdata(in: dataOffset..<dataOffset + dataStride * vectorCount - padding)
             
             let geometrySource = SCNGeometrySource(data: bufferView, semantic: semantic, vectorCount: vectorCount, usesFloatComponents: usesFloatComponents, componentsPerVector: componentsPerVector, bytesPerComponent: bytesPerComponent, dataOffset: 0, dataStride: dataStride)
-            
         #else
+            #error("GLTF Bug still getting through in build")
             let geometrySource = SCNGeometrySource(data: bufferView, semantic: semantic, vectorCount: vectorCount, usesFloatComponents: usesFloatComponents, componentsPerVector: componentsPerVector, bytesPerComponent: bytesPerComponent, dataOffset: dataOffset, dataStride: dataStride)
         #endif
         
@@ -1033,7 +1033,6 @@ public class GLTFUnarchiver {
         }
         
         material.isDoubleSided = glMaterial.doubleSided
-        
         material.shaderModifiers = [
             .surface: try! String(contentsOf: URL(fileURLWithPath: Bundle(for: GLTFUnarchiver.self).path(forResource: "GLTFShaderModifierSurface", ofType: "shader")!), encoding: String.Encoding.utf8)
         ]
@@ -1598,7 +1597,8 @@ public class GLTFUnarchiver {
         var scnNode = SCNNode()
         self.nodes[index] = scnNode
         
-        if let name = glNode.name {
+        let name = glNode.name
+        if name != nil {
             scnNode.name = name
         }
         if let camera = glNode.camera {
@@ -1606,6 +1606,11 @@ public class GLTFUnarchiver {
         }
         if let mesh = glNode.mesh {
             scnNode = try self.loadMesh(index: mesh)
+            
+            // Keep the main node's name, not that of the mesh
+            if (name != nil) {
+                scnNode.name = name
+            }
             
             var weightPaths = [String]()
             for i in 0..<scnNode.childNodes.count {
