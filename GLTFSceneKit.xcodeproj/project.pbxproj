@@ -215,10 +215,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		0D5A903823FF352400BEC130 /* GLTFSceneKit_iOS copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "GLTFSceneKit_iOS copy-Info.plist"; path = "/Users/moimart/kikkei-labs/apple/mak3do/mak3do/externals/GLTFSceneKit/GLTFSceneKit_iOS copy-Info.plist"; sourceTree = "<absolute>"; };
-		0D5A908023FF36B400BEC130 /* GLTFSceneKit_iOS copy2-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "GLTFSceneKit_iOS copy2-Info.plist"; path = "/Users/moimart/kikkei-labs/apple/mak3do/mak3do/externals/GLTFSceneKit/GLTFSceneKit_iOS copy2-Info.plist"; sourceTree = "<absolute>"; };
 		0D5A90C823FF3A8A00BEC130 /* GLTFSceneKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = GLTFSceneKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		0D5A90C923FF3A8A00BEC130 /* GLTFSceneKit_iOS copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "GLTFSceneKit_iOS copy-Info.plist"; path = "/Users/moimart/kikkei-labs/apple/mak3do/mak3do/externals/GLTFSceneKit/GLTFSceneKit_iOS copy-Info.plist"; sourceTree = "<absolute>"; };
 		0D5A90D123FF3CDF00BEC130 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9DA74DB31FD5F54F007F0749 /* GLTFShaderModifierSurface_alphaModeBlend.shader */ = {isa = PBXFileReference; lastKnownFileType = text; path = GLTFShaderModifierSurface_alphaModeBlend.shader; sourceTree = "<group>"; };
 		DD071E031F55ED1200F00567 /* GLTFShaderModifierSurface.shader */ = {isa = PBXFileReference; lastKnownFileType = text; path = GLTFShaderModifierSurface.shader; sourceTree = "<group>"; };
@@ -374,9 +371,6 @@
 				DD83924E1F466C2D006A1CAC /* Source */,
 				DD83924D1F466C2D006A1CAC /* Products */,
 				DDE6FD831F46708100CB11D6 /* Sample */,
-				0D5A903823FF352400BEC130 /* GLTFSceneKit_iOS copy-Info.plist */,
-				0D5A908023FF36B400BEC130 /* GLTFSceneKit_iOS copy2-Info.plist */,
-				0D5A90C923FF3A8A00BEC130 /* GLTFSceneKit_iOS copy-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
