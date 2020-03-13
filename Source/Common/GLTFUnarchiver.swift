@@ -1166,6 +1166,7 @@ public class GLTFUnarchiver {
                     
                 }
                 morpher.calculationMode = .additive
+                morpher.unifiesNormals = true
                 primitiveNode.morpher = morpher
             }
             
