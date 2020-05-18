@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "0D5A908F23FF3A8A00BEC130"
-               BuildableName = "GLTFSceneKit_tvOS.framework"
+               BuildableName = "GLTFSceneKit.framework"
                BlueprintName = "GLTFSceneKit_tvOS"
                ReferencedContainer = "container:GLTFSceneKit.xcodeproj">
             </BuildableReference>
@@ -51,7 +51,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "0D5A908F23FF3A8A00BEC130"
-            BuildableName = "GLTFSceneKit_tvOS.framework"
+            BuildableName = "GLTFSceneKit.framework"
             BlueprintName = "GLTFSceneKit_tvOS"
             ReferencedContainer = "container:GLTFSceneKit.xcodeproj">
          </BuildableReference>
