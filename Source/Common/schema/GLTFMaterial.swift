@@ -39,7 +39,7 @@ struct GLTFMaterial: GLTFPropertyProtocol {
   let _alphaMode: String?
   /** The material's alpha rendering mode enumeration specifying the interpretation of the alpha value of the main factor and texture. */
   var alphaMode: String {
-    get { return self._alphaMode ?? "OPAQUE" }
+    get { return self._alphaMode ?? "BLEND" }
   }
 
   let _alphaCutoff: Float?
