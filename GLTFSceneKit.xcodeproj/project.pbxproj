@@ -173,6 +173,7 @@
 
 /* Begin PBXFileReference section */
 		4914BC89211F5222006FB1C0 /* GLTFShaderModifierFragment_VRMUnlitTexture.shader */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GLTFShaderModifierFragment_VRMUnlitTexture.shader; sourceTree = "<group>"; };
+		4915441C269FC8F30046005C /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		492D0F962118A1270005F340 /* GLTFShaderModifierSurface_VRMMToon.shader */ = {isa = PBXFileReference; lastKnownFileType = text; path = GLTFShaderModifierSurface_VRMMToon.shader; sourceTree = "<group>"; };
 		49356776211575F600F3C28F /* GLTFVRM_VRM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GLTFVRM_VRM.swift; path = Source/Common/schema/extensions/VRM/GLTFVRM_VRM.swift; sourceTree = SOURCE_ROOT; };
 		9DA74DB31FD5F54F007F0749 /* GLTFShaderModifierSurface_alphaModeBlend.shader */ = {isa = PBXFileReference; lastKnownFileType = text; path = GLTFShaderModifierSurface_alphaModeBlend.shader; sourceTree = "<group>"; };
@@ -322,6 +323,7 @@
 		DD8392421F466C2D006A1CAC = {
 			isa = PBXGroup;
 			children = (
+				4915441C269FC8F30046005C /* Package.swift */,
 				DD83924E1F466C2D006A1CAC /* Source */,
 				DD83924D1F466C2D006A1CAC /* Products */,
 				DDE6FD831F46708100CB11D6 /* Sample */,
