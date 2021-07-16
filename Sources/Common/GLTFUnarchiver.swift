@@ -1035,12 +1035,12 @@ public class GLTFUnarchiver {
         material.isDoubleSided = glMaterial.doubleSided
         
         material.shaderModifiers = [
-            .surface: try! String(contentsOf: URL(fileURLWithPath: Bundle(for: GLTFUnarchiver.self).path(forResource: "GLTFShaderModifierSurface", ofType: "shader")!), encoding: String.Encoding.utf8)
+            .surface: try! String(contentsOf: Bundle.module.url(forResource: "GLTFShaderModifierSurface", withExtension: "shader")!, encoding: String.Encoding.utf8)
         ]
         #if SEEMS_TO_HAVE_DOUBLESIDED_BUG
             if material.isDoubleSided {
                 material.shaderModifiers = [
-                    .surface: try! String(contentsOf: URL(fileURLWithPath: Bundle(for: GLTFUnarchiver.self).path(forResource: "GLTFShaderModifierSurface_doubleSidedWorkaround", ofType: "shader")!), encoding: String.Encoding.utf8)
+                    .surface: try! String(contentsOf: Bundle.module.url(forResource: "GLTFShaderModifierSurface_doubleSidedWorkaround", withExtension: "shader")!, encoding: String.Encoding.utf8)
                 ]
             }
         #endif
@@ -1051,7 +1051,7 @@ public class GLTFUnarchiver {
         case "BLEND":
             material.blendMode = .alpha
         case "MASK":
-            material.shaderModifiers![.fragment] = try! String(contentsOf: URL(fileURLWithPath: Bundle(for: GLTFUnarchiver.self).path(forResource: "GLTFShaderModifierFragment_alphaCutoff", ofType: "shader")!), encoding: String.Encoding.utf8)
+            material.shaderModifiers![.fragment] = try! String(contentsOf: Bundle.module.url(forResource: "GLTFShaderModifierFragment_alphaCutoff", withExtension: "shader")!, encoding: String.Encoding.utf8) 
         default:
             throw GLTFUnarchiveError.NotSupported("loadMaterial: alphaMode \(glMaterial.alphaMode) is not supported")
         }
