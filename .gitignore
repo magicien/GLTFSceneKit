@@ -38,3 +38,5 @@ Framework/
 *~
 *.swp
 
+.build
+
