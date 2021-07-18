@@ -22,6 +22,12 @@ Add the following to your [Cartfile](https://github.com/Carthage/Carthage/blob/m
 github "magicien/GLTFSceneKit" ~> 0.2.0
 ```
 
+### Using [Swift Package Manager](https://swift.org/package-manager/)
+
+1. Open your project with Xcode
+2. Select `File` > `Swift Packages` > `Add Package Dependency...`
+3. Put `https://github.com/magicien/GLTFSceneKit` in the search box and click `Next`
+
 ## Usage
 
 ### Swift
