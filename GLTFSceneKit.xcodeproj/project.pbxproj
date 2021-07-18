@@ -839,6 +839,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MARKETING_VERSION = 0.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = jp.0spec.GLTFSceneKit;
 				PRODUCT_NAME = GLTFSceneKit;
 				SDKROOT = iphoneos;
@@ -863,6 +864,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MARKETING_VERSION = 0.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = jp.0spec.GLTFSceneKit;
 				PRODUCT_NAME = GLTFSceneKit;
 				SDKROOT = iphoneos;
@@ -1006,6 +1008,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @loader_path/Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MARKETING_VERSION = 0.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = jp.0spec.GLTFSceneKit;
 				PRODUCT_NAME = GLTFSceneKit;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1031,6 +1034,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @loader_path/Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MARKETING_VERSION = 0.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = jp.0spec.GLTFSceneKit;
 				PRODUCT_NAME = GLTFSceneKit;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1050,6 +1054,7 @@
 				INFOPLIST_FILE = "$(SRCROOT)/Sample/iOS/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 0.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = jp.0spec.GLTFSceneKitSample;
 				PRODUCT_NAME = GLTFSceneKitSample;
 				SDKROOT = iphoneos;
@@ -1068,6 +1073,7 @@
 				INFOPLIST_FILE = "$(SRCROOT)/Sample/iOS/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 0.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = jp.0spec.GLTFSceneKitSample;
 				PRODUCT_NAME = GLTFSceneKitSample;
 				SDKROOT = iphoneos;
@@ -1088,6 +1094,7 @@
 				INFOPLIST_FILE = "$(SRCROOT)/Sample/macOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MARKETING_VERSION = 0.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "jp.0spec.GLTFSceneKitSample-macOS";
 				PRODUCT_NAME = GLTFSceneKitSample;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
@@ -1106,6 +1113,7 @@
 				INFOPLIST_FILE = "$(SRCROOT)/Sample/macOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MARKETING_VERSION = 0.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "jp.0spec.GLTFSceneKitSample-macOS";
 				PRODUCT_NAME = GLTFSceneKitSample;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "";
