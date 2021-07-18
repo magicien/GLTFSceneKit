@@ -67,6 +67,13 @@ public class GLTFUnarchiver {
         extensions?.forEach { (ext) in _extensions[ext.key] = ext.value }
         
         decoder.userInfo[GLTFExtensionCodingUserInfoKey] = _extensions
+
+        let _extras = [
+            "TargetNames": GLTFExtrasTargetNames.self
+        ]
+
+        decoder.userInfo[GLTFExtrasCodingUserInfoKey] = _extras
+
         var jsonData = data
         
         let magic: UInt32 = data.subdata(in: 0..<4).withUnsafeBytes { $0.pointee }
@@ -1163,7 +1170,10 @@ public class GLTFUnarchiver {
                     let sources = try self.loadAttributes(target)
                     let geometry = SCNGeometry(sources: sources, elements: nil)
 
-                    if let accessor = self.json.accessors?[target["POSITION"]!], let name = accessor.name {
+                    if let extras = glMesh.extras, let extrasTargetNames = extras.extensions["TargetNames"] as? GLTFExtrasTargetNames, let targetNames = extrasTargetNames.targetNames {
+                        geometry.name = targetNames[targetIndex]
+                    }
+                    else if let accessor = self.json.accessors?[target["POSITION"]!], let name = accessor.name {
                         geometry.name = name
                     }
 
