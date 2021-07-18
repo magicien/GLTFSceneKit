@@ -16,22 +16,22 @@ public class GLTFSceneSource : SCNSceneSource {
         super.init()
     }
     
-    public convenience init(path: String, options: [SCNSceneSource.LoadingOption : Any]? = nil, extensions: [String:Codable.Type]? = nil) throws {
+    public convenience init(path: String, options: [SCNSceneSource.LoadingOption : Any]? = nil, extensions: [String:Codable.Type]? = nil, embedExternalImages: Bool = true) throws {
         self.init()
         
-        let loader = try GLTFUnarchiver(path: path, extensions: extensions)
+        let loader = try GLTFUnarchiver(path: path, extensions: extensions, embedExternalImages: embedExternalImages)
         self.loader = loader
     }
     
     public override convenience init(url: URL, options: [SCNSceneSource.LoadingOption : Any]? = nil) {
-        self.init(url: url, options: options, extensions: nil)
+        self.init(url: url, options: options, extensions: nil, embedExternalImages: true)
     }
     
-    public convenience init(url: URL, options: [SCNSceneSource.LoadingOption : Any]?, extensions: [String:Codable.Type]?) {
+    public convenience init(url: URL, options: [SCNSceneSource.LoadingOption : Any]?, extensions: [String:Codable.Type]?, embedExternalImages: Bool = true) {
         self.init()
         
         do {
-            self.loader = try GLTFUnarchiver(url: url, extensions: extensions)
+            self.loader = try GLTFUnarchiver(url: url, extensions: extensions, embedExternalImages: embedExternalImages)
         } catch {
             print("\(error.localizedDescription)")
         }
