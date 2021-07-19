@@ -7,12 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4914BC8A211F5222006FB1C0 /* GLTFShaderModifierFragment_VRMUnlitTexture.shader in Resources */ = {isa = PBXBuildFile; fileRef = 4914BC89211F5222006FB1C0 /* GLTFShaderModifierFragment_VRMUnlitTexture.shader */; };
-		4914BC8B211F5222006FB1C0 /* GLTFShaderModifierFragment_VRMUnlitTexture.shader in Resources */ = {isa = PBXBuildFile; fileRef = 4914BC89211F5222006FB1C0 /* GLTFShaderModifierFragment_VRMUnlitTexture.shader */; };
-		492D0F972118A1270005F340 /* GLTFShaderModifierSurface_VRMMToon.shader in Sources */ = {isa = PBXBuildFile; fileRef = 492D0F962118A1270005F340 /* GLTFShaderModifierSurface_VRMMToon.shader */; };
-		492D0F982118A1270005F340 /* GLTFShaderModifierSurface_VRMMToon.shader in Sources */ = {isa = PBXBuildFile; fileRef = 492D0F962118A1270005F340 /* GLTFShaderModifierSurface_VRMMToon.shader */; };
-		49356777211575F600F3C28F /* GLTFVRM_VRM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49356776211575F600F3C28F /* GLTFVRM_VRM.swift */; };
-		49356778211575F600F3C28F /* GLTFVRM_VRM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49356776211575F600F3C28F /* GLTFVRM_VRM.swift */; };
+		1213286D231A535600083524 /* GLTFExtrasTargetNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1213286C231A535600083524 /* GLTFExtrasTargetNames.swift */; };
+		12132870231A552900083524 /* GLTFExtrasTargetNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1213286C231A535600083524 /* GLTFExtrasTargetNames.swift */; };
+		49DFA9BE26A45B290009965E /* GLTFSceneKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 49DFA9BD26A45A710009965E /* GLTFSceneKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		49DFA9BF26A45B2A0009965E /* GLTFSceneKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 49DFA9BD26A45A710009965E /* GLTFSceneKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		49DFAA3226A4FC9F0009965E /* GLTFVRM_VRM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49DFAA2F26A4FC9F0009965E /* GLTFVRM_VRM.swift */; };
+		49DFAA3326A4FC9F0009965E /* GLTFVRM_VRM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49DFAA2F26A4FC9F0009965E /* GLTFVRM_VRM.swift */; };
+		49DFAA3426A4FC9F0009965E /* GLTFShaderModifierFragment_VRMUnlitTexture.shader in Resources */ = {isa = PBXBuildFile; fileRef = 49DFAA3026A4FC9F0009965E /* GLTFShaderModifierFragment_VRMUnlitTexture.shader */; };
+		49DFAA3526A4FC9F0009965E /* GLTFShaderModifierFragment_VRMUnlitTexture.shader in Resources */ = {isa = PBXBuildFile; fileRef = 49DFAA3026A4FC9F0009965E /* GLTFShaderModifierFragment_VRMUnlitTexture.shader */; };
+		49DFAA3626A4FC9F0009965E /* GLTFShaderModifierSurface_VRMMToon.shader in Resources */ = {isa = PBXBuildFile; fileRef = 49DFAA3126A4FC9F0009965E /* GLTFShaderModifierSurface_VRMMToon.shader */; };
+		49DFAA3726A4FC9F0009965E /* GLTFShaderModifierSurface_VRMMToon.shader in Resources */ = {isa = PBXBuildFile; fileRef = 49DFAA3126A4FC9F0009965E /* GLTFShaderModifierSurface_VRMMToon.shader */; };
 		9DA74DB61FD5F8D9007F0749 /* GLTFShaderModifierSurface_alphaModeBlend.shader in Resources */ = {isa = PBXBuildFile; fileRef = 9DA74DB31FD5F54F007F0749 /* GLTFShaderModifierSurface_alphaModeBlend.shader */; };
 		9DA74DB71FD5FBAC007F0749 /* GLTFShaderModifierSurface_alphaModeBlend.shader in Resources */ = {isa = PBXBuildFile; fileRef = 9DA74DB31FD5F54F007F0749 /* GLTFShaderModifierSurface_alphaModeBlend.shader */; };
 		DD10459A1F47723D004B20CE /* GLTFTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1045991F47723D004B20CE /* GLTFTypes.swift */; };
@@ -60,8 +64,6 @@
 		DD3EB09E1F524790009F32D2 /* GLTFTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1045991F47723D004B20CE /* GLTFTypes.swift */; };
 		DD3EB09F1F524790009F32D2 /* GLTFFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD634F9C1F4A2D90008886AD /* GLTFFunctions.swift */; };
 		DD3EB0A01F524790009F32D2 /* GLTFErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD10459B1F4772E3004B20CE /* GLTFErrors.swift */; };
-		DD3EB0A51F524826009F32D2 /* GLTFSceneKit_iOS.h in Headers */ = {isa = PBXBuildFile; fileRef = DD3EB0A31F52480D009F32D2 /* GLTFSceneKit_iOS.h */; };
-		DD3EB0A91F524D3D009F32D2 /* GLTFSceneKit_macOS.h in Headers */ = {isa = PBXBuildFile; fileRef = DD3EB0A81F524D28009F32D2 /* GLTFSceneKit_macOS.h */; };
 		DD634F9D1F4A2D90008886AD /* GLTFFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD634F9C1F4A2D90008886AD /* GLTFFunctions.swift */; };
 		DD8804E41FA7AC92009B4584 /* GLTFShaderModifierSurface_pbrSpecularGlossiness_texture_doubleSidedWorkaround.shader in Resources */ = {isa = PBXBuildFile; fileRef = DD8804E31FA7AC91009B4584 /* GLTFShaderModifierSurface_pbrSpecularGlossiness_texture_doubleSidedWorkaround.shader */; };
 		DD8804E51FA7AC92009B4584 /* GLTFShaderModifierSurface_pbrSpecularGlossiness_texture_doubleSidedWorkaround.shader in Resources */ = {isa = PBXBuildFile; fileRef = DD8804E31FA7AC91009B4584 /* GLTFShaderModifierSurface_pbrSpecularGlossiness_texture_doubleSidedWorkaround.shader */; };
@@ -172,9 +174,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		4914BC89211F5222006FB1C0 /* GLTFShaderModifierFragment_VRMUnlitTexture.shader */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GLTFShaderModifierFragment_VRMUnlitTexture.shader; sourceTree = "<group>"; };
-		492D0F962118A1270005F340 /* GLTFShaderModifierSurface_VRMMToon.shader */ = {isa = PBXFileReference; lastKnownFileType = text; path = GLTFShaderModifierSurface_VRMMToon.shader; sourceTree = "<group>"; };
-		49356776211575F600F3C28F /* GLTFVRM_VRM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GLTFVRM_VRM.swift; path = Source/Common/schema/extensions/VRM/GLTFVRM_VRM.swift; sourceTree = SOURCE_ROOT; };
+		1213286C231A535600083524 /* GLTFExtrasTargetNames.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GLTFExtrasTargetNames.swift; sourceTree = "<group>"; };
+		49DFA9BD26A45A710009965E /* GLTFSceneKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GLTFSceneKit.h; sourceTree = "<group>"; };
+		49DFA9C026A47D520009965E /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
+		49DFAA2F26A4FC9F0009965E /* GLTFVRM_VRM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GLTFVRM_VRM.swift; sourceTree = "<group>"; };
+		49DFAA3026A4FC9F0009965E /* GLTFShaderModifierFragment_VRMUnlitTexture.shader */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GLTFShaderModifierFragment_VRMUnlitTexture.shader; sourceTree = "<group>"; };
+		49DFAA3126A4FC9F0009965E /* GLTFShaderModifierSurface_VRMMToon.shader */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GLTFShaderModifierSurface_VRMMToon.shader; sourceTree = "<group>"; };
 		9DA74DB31FD5F54F007F0749 /* GLTFShaderModifierSurface_alphaModeBlend.shader */ = {isa = PBXFileReference; lastKnownFileType = text; path = GLTFShaderModifierSurface_alphaModeBlend.shader; sourceTree = "<group>"; };
 		DD071E031F55ED1200F00567 /* GLTFShaderModifierSurface.shader */ = {isa = PBXFileReference; lastKnownFileType = text; path = GLTFShaderModifierSurface.shader; sourceTree = "<group>"; };
 		DD1045991F47723D004B20CE /* GLTFTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GLTFTypes.swift; sourceTree = "<group>"; };
@@ -182,9 +187,6 @@
 		DD2E982D1F4CF5B800D47C89 /* ExtensionList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionList.swift; sourceTree = "<group>"; };
 		DD2E98301F4CF6FA00D47C89 /* GLTFKHRMaterialsCommon_GLTFKHRMaterialsCommon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GLTFKHRMaterialsCommon_GLTFKHRMaterialsCommon.swift; sourceTree = "<group>"; };
 		DD3EB0711F52476B009F32D2 /* GLTFSceneKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = GLTFSceneKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		DD3EB0A31F52480D009F32D2 /* GLTFSceneKit_iOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GLTFSceneKit_iOS.h; sourceTree = "<group>"; };
-		DD3EB0A41F52480D009F32D2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		DD3EB0A81F524D28009F32D2 /* GLTFSceneKit_macOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GLTFSceneKit_macOS.h; sourceTree = "<group>"; };
 		DD634F9C1F4A2D90008886AD /* GLTFFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GLTFFunctions.swift; sourceTree = "<group>"; };
 		DD83924C1F466C2D006A1CAC /* GLTFSceneKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = GLTFSceneKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD8392501F466C2D006A1CAC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -284,9 +286,9 @@
 		49356775211573F500F3C28F /* VRM */ = {
 			isa = PBXGroup;
 			children = (
-				49356776211575F600F3C28F /* GLTFVRM_VRM.swift */,
-				492D0F962118A1270005F340 /* GLTFShaderModifierSurface_VRMMToon.shader */,
-				4914BC89211F5222006FB1C0 /* GLTFShaderModifierFragment_VRMUnlitTexture.shader */,
+				49DFAA2F26A4FC9F0009965E /* GLTFVRM_VRM.swift */,
+				49DFAA3026A4FC9F0009965E /* GLTFShaderModifierFragment_VRMUnlitTexture.shader */,
+				49DFAA3126A4FC9F0009965E /* GLTFShaderModifierSurface_VRMMToon.shader */,
 			);
 			path = VRM;
 			sourceTree = "<group>";
@@ -310,19 +312,11 @@
 			path = KHR_materials_common;
 			sourceTree = "<group>";
 		};
-		DD3EB0A21F52480D009F32D2 /* iOS */ = {
-			isa = PBXGroup;
-			children = (
-				DD3EB0A31F52480D009F32D2 /* GLTFSceneKit_iOS.h */,
-				DD3EB0A41F52480D009F32D2 /* Info.plist */,
-			);
-			path = iOS;
-			sourceTree = "<group>";
-		};
 		DD8392421F466C2D006A1CAC = {
 			isa = PBXGroup;
 			children = (
-				DD83924E1F466C2D006A1CAC /* Source */,
+				49DFA9C026A47D520009965E /* Package.swift */,
+				DD83924E1F466C2D006A1CAC /* Sources */,
 				DD83924D1F466C2D006A1CAC /* Products */,
 				DDE6FD831F46708100CB11D6 /* Sample */,
 			);
@@ -339,14 +333,12 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		DD83924E1F466C2D006A1CAC /* Source */ = {
+		DD83924E1F466C2D006A1CAC /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				DDE6FD3D1F466D2700CB11D6 /* Common */,
-				DDE6FD3C1F466D0C00CB11D6 /* macOS */,
-				DD3EB0A21F52480D009F32D2 /* iOS */,
+				DDE6FD3D1F466D2700CB11D6 /* GLTFSceneKit */,
 			);
-			path = Source;
+			path = Sources;
 			sourceTree = "<group>";
 		};
 		DD9BFA7A1F9C0EBB00542D5B /* KHR_materials_pbrSpecularGlossiness */ = {
@@ -373,16 +365,7 @@
 			path = iOS;
 			sourceTree = "<group>";
 		};
-		DDE6FD3C1F466D0C00CB11D6 /* macOS */ = {
-			isa = PBXGroup;
-			children = (
-				DD3EB0A81F524D28009F32D2 /* GLTFSceneKit_macOS.h */,
-				DD8392501F466C2D006A1CAC /* Info.plist */,
-			);
-			path = macOS;
-			sourceTree = "<group>";
-		};
-		DDE6FD3D1F466D2700CB11D6 /* Common */ = {
+		DDE6FD3D1F466D2700CB11D6 /* GLTFSceneKit */ = {
 			isa = PBXGroup;
 			children = (
 				DDE6FD3E1F466D5000CB11D6 /* schema */,
@@ -395,8 +378,10 @@
 				DD1045991F47723D004B20CE /* GLTFTypes.swift */,
 				DD634F9C1F4A2D90008886AD /* GLTFFunctions.swift */,
 				DD10459B1F4772E3004B20CE /* GLTFErrors.swift */,
+				49DFA9BD26A45A710009965E /* GLTFSceneKit.h */,
+				DD8392501F466C2D006A1CAC /* Info.plist */,
 			);
-			path = Common;
+			path = GLTFSceneKit;
 			sourceTree = "<group>";
 		};
 		DDE6FD3E1F466D5000CB11D6 /* schema */ = {
@@ -436,6 +421,7 @@
 				DDE6FD3F1F466F2000CB11D6 /* GLTFTexture.swift */,
 				DDE6FD411F466F2000CB11D6 /* GLTFTextureInfo.swift */,
 				DD2E982B1F4CF55400D47C89 /* extensions */,
+				1213286C231A535600083524 /* GLTFExtrasTargetNames.swift */,
 			);
 			path = schema;
 			sourceTree = "<group>";
@@ -487,7 +473,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DD3EB0A51F524826009F32D2 /* GLTFSceneKit_iOS.h in Headers */,
+				49DFA9BF26A45B2A0009965E /* GLTFSceneKit.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -495,7 +481,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DD3EB0A91F524D3D009F32D2 /* GLTFSceneKit_macOS.h in Headers */,
+				49DFA9BE26A45B290009965E /* GLTFSceneKit.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -583,11 +569,12 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0900;
-				LastUpgradeCheck = 0940;
+				LastUpgradeCheck = 1000;
 				ORGANIZATIONNAME = DarkHorse;
 				TargetAttributes = {
 					DD3EB0701F52476B009F32D2 = {
 						CreatedOnToolsVersion = 9.0;
+						LastSwiftMigration = 1000;
 					};
 					DD83924B1F466C2D006A1CAC = {
 						CreatedOnToolsVersion = 9.0;
@@ -634,11 +621,12 @@
 			files = (
 				9DA74DB71FD5FBAC007F0749 /* GLTFShaderModifierSurface_alphaModeBlend.shader in Resources */,
 				DD9BFA8B1F9C2E2800542D5B /* GLTFShaderModifierSurface_pbrSpecularGlossiness_doubleSidedWorkaround.shader in Resources */,
-				4914BC8B211F5222006FB1C0 /* GLTFShaderModifierFragment_VRMUnlitTexture.shader in Resources */,
 				DD2930291F9C8E7C00216F1D /* GLTFShaderModifierSurface.shader in Resources */,
 				DD9BFA871F9C211A00542D5B /* GLTFShaderModifierSurface_doubleSidedWorkaround.shader in Resources */,
 				DD9BFA851F9C20FB00542D5B /* GLTFShaderModifierSurface_pbrSpecularGlossiness.shader in Resources */,
 				DD8804E51FA7AC92009B4584 /* GLTFShaderModifierSurface_pbrSpecularGlossiness_texture_doubleSidedWorkaround.shader in Resources */,
+				49DFAA3726A4FC9F0009965E /* GLTFShaderModifierSurface_VRMMToon.shader in Resources */,
+				49DFAA3526A4FC9F0009965E /* GLTFShaderModifierFragment_VRMUnlitTexture.shader in Resources */,
 				DD9BFA881F9C211E00542D5B /* GLTFShaderModifierFragment_alphaCutoff.shader in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -649,11 +637,12 @@
 			files = (
 				9DA74DB61FD5F8D9007F0749 /* GLTFShaderModifierSurface_alphaModeBlend.shader in Resources */,
 				DD9BFA821F9C20E900542D5B /* GLTFShaderModifierSurface.shader in Resources */,
-				4914BC8A211F5222006FB1C0 /* GLTFShaderModifierFragment_VRMUnlitTexture.shader in Resources */,
 				DD9BFA831F9C20ED00542D5B /* GLTFShaderModifierFragment_alphaCutoff.shader in Resources */,
 				DD9BFA891F9C220F00542D5B /* GLTFShaderModifierSurface_doubleSidedWorkaround.shader in Resources */,
 				DD9BFA841F9C20EF00542D5B /* GLTFShaderModifierSurface_pbrSpecularGlossiness.shader in Resources */,
 				DD8804E41FA7AC92009B4584 /* GLTFShaderModifierSurface_pbrSpecularGlossiness_texture_doubleSidedWorkaround.shader in Resources */,
+				49DFAA3626A4FC9F0009965E /* GLTFShaderModifierSurface_VRMMToon.shader in Resources */,
+				49DFAA3426A4FC9F0009965E /* GLTFShaderModifierFragment_VRMUnlitTexture.shader in Resources */,
 				DD9BFA8C1F9C2E2800542D5B /* GLTFShaderModifierSurface_pbrSpecularGlossiness_doubleSidedWorkaround.shader in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -691,7 +680,6 @@
 				DD3EB0841F524783009F32D2 /* GLTFCamera.swift in Sources */,
 				DD3EB0791F524783009F32D2 /* GLTFAccessor.swift in Sources */,
 				DD3EB0821F524783009F32D2 /* GLTFBuffer.swift in Sources */,
-				49356778211575F600F3C28F /* GLTFVRM_VRM.swift in Sources */,
 				DD3EB08C1F524783009F32D2 /* GLTFGlTFProperty.swift in Sources */,
 				DD3EB09D1F524790009F32D2 /* GLTFSceneSource.swift in Sources */,
 				DD3EB08B1F524783009F32D2 /* GLTFGlTFid.swift in Sources */,
@@ -701,6 +689,7 @@
 				DD3EB09A1F524788009F32D2 /* ExtensionList.swift in Sources */,
 				DD3EB07B1F524783009F32D2 /* GLTFAccessorSparseIndices.swift in Sources */,
 				DD3EB0981F524783009F32D2 /* GLTFTexture.swift in Sources */,
+				49DFAA3326A4FC9F0009965E /* GLTFVRM_VRM.swift in Sources */,
 				DD3EB0971F524783009F32D2 /* GLTFSkin.swift in Sources */,
 				DD3EB07C1F524783009F32D2 /* GLTFAccessorSparseValues.swift in Sources */,
 				DD3EB0911F524783009F32D2 /* GLTFMaterialPbrMetallicRoughness.swift in Sources */,
@@ -712,7 +701,7 @@
 				DD3EB09C1F524790009F32D2 /* GLTFUnarchiver.swift in Sources */,
 				DD3EB0861F524783009F32D2 /* GLTFCameraPerspective.swift in Sources */,
 				DD3EB09E1F524790009F32D2 /* GLTFTypes.swift in Sources */,
-				492D0F982118A1270005F340 /* GLTFShaderModifierSurface_VRMMToon.shader in Sources */,
+				12132870231A552900083524 /* GLTFExtrasTargetNames.swift in Sources */,
 				DD3EB0931F524783009F32D2 /* GLTFMeshPrimitive.swift in Sources */,
 				DD3EB08E1F524783009F32D2 /* GLTFMaterial.swift in Sources */,
 				DD3EB0811F524783009F32D2 /* GLTFAsset.swift in Sources */,
@@ -741,7 +730,6 @@
 				DDE6FD6B1F466F3600CB11D6 /* GLTFCamera.swift in Sources */,
 				DDE6FD601F466F3600CB11D6 /* GLTFAccessor.swift in Sources */,
 				DDE6FD691F466F3600CB11D6 /* GLTFBuffer.swift in Sources */,
-				49356777211575F600F3C28F /* GLTFVRM_VRM.swift in Sources */,
 				DDE6FD731F466F3600CB11D6 /* GLTFGlTFProperty.swift in Sources */,
 				DDE6FD721F466F3600CB11D6 /* GLTFGlTFid.swift in Sources */,
 				DDE6FD701F466F3600CB11D6 /* GLTFGlTF.swift in Sources */,
@@ -751,6 +739,7 @@
 				DD2E982E1F4CF5B800D47C89 /* ExtensionList.swift in Sources */,
 				DDE6FD611F466F3600CB11D6 /* GLTFAccessorSparse.swift in Sources */,
 				DDE6FD621F466F3600CB11D6 /* GLTFAccessorSparseIndices.swift in Sources */,
+				49DFAA3226A4FC9F0009965E /* GLTFVRM_VRM.swift in Sources */,
 				DDE6FD7F1F466F3600CB11D6 /* GLTFTexture.swift in Sources */,
 				DDE6FD7E1F466F3600CB11D6 /* GLTFSkin.swift in Sources */,
 				DD2E98311F4CF98600D47C89 /* GLTFKHRMaterialsCommon_GLTFKHRMaterialsCommon.swift in Sources */,
@@ -762,7 +751,7 @@
 				DDE6FD6D1F466F3600CB11D6 /* GLTFCameraPerspective.swift in Sources */,
 				DDE6FD7A1F466F3600CB11D6 /* GLTFMeshPrimitive.swift in Sources */,
 				DDE6FD751F466F3600CB11D6 /* GLTFMaterial.swift in Sources */,
-				492D0F972118A1270005F340 /* GLTFShaderModifierSurface_VRMMToon.shader in Sources */,
+				1213286D231A535600083524 /* GLTFExtrasTargetNames.swift in Sources */,
 				DDE6FD681F466F3600CB11D6 /* GLTFAsset.swift in Sources */,
 				DDE6FD671F466F3600CB11D6 /* GLTFAnimationSampler.swift in Sources */,
 				DDE6FD7C1F466F3600CB11D6 /* GLTFSampler.swift in Sources */,
@@ -854,17 +843,20 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = "$(SRCROOT)/Source/iOS/Info.plist";
+				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
+				INFOPLIST_FILE = "$(SRCROOT)/Sources/GLTFSceneKit/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MARKETING_VERSION = 0.3.0;
+				OTHER_CFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = jp.0spec.GLTFSceneKit;
 				PRODUCT_NAME = GLTFSceneKit;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG SEEMS_TO_HAVE_VALIDATE_VERTEX_ATTRIBUTE_BUG SEEMS_TO_HAVE_PNG_LOADING_BUG";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2,6";
 			};
 			name = Debug;
 		};
@@ -878,17 +870,20 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = "$(SRCROOT)/Source/iOS/Info.plist";
+				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
+				INFOPLIST_FILE = "$(SRCROOT)/Sources/GLTFSceneKit/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MARKETING_VERSION = 0.3.0;
+				OTHER_CFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = jp.0spec.GLTFSceneKit;
 				PRODUCT_NAME = GLTFSceneKit;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "SEEMS_TO_HAVE_VALIDATE_VERTEX_ATTRIBUTE_BUG SEEMS_TO_HAVE_PNG_LOADING_BUG";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2,6";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -944,6 +939,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1000,6 +996,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
@@ -1021,15 +1018,19 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_VERSION = A;
-				INFOPLIST_FILE = "$(SRCROOT)/Source/macOS/Info.plist";
+				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
+				INFOPLIST_FILE = "$(SRCROOT)/Sources/GLTFSceneKit/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MARKETING_VERSION = 0.3.0;
+				OTHER_CFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = jp.0spec.GLTFSceneKit;
 				PRODUCT_NAME = GLTFSceneKit;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG SEEMS_TO_HAVE_VALIDATE_VERTEX_ATTRIBUTE_BUG SEEMS_TO_HAVE_PNG_LOADING_BUG SEEMS_TO_HAVE_DOUBLESIDED_BUG SEEMS_TO_HAVE_SKINNER_VECTOR_TYPE_BUG";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
@@ -1046,15 +1047,19 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_VERSION = A;
-				INFOPLIST_FILE = "$(SRCROOT)/Source/macOS/Info.plist";
+				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
+				INFOPLIST_FILE = "$(SRCROOT)/Sources/GLTFSceneKit/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MARKETING_VERSION = 0.3.0;
+				OTHER_CFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = jp.0spec.GLTFSceneKit;
 				PRODUCT_NAME = GLTFSceneKit;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "SEEMS_TO_HAVE_PNG_LOADING_BUG SEEMS_TO_HAVE_VALIDATE_VERTEX_ATTRIBUTE_BUG SEEMS_TO_HAVE_DOUBLESIDED_BUG SEEMS_TO_HAVE_SKINNER_VECTOR_TYPE_BUG";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
@@ -1069,6 +1074,7 @@
 				INFOPLIST_FILE = "$(SRCROOT)/Sample/iOS/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 0.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = jp.0spec.GLTFSceneKitSample;
 				PRODUCT_NAME = GLTFSceneKitSample;
 				SDKROOT = iphoneos;
@@ -1087,6 +1093,7 @@
 				INFOPLIST_FILE = "$(SRCROOT)/Sample/iOS/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 0.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = jp.0spec.GLTFSceneKitSample;
 				PRODUCT_NAME = GLTFSceneKitSample;
 				SDKROOT = iphoneos;
@@ -1106,7 +1113,8 @@
 				DEVELOPMENT_TEAM = EF37D6UQZ9;
 				INFOPLIST_FILE = "$(SRCROOT)/Sample/macOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MARKETING_VERSION = 0.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "jp.0spec.GLTFSceneKitSample-macOS";
 				PRODUCT_NAME = GLTFSceneKitSample;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
@@ -1124,7 +1132,8 @@
 				DEVELOPMENT_TEAM = EF37D6UQZ9;
 				INFOPLIST_FILE = "$(SRCROOT)/Sample/macOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MARKETING_VERSION = 0.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "jp.0spec.GLTFSceneKitSample-macOS";
 				PRODUCT_NAME = GLTFSceneKitSample;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "";

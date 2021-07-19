@@ -99,7 +99,7 @@ class GameViewController: NSViewController {
         openPanel.canChooseFiles = true
         openPanel.canChooseDirectories = false
         openPanel.allowsMultipleSelection = false
-        openPanel.allowedFileTypes = ["gltf", "glb"]
+        openPanel.allowedFileTypes = ["gltf", "glb", "vrm"]
         openPanel.message = "Choose glTF file"
         openPanel.begin { (response) in
             if response == .OK {

@@ -126,7 +126,7 @@ func createKeyTimeArray(from data: Data, offset: Int, stride: Int, count: Int) -
     //var floatArray = [Float32]()
     //floatArray.reserveCapacity(count)
     var floatArray = [Float32](repeating: 0.0, count: count)
-    _ = floatArray.withUnsafeMutableBufferPointer {
+    floatArray.withUnsafeMutableBufferPointer {
         data.copyBytes(to: $0, from: data.startIndex + offset..<data.startIndex + offset + count * 4)
     }
     let duration = Float(floatArray.last!)

@@ -19,12 +19,14 @@ pod 'GLTFSceneKit'
 Add the following to your [Cartfile](https://github.com/Carthage/Carthage/blob/master/Documentation/Artifacts.md#cartfile):
 
 ```
-github "magicien/GLTFSceneKit" ~> 0.1.3
+github "magicien/GLTFSceneKit" ~> 0.2.0
 ```
 
-### Manually
+### Using [Swift Package Manager](https://swift.org/package-manager/)
 
-Download **GLTFSceneKit_vX.X.X.zip** from [Releases](https://github.com/magicien/GLTFSceneKit/releases/latest).
+1. Open your project with Xcode
+2. Select `File` > `Swift Packages` > `Add Package Dependency...`
+3. Put `https://github.com/magicien/GLTFSceneKit` in the search box and click `Next`
 
 ## Usage
 
