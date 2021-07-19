@@ -16,7 +16,9 @@ let attributeMap: [String: SCNGeometrySource.Semantic] = [
     "TEXCOORD_1": SCNGeometrySource.Semantic.texcoord,
     "COLOR_0": SCNGeometrySource.Semantic.color,
     "JOINTS_0": SCNGeometrySource.Semantic.boneIndices,
-    "WEIGHTS_0": SCNGeometrySource.Semantic.boneWeights
+    "JOINTS_1": SCNGeometrySource.Semantic.boneIndices,
+    "WEIGHTS_0": SCNGeometrySource.Semantic.boneWeights,
+    "WEIGHTS_1": SCNGeometrySource.Semantic.boneWeights
 ]
 
 let GLTF_BYTE = Int(GL_BYTE)
