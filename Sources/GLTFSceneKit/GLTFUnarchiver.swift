@@ -34,7 +34,7 @@ public class GLTFUnarchiver {
     //private var animationChannels: [[Any?]?] = [] // SCNAcnimation
     private var animationChannels: [[CAAnimation?]?] = []
     private var animationSamplers: [[CAAnimation?]?] = []
-    private var meshes: [SCNNode?] = []
+    internal var meshes: [SCNNode?] = []
     private var accessors: [Any?] = []
     private var durations: [CFTimeInterval?] = []
     private var bufferViews: [Data?] = []

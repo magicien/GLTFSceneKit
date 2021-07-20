@@ -403,6 +403,7 @@
 				DDE6FD5C1F466F2000CB11D6 /* GLTFCameraPerspective.swift */,
 				DDE6FD4A1F466F2000CB11D6 /* GLTFExtension.swift */,
 				DDE6FD471F466F2000CB11D6 /* GLTFExtras.swift */,
+				1213286C231A535600083524 /* GLTFExtrasTargetNames.swift */,
 				DDE6FD5B1F466F2000CB11D6 /* GLTFGlTF.swift */,
 				DDE6FD481F466F2000CB11D6 /* GLTFGlTFChildOfRootProperty.swift */,
 				DDE6FD431F466F2000CB11D6 /* GLTFGlTFid.swift */,
@@ -421,7 +422,6 @@
 				DDE6FD3F1F466F2000CB11D6 /* GLTFTexture.swift */,
 				DDE6FD411F466F2000CB11D6 /* GLTFTextureInfo.swift */,
 				DD2E982B1F4CF55400D47C89 /* extensions */,
-				1213286C231A535600083524 /* GLTFExtrasTargetNames.swift */,
 			);
 			path = schema;
 			sourceTree = "<group>";

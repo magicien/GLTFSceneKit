@@ -155,6 +155,13 @@ struct GLTFVRM_GLTFVRMExtension: GLTFCodable {
 
         self.setMetadata(data.meta, to: scene)
         
+        // FIXME: Can't handle a node name including "."
+        scene.rootNode.childNodes(passingTest: { (node, _) in
+            return node.name?.contains(".") ?? false
+        }).forEach {
+            $0.name = $0.name?.replacingOccurrences(of: ".", with: "_")
+        }
+        
         // TODO: Implement
         data.materialProperties.forEach { material in
             let nodes = scene.rootNode.childNodes(passingTest: { node, finish in
@@ -163,19 +170,52 @@ struct GLTFVRM_GLTFVRMExtension: GLTFCodable {
                 }
                 return false
             })
-            print("material nodes count: \(nodes.count)")
             
             nodes.forEach { node in
                 node.renderingOrder = material.renderQueue
                 
                 guard let orgMaterial = node.geometry?.material(named: material.name) else { return }
                 orgMaterial.shaderModifiers = [
-                    .fragment: try! String(contentsOf: URL(fileURLWithPath: Bundle(for: GLTFUnarchiver.self).path(forResource: "GLTFShaderModifierFragment_VRMUnlitTexture", ofType: "shader")!), encoding: String.Encoding.utf8)
+                    .fragment: try! String(contentsOf: URL(fileURLWithPath: bundle.path(forResource: "GLTFShaderModifierFragment_VRMUnlitTexture", ofType: "shader")!), encoding: String.Encoding.utf8)
                 ]
                 
                 orgMaterial.blendMode = .alpha
             }
         }
+        
+        // shapeName (presetName/name) => keyPath => weight
+        var blendShapes: [String: [String: CGFloat]] = [:]
+        data.blendShapeMaster.blendShapeGroups.forEach { blendShapeGroup in
+            var morpherWeights = [String: CGFloat]()
+            
+            blendShapeGroup.binds.forEach { bind in
+                guard bind.mesh < unarchiver.meshes.count else {
+                    // Data count error
+                    return
+                }
+                
+                guard let meshNode = unarchiver.meshes[bind.mesh] else {
+                    return
+                }
+
+                // TODO: Handle empty name and name conflicts
+                guard let meshName = meshNode.name else {
+                    return
+                }
+                                
+                for i in 0..<meshNode.childNodes.count {
+                    let keyPath = "/\(meshName).childNodes[\(i)].morpher.weights[\(bind.index)]"
+                    morpherWeights[keyPath] = CGFloat(bind.weight / 100.0)
+                }
+            }
+            
+            var shapeName = blendShapeGroup.presetName
+            if shapeName == "" {
+                shapeName = blendShapeGroup.name
+            }
+            blendShapes[shapeName] = morpherWeights
+        }
+        scene.rootNode.setValue(blendShapes, forKey: "VRMBlendShapes")
     }
     
     func setMetadata(_ meta: GLTFVRM_GLTFVRMMeta, to scene: SCNScene) {
@@ -198,4 +238,13 @@ struct GLTFVRM_GLTFVRMExtension: GLTFCodable {
     }
 }
 
-
+extension SCNNode {
+    // TODO: Blending some shapes which have the same keyPath
+    public func setVRMBlendShape(name: String, weight: CGFloat) {
+        guard let shapes = self.value(forKey: "VRMBlendShapes") as? [String : [String : CGFloat]] else { return }
+        
+        shapes[name]?.forEach { (keyPath, weightRatio) in
+            self.setValue(weight * weightRatio, forKeyPath: keyPath)
+        }
+    }
+}
