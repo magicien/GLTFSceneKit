@@ -162,7 +162,17 @@ struct GLTFVRM_GLTFVRMExtension: GLTFCodable {
             $0.name = $0.name?.replacingOccurrences(of: ".", with: "_")
         }
         
-        // TODO: Implement
+        // Load humanoid
+        var humanoidBoneMap = [String: String]()
+        data.humanoid.humanBones.forEach { humanBone in
+            if let boneName = unarchiver.nodes[humanBone.node]?.name {
+                humanoidBoneMap[humanBone.bone] = boneName
+            }
+        }
+        scene.rootNode.setValue(humanoidBoneMap, forKey: "VRMHumanoidBones")
+
+        // Load materialProperties
+        // TODO: Implement shaders
         data.materialProperties.forEach { material in
             let nodes = scene.rootNode.childNodes(passingTest: { node, finish in
                 if node.geometry?.material(named: material.name) != nil {
@@ -182,7 +192,8 @@ struct GLTFVRM_GLTFVRMExtension: GLTFCodable {
                 orgMaterial.blendMode = .alpha
             }
         }
-        
+
+        // Load blendShapes
         // shapeName (presetName/name) => keyPath => weight
         var blendShapes: [String: [String: CGFloat]] = [:]
         data.blendShapeMaster.blendShapeGroups.forEach { blendShapeGroup in
@@ -246,5 +257,12 @@ extension SCNNode {
         shapes[name]?.forEach { (keyPath, weightRatio) in
             self.setValue(weight * weightRatio, forKeyPath: keyPath)
         }
+    }
+    
+    public func getVRMHumanoidBone(name: String) -> SCNNode? {
+        guard let boneMap = self.value(forKey: "VRMHumanoidBones") as? [String: String] else { return nil }
+        guard let boneName = boneMap[name] else { return nil }
+        
+        return self.childNode(withName: boneName, recursively: true)
     }
 }

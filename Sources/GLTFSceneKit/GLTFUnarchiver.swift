@@ -26,23 +26,22 @@ public class GLTFUnarchiver {
     private var json: GLTFGlTF! = nil
     private var bin: Data?
     
-    private var scene: SCNScene?
-    private var scenes: [SCNScene?] = []
-    private var cameras: [SCNCamera?] = []
-    private var nodes: [SCNNode?] = []
-    private var skins: [SCNSkinner?] = []
-    //private var animationChannels: [[Any?]?] = [] // SCNAcnimation
-    private var animationChannels: [[CAAnimation?]?] = []
-    private var animationSamplers: [[CAAnimation?]?] = []
+    internal var scene: SCNScene?
+    internal var scenes: [SCNScene?] = []
+    internal var cameras: [SCNCamera?] = []
+    internal var nodes: [SCNNode?] = []
+    internal var skins: [SCNSkinner?] = []
+    internal var animationChannels: [[CAAnimation?]?] = []
+    internal var animationSamplers: [[CAAnimation?]?] = []
     internal var meshes: [SCNNode?] = []
-    private var accessors: [Any?] = []
-    private var durations: [CFTimeInterval?] = []
-    private var bufferViews: [Data?] = []
-    private var buffers: [Data?] = []
-    private var materials: [SCNMaterial?] = []
-    private var textures: [SCNMaterialProperty?] = []
-    private var images: [Image?] = []
-    private var maxAnimationDuration: CFTimeInterval = 0.0
+    internal var accessors: [Any?] = []
+    internal var durations: [CFTimeInterval?] = []
+    internal var bufferViews: [Data?] = []
+    internal var buffers: [Data?] = []
+    internal var materials: [SCNMaterial?] = []
+    internal var textures: [SCNMaterialProperty?] = []
+    internal var images: [Image?] = []
+    internal var maxAnimationDuration: CFTimeInterval = 0.0
     
     #if !os(watchOS)
         private var workingAnimationGroup: CAAnimationGroup! = nil
