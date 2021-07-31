@@ -7,6 +7,7 @@
 //
 
 import SceneKit
+import OpenGL
 
 let attributeMap: [String: SCNGeometrySource.Semantic] = [
     "POSITION": SCNGeometrySource.Semantic.vertex,
