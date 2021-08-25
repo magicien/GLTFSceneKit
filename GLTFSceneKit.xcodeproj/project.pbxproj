@@ -246,7 +246,7 @@
 		DDE6FDAE1F46716B00CB11D6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DDE6FDAF1F46716B00CB11D6 /* GameSample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GameSample.entitlements; sourceTree = "<group>"; };
 		DDE6FDB41F4671B000CB11D6 /* GLTFSceneKitSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GLTFSceneKitSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		DDE6FDD91F46785100CB11D6 /* GLTFSceneSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GLTFSceneSource.swift; sourceTree = "<group>"; };
+		DDE6FDD91F46785100CB11D6 /* GLTFSceneSource.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = GLTFSceneSource.swift; sourceTree = "<group>"; tabWidth = 4; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */

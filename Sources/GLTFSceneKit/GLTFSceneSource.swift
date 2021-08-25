@@ -10,7 +10,8 @@ import SceneKit
 
 @objcMembers
 public class GLTFSceneSource : SCNSceneSource {
-    private var loader: GLTFUnarchiver! = nil
+    private var loader: GLTFUnarchiver?
+    private var error: Error?
     
     public override init() {
         super.init()
@@ -33,7 +34,7 @@ public class GLTFSceneSource : SCNSceneSource {
         do {
             self.loader = try GLTFUnarchiver(url: url, extensions: extensions)
         } catch {
-            print("\(error.localizedDescription)")
+            self.error = error
         }
     }
     
@@ -42,7 +43,7 @@ public class GLTFSceneSource : SCNSceneSource {
         do {
             self.loader = try GLTFUnarchiver(data: data)
         } catch {
-            print("\(error.localizedDescription)")
+            self.error = error
         }
     }
     
@@ -55,7 +56,13 @@ public class GLTFSceneSource : SCNSceneSource {
     }
     
     public override func scene(options: [SCNSceneSource.LoadingOption : Any]? = nil) throws -> SCNScene {
-        let scene = try self.loader.loadScene()
+        guard let loader = self.loader else {
+            if let error = self.error {
+                throw error
+            }
+            throw GLTFUnarchiveError.Unknown("loader is not initialized")
+        }
+        let scene = try loader.loadScene()
         #if SEEMS_TO_HAVE_SKINNER_VECTOR_TYPE_BUG
             let sceneData = NSKeyedArchiver.archivedData(withRootObject: scene)
             let source = SCNSceneSource(data: sceneData, options: nil)!

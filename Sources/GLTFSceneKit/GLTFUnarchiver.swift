@@ -109,16 +109,13 @@ public class GLTFUnarchiver {
         }
         
         // just throw the error to the user
-        do {
-            self.json = try decoder.decode(GLTFGlTF.self, from: jsonData)
-        } catch DecodingError.keyNotFound(let key, let context) {
-            print("keyNotFound: \(key): \(context)")
-        } catch DecodingError.typeMismatch(let type, let context) {
-            print("typeMismatch: \(type): \(context)")
-        } catch DecodingError.valueNotFound(let type, let context) {
-            print("valueNotFound: \(type): \(context)")
-        }
-        
+        self.json = try decoder.decode(GLTFGlTF.self, from: jsonData)
+
+        // Errors can be:
+        // DecodingError.keyNotFound(let key, let context)
+        // DecodingError.typeMismatch(let type, let context)
+        // DecodingError.valueNotFound(let type, let context)
+
         self.initArrays()
     }
     
