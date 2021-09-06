@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		1213286D231A535600083524 /* GLTFExtrasTargetNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1213286C231A535600083524 /* GLTFExtrasTargetNames.swift */; };
 		12132870231A552900083524 /* GLTFExtrasTargetNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1213286C231A535600083524 /* GLTFExtrasTargetNames.swift */; };
+		46A8CD2726E6B240008819AB /* GLTFSceneKit+BundleFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46A8CD2626E6B240008819AB /* GLTFSceneKit+BundleFinder.swift */; };
+		46A8CD2826E6B240008819AB /* GLTFSceneKit+BundleFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46A8CD2626E6B240008819AB /* GLTFSceneKit+BundleFinder.swift */; };
 		49DFA9BE26A45B290009965E /* GLTFSceneKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 49DFA9BD26A45A710009965E /* GLTFSceneKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		49DFA9BF26A45B2A0009965E /* GLTFSceneKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 49DFA9BD26A45A710009965E /* GLTFSceneKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		49DFAA3226A4FC9F0009965E /* GLTFVRM_VRM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49DFAA2F26A4FC9F0009965E /* GLTFVRM_VRM.swift */; };
@@ -175,6 +177,7 @@
 
 /* Begin PBXFileReference section */
 		1213286C231A535600083524 /* GLTFExtrasTargetNames.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GLTFExtrasTargetNames.swift; sourceTree = "<group>"; };
+		46A8CD2626E6B240008819AB /* GLTFSceneKit+BundleFinder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "GLTFSceneKit+BundleFinder.swift"; sourceTree = "<group>"; };
 		49DFA9BD26A45A710009965E /* GLTFSceneKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GLTFSceneKit.h; sourceTree = "<group>"; };
 		49DFA9C026A47D520009965E /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		49DFAA2F26A4FC9F0009965E /* GLTFVRM_VRM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GLTFVRM_VRM.swift; sourceTree = "<group>"; };
@@ -193,7 +196,7 @@
 		DD8804E31FA7AC91009B4584 /* GLTFShaderModifierSurface_pbrSpecularGlossiness_texture_doubleSidedWorkaround.shader */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GLTFShaderModifierSurface_pbrSpecularGlossiness_texture_doubleSidedWorkaround.shader; sourceTree = "<group>"; };
 		DD99E8071F55FBA8003D380A /* GLTFShaderModifierSurface_doubleSidedWorkaround.shader */ = {isa = PBXFileReference; lastKnownFileType = text; path = GLTFShaderModifierSurface_doubleSidedWorkaround.shader; sourceTree = "<group>"; };
 		DD99E80A1F560099003D380A /* GLTFShaderModifierFragment_alphaCutoff.shader */ = {isa = PBXFileReference; lastKnownFileType = text; path = GLTFShaderModifierFragment_alphaCutoff.shader; sourceTree = "<group>"; };
-		DD9BFA7B1F9C0EBB00542D5B /* GLTFKHRMaterialsPbrSpecularGlossiness_GLTFKHRMaterialsPbrSpecularGlossiness.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GLTFKHRMaterialsPbrSpecularGlossiness_GLTFKHRMaterialsPbrSpecularGlossiness.swift; sourceTree = "<group>"; };
+		DD9BFA7B1F9C0EBB00542D5B /* GLTFKHRMaterialsPbrSpecularGlossiness_GLTFKHRMaterialsPbrSpecularGlossiness.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = GLTFKHRMaterialsPbrSpecularGlossiness_GLTFKHRMaterialsPbrSpecularGlossiness.swift; sourceTree = "<group>"; tabWidth = 4; };
 		DD9BFA7E1F9C11EA00542D5B /* GLTFShaderModifierSurface_pbrSpecularGlossiness.shader */ = {isa = PBXFileReference; lastKnownFileType = text; path = GLTFShaderModifierSurface_pbrSpecularGlossiness.shader; sourceTree = "<group>"; };
 		DD9BFA8A1F9C2DA000542D5B /* GLTFShaderModifierSurface_pbrSpecularGlossiness_doubleSidedWorkaround.shader */ = {isa = PBXFileReference; lastKnownFileType = text; path = GLTFShaderModifierSurface_pbrSpecularGlossiness_doubleSidedWorkaround.shader; sourceTree = "<group>"; };
 		DDB221DA1F525D6E002CFA4D /* GLTFSceneKitSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GLTFSceneKitSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -236,7 +239,7 @@
 		DDE6FD5D1F466F2000CB11D6 /* GLTFAccessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GLTFAccessor.swift; sourceTree = "<group>"; };
 		DDE6FD5E1F466F2000CB11D6 /* GLTFAccessorSparse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GLTFAccessorSparse.swift; sourceTree = "<group>"; };
 		DDE6FD5F1F466F2000CB11D6 /* GLTFAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GLTFAnimation.swift; sourceTree = "<group>"; };
-		DDE6FD811F466F9B00CB11D6 /* GLTFUnarchiver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GLTFUnarchiver.swift; sourceTree = "<group>"; };
+		DDE6FD811F466F9B00CB11D6 /* GLTFUnarchiver.swift */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = GLTFUnarchiver.swift; sourceTree = "<group>"; tabWidth = 4; };
 		DDE6FDA61F46716500CB11D6 /* art.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = art.scnassets; sourceTree = "<group>"; };
 		DDE6FDA71F46716B00CB11D6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DDE6FDA81F46716B00CB11D6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -375,6 +378,7 @@
 				DD99E8071F55FBA8003D380A /* GLTFShaderModifierSurface_doubleSidedWorkaround.shader */,
 				DD99E80A1F560099003D380A /* GLTFShaderModifierFragment_alphaCutoff.shader */,
 				DDE6FDD91F46785100CB11D6 /* GLTFSceneSource.swift */,
+				46A8CD2626E6B240008819AB /* GLTFSceneKit+BundleFinder.swift */,
 				DD1045991F47723D004B20CE /* GLTFTypes.swift */,
 				DD634F9C1F4A2D90008886AD /* GLTFFunctions.swift */,
 				DD10459B1F4772E3004B20CE /* GLTFErrors.swift */,
@@ -717,6 +721,7 @@
 				DD3EB0871F524783009F32D2 /* GLTFExtension.swift in Sources */,
 				DD3EB0A01F524790009F32D2 /* GLTFErrors.swift in Sources */,
 				DD3EB0881F524783009F32D2 /* GLTFExtras.swift in Sources */,
+				46A8CD2826E6B240008819AB /* GLTFSceneKit+BundleFinder.swift in Sources */,
 				DD3EB0961F524783009F32D2 /* GLTFScene.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -767,6 +772,7 @@
 				DDE6FDDA1F46785100CB11D6 /* GLTFSceneSource.swift in Sources */,
 				DDE6FD6E1F466F3600CB11D6 /* GLTFExtension.swift in Sources */,
 				DDE6FD6F1F466F3600CB11D6 /* GLTFExtras.swift in Sources */,
+				46A8CD2726E6B240008819AB /* GLTFSceneKit+BundleFinder.swift in Sources */,
 				DDE6FD7D1F466F3600CB11D6 /* GLTFScene.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
