@@ -583,33 +583,38 @@ public class GLTFUnarchiver {
         var counts = [Int](repeating: 0, count: vertexArray.count)
         
         for element in elements {
-            if element.primitiveType != .triangles {
-                throw GLTFUnarchiveError.NotSupported("createNormalSource: only triangles primitveType is supported: \(element.primitiveType)")
-            }
-            
-            let indexArray = createIndexArray(from: element)
-            
-            var indexPos = 0
-            for _ in 0..<indexArray.count/3 {
-                let i0 = indexArray[indexPos]
-                let i1 = indexArray[indexPos+1]
-                let i2 = indexArray[indexPos+2]
+            if element.primitiveType == .triangles {
+
+                let indexArray = createIndexArray(from: element)
                 
-                let v0 = vertexArray[i0]
-                let v1 = vertexArray[i1]
-                let v2 = vertexArray[i2]
-                
-                let n = createNormal(v0, v1, v2)
-                
-                normals[i0] = add(normals[i0], n)
-                normals[i1] = add(normals[i1], n)
-                normals[i2] = add(normals[i2], n)
-                
-                counts[i0] += 1
-                counts[i1] += 1
-                counts[i2] += 1
-                
-                indexPos += 3
+                var indexPos = 0
+                for _ in 0..<indexArray.count/3 {
+                    let i0 = indexArray[indexPos]
+                    let i1 = indexArray[indexPos+1]
+                    let i2 = indexArray[indexPos+2]
+                    
+                    let v0 = vertexArray[i0]
+                    let v1 = vertexArray[i1]
+                    let v2 = vertexArray[i2]
+                    
+                    let n = createNormal(v0, v1, v2)
+                    
+                    normals[i0] = add(normals[i0], n)
+                    normals[i1] = add(normals[i1], n)
+                    normals[i2] = add(normals[i2], n)
+                    
+                    counts[i0] += 1
+                    counts[i1] += 1
+                    counts[i2] += 1
+                    
+                    indexPos += 3
+                }
+            } else if element.primitiveType == .point {
+                element.pointSize = 3.0
+                element.minimumPointScreenSpaceRadius = 1
+                element.maximumPointScreenSpaceRadius = 5
+            } else {
+                throw GLTFUnarchiveError.NotSupported("createNormalSource: only triangles and points primitveType is supported: \(element.primitiveType)")
             }
         }
         for i in 0..<normals.count {
