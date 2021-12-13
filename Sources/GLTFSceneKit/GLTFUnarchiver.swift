@@ -1039,7 +1039,7 @@ public class GLTFUnarchiver {
         }
         
         material.isDoubleSided = glMaterial.doubleSided
-        
+
         material.shaderModifiers = [
             .surface: try! String(contentsOf: URL(fileURLWithPath: bundle.path(forResource: "GLTFShaderModifierSurface", ofType: "shader")!), encoding: String.Encoding.utf8)
         ]
