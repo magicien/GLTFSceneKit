@@ -333,8 +333,7 @@ public class GLTFUnarchiver {
         if let glByteStride = glBufferView.byteStride {
             byteStride = glByteStride
         }
-        print("iterateBufferView: byteStride: \(byteStride)")
-        
+
         guard offset + byteStride * count <= glBufferView.byteLength else {
             throw GLTFUnarchiveError.DataInconsistent("iterateBufferView: offset (\(offset)) + byteStride (\(byteStride)) * count (\(count)) shoule be equal or less than byteLength (\(glBufferView.byteLength)))")
         }
@@ -1545,8 +1544,7 @@ public class GLTFUnarchiver {
                     throw GLTFUnarchiveError.DataInconsistent("loadSkin: JOINTS_0 is not defined")
                 }
                 let boneIndices = _joints[0]
-                print("boneIndices dataStride: \(boneIndices.dataStride)")
-                
+
                 #if SEEMS_TO_HAVE_SKINNER_VECTOR_TYPE_BUG
                     // This code doesn't solve the problem.
                     #if false
