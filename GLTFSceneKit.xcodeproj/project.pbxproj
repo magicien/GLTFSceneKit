@@ -9,19 +9,32 @@
 /* Begin PBXBuildFile section */
 		1213286D231A535600083524 /* GLTFExtrasTargetNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1213286C231A535600083524 /* GLTFExtrasTargetNames.swift */; };
 		12132870231A552900083524 /* GLTFExtrasTargetNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1213286C231A535600083524 /* GLTFExtrasTargetNames.swift */; };
+		46A8CD2726E6B240008819AB /* GLTFSceneKit+BundleFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46A8CD2626E6B240008819AB /* GLTFSceneKit+BundleFinder.swift */; };
+		46A8CD2826E6B240008819AB /* GLTFSceneKit+BundleFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46A8CD2626E6B240008819AB /* GLTFSceneKit+BundleFinder.swift */; };
 		49DFA9BE26A45B290009965E /* GLTFSceneKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 49DFA9BD26A45A710009965E /* GLTFSceneKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		49DFA9BF26A45B2A0009965E /* GLTFSceneKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 49DFA9BD26A45A710009965E /* GLTFSceneKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		49DFAA3226A4FC9F0009965E /* GLTFVRM_VRM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49DFAA2F26A4FC9F0009965E /* GLTFVRM_VRM.swift */; };
 		49DFAA3326A4FC9F0009965E /* GLTFVRM_VRM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49DFAA2F26A4FC9F0009965E /* GLTFVRM_VRM.swift */; };
-		49DFAA3426A4FC9F0009965E /* GLTFShaderModifierFragment_VRMUnlitTexture.shader in Resources */ = {isa = PBXBuildFile; fileRef = 49DFAA3026A4FC9F0009965E /* GLTFShaderModifierFragment_VRMUnlitTexture.shader */; };
-		49DFAA3526A4FC9F0009965E /* GLTFShaderModifierFragment_VRMUnlitTexture.shader in Resources */ = {isa = PBXBuildFile; fileRef = 49DFAA3026A4FC9F0009965E /* GLTFShaderModifierFragment_VRMUnlitTexture.shader */; };
-		49DFAA3626A4FC9F0009965E /* GLTFShaderModifierSurface_VRMMToon.shader in Resources */ = {isa = PBXBuildFile; fileRef = 49DFAA3126A4FC9F0009965E /* GLTFShaderModifierSurface_VRMMToon.shader */; };
-		49DFAA3726A4FC9F0009965E /* GLTFShaderModifierSurface_VRMMToon.shader in Resources */ = {isa = PBXBuildFile; fileRef = 49DFAA3126A4FC9F0009965E /* GLTFShaderModifierSurface_VRMMToon.shader */; };
-		9DA74DB61FD5F8D9007F0749 /* GLTFShaderModifierSurface_alphaModeBlend.shader in Resources */ = {isa = PBXBuildFile; fileRef = 9DA74DB31FD5F54F007F0749 /* GLTFShaderModifierSurface_alphaModeBlend.shader */; };
-		9DA74DB71FD5FBAC007F0749 /* GLTFShaderModifierSurface_alphaModeBlend.shader in Resources */ = {isa = PBXBuildFile; fileRef = 9DA74DB31FD5F54F007F0749 /* GLTFShaderModifierSurface_alphaModeBlend.shader */; };
+		49FBB50327670A8100674883 /* GLTFShaderModifierFragment_VRMUnlitTexture.shader in Resources */ = {isa = PBXBuildFile; fileRef = 49D5C8AD2767081E0076FB22 /* GLTFShaderModifierFragment_VRMUnlitTexture.shader */; };
+		49FBB50427670A8100674883 /* GLTFShaderModifierSurface_VRMMToon.shader in Resources */ = {isa = PBXBuildFile; fileRef = 49D5C8AE2767081E0076FB22 /* GLTFShaderModifierSurface_VRMMToon.shader */; };
+		49FBB50527670A8100674883 /* GLTFShaderModifierSurface_alphaModeBlend.shader in Resources */ = {isa = PBXBuildFile; fileRef = 49D5C8AF2767081E0076FB22 /* GLTFShaderModifierSurface_alphaModeBlend.shader */; };
+		49FBB50627670A8100674883 /* GLTFShaderModifierSurface.shader in Resources */ = {isa = PBXBuildFile; fileRef = 49D5C8B02767081E0076FB22 /* GLTFShaderModifierSurface.shader */; };
+		49FBB50727670A8100674883 /* GLTFShaderModifierSurface_pbrSpecularGlossiness.shader in Resources */ = {isa = PBXBuildFile; fileRef = 49D5C8B22767081E0076FB22 /* GLTFShaderModifierSurface_pbrSpecularGlossiness.shader */; };
+		49FBB50827670A8100674883 /* GLTFShaderModifierSurface_pbrSpecularGlossiness_doubleSidedWorkaround.shader in Resources */ = {isa = PBXBuildFile; fileRef = 49D5C8B32767081E0076FB22 /* GLTFShaderModifierSurface_pbrSpecularGlossiness_doubleSidedWorkaround.shader */; };
+		49FBB50927670A8100674883 /* GLTFShaderModifierSurface_pbrSpecularGlossiness_texture_doubleSidedWorkaround.shader in Resources */ = {isa = PBXBuildFile; fileRef = 49D5C8B42767081E0076FB22 /* GLTFShaderModifierSurface_pbrSpecularGlossiness_texture_doubleSidedWorkaround.shader */; };
+		49FBB50A27670A8100674883 /* GLTFShaderModifierFragment_alphaCutoff.shader in Resources */ = {isa = PBXBuildFile; fileRef = 49D5C8B52767081E0076FB22 /* GLTFShaderModifierFragment_alphaCutoff.shader */; };
+		49FBB50B27670A8100674883 /* GLTFShaderModifierSurface_doubleSidedWorkaround.shader in Resources */ = {isa = PBXBuildFile; fileRef = 49D5C8B62767081E0076FB22 /* GLTFShaderModifierSurface_doubleSidedWorkaround.shader */; };
+		49FBB50C27670C3200674883 /* GLTFShaderModifierFragment_VRMUnlitTexture.shader in Resources */ = {isa = PBXBuildFile; fileRef = 49D5C8AD2767081E0076FB22 /* GLTFShaderModifierFragment_VRMUnlitTexture.shader */; };
+		49FBB50D27670C3200674883 /* GLTFShaderModifierSurface_VRMMToon.shader in Resources */ = {isa = PBXBuildFile; fileRef = 49D5C8AE2767081E0076FB22 /* GLTFShaderModifierSurface_VRMMToon.shader */; };
+		49FBB50E27670C3200674883 /* GLTFShaderModifierSurface_alphaModeBlend.shader in Resources */ = {isa = PBXBuildFile; fileRef = 49D5C8AF2767081E0076FB22 /* GLTFShaderModifierSurface_alphaModeBlend.shader */; };
+		49FBB50F27670C3200674883 /* GLTFShaderModifierSurface.shader in Resources */ = {isa = PBXBuildFile; fileRef = 49D5C8B02767081E0076FB22 /* GLTFShaderModifierSurface.shader */; };
+		49FBB51027670C3200674883 /* GLTFShaderModifierSurface_pbrSpecularGlossiness.shader in Resources */ = {isa = PBXBuildFile; fileRef = 49D5C8B22767081E0076FB22 /* GLTFShaderModifierSurface_pbrSpecularGlossiness.shader */; };
+		49FBB51127670C3200674883 /* GLTFShaderModifierSurface_pbrSpecularGlossiness_doubleSidedWorkaround.shader in Resources */ = {isa = PBXBuildFile; fileRef = 49D5C8B32767081E0076FB22 /* GLTFShaderModifierSurface_pbrSpecularGlossiness_doubleSidedWorkaround.shader */; };
+		49FBB51227670C3200674883 /* GLTFShaderModifierSurface_pbrSpecularGlossiness_texture_doubleSidedWorkaround.shader in Resources */ = {isa = PBXBuildFile; fileRef = 49D5C8B42767081E0076FB22 /* GLTFShaderModifierSurface_pbrSpecularGlossiness_texture_doubleSidedWorkaround.shader */; };
+		49FBB51327670C3200674883 /* GLTFShaderModifierFragment_alphaCutoff.shader in Resources */ = {isa = PBXBuildFile; fileRef = 49D5C8B52767081E0076FB22 /* GLTFShaderModifierFragment_alphaCutoff.shader */; };
+		49FBB51427670C3200674883 /* GLTFShaderModifierSurface_doubleSidedWorkaround.shader in Resources */ = {isa = PBXBuildFile; fileRef = 49D5C8B62767081E0076FB22 /* GLTFShaderModifierSurface_doubleSidedWorkaround.shader */; };
 		DD10459A1F47723D004B20CE /* GLTFTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1045991F47723D004B20CE /* GLTFTypes.swift */; };
 		DD10459C1F4772E3004B20CE /* GLTFErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD10459B1F4772E3004B20CE /* GLTFErrors.swift */; };
-		DD2930291F9C8E7C00216F1D /* GLTFShaderModifierSurface.shader in Resources */ = {isa = PBXBuildFile; fileRef = DD071E031F55ED1200F00567 /* GLTFShaderModifierSurface.shader */; };
 		DD2E982E1F4CF5B800D47C89 /* ExtensionList.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD2E982D1F4CF5B800D47C89 /* ExtensionList.swift */; };
 		DD2E98311F4CF98600D47C89 /* GLTFKHRMaterialsCommon_GLTFKHRMaterialsCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD2E98301F4CF6FA00D47C89 /* GLTFKHRMaterialsCommon_GLTFKHRMaterialsCommon.swift */; };
 		DD3EB0791F524783009F32D2 /* GLTFAccessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDE6FD5D1F466F2000CB11D6 /* GLTFAccessor.swift */; };
@@ -65,23 +78,11 @@
 		DD3EB09F1F524790009F32D2 /* GLTFFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD634F9C1F4A2D90008886AD /* GLTFFunctions.swift */; };
 		DD3EB0A01F524790009F32D2 /* GLTFErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD10459B1F4772E3004B20CE /* GLTFErrors.swift */; };
 		DD634F9D1F4A2D90008886AD /* GLTFFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD634F9C1F4A2D90008886AD /* GLTFFunctions.swift */; };
-		DD8804E41FA7AC92009B4584 /* GLTFShaderModifierSurface_pbrSpecularGlossiness_texture_doubleSidedWorkaround.shader in Resources */ = {isa = PBXBuildFile; fileRef = DD8804E31FA7AC91009B4584 /* GLTFShaderModifierSurface_pbrSpecularGlossiness_texture_doubleSidedWorkaround.shader */; };
-		DD8804E51FA7AC92009B4584 /* GLTFShaderModifierSurface_pbrSpecularGlossiness_texture_doubleSidedWorkaround.shader in Resources */ = {isa = PBXBuildFile; fileRef = DD8804E31FA7AC91009B4584 /* GLTFShaderModifierSurface_pbrSpecularGlossiness_texture_doubleSidedWorkaround.shader */; };
 		DD9BFA7C1F9C0EC400542D5B /* GLTFKHRMaterialsPbrSpecularGlossiness_GLTFKHRMaterialsPbrSpecularGlossiness.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9BFA7B1F9C0EBB00542D5B /* GLTFKHRMaterialsPbrSpecularGlossiness_GLTFKHRMaterialsPbrSpecularGlossiness.swift */; };
 		DD9BFA7D1F9C0EC400542D5B /* GLTFKHRMaterialsPbrSpecularGlossiness_GLTFKHRMaterialsPbrSpecularGlossiness.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9BFA7B1F9C0EBB00542D5B /* GLTFKHRMaterialsPbrSpecularGlossiness_GLTFKHRMaterialsPbrSpecularGlossiness.swift */; };
-		DD9BFA821F9C20E900542D5B /* GLTFShaderModifierSurface.shader in Resources */ = {isa = PBXBuildFile; fileRef = DD071E031F55ED1200F00567 /* GLTFShaderModifierSurface.shader */; };
-		DD9BFA831F9C20ED00542D5B /* GLTFShaderModifierFragment_alphaCutoff.shader in Resources */ = {isa = PBXBuildFile; fileRef = DD99E80A1F560099003D380A /* GLTFShaderModifierFragment_alphaCutoff.shader */; };
-		DD9BFA841F9C20EF00542D5B /* GLTFShaderModifierSurface_pbrSpecularGlossiness.shader in Resources */ = {isa = PBXBuildFile; fileRef = DD9BFA7E1F9C11EA00542D5B /* GLTFShaderModifierSurface_pbrSpecularGlossiness.shader */; };
-		DD9BFA851F9C20FB00542D5B /* GLTFShaderModifierSurface_pbrSpecularGlossiness.shader in Resources */ = {isa = PBXBuildFile; fileRef = DD9BFA7E1F9C11EA00542D5B /* GLTFShaderModifierSurface_pbrSpecularGlossiness.shader */; };
-		DD9BFA871F9C211A00542D5B /* GLTFShaderModifierSurface_doubleSidedWorkaround.shader in Resources */ = {isa = PBXBuildFile; fileRef = DD99E8071F55FBA8003D380A /* GLTFShaderModifierSurface_doubleSidedWorkaround.shader */; };
-		DD9BFA881F9C211E00542D5B /* GLTFShaderModifierFragment_alphaCutoff.shader in Resources */ = {isa = PBXBuildFile; fileRef = DD99E80A1F560099003D380A /* GLTFShaderModifierFragment_alphaCutoff.shader */; };
-		DD9BFA891F9C220F00542D5B /* GLTFShaderModifierSurface_doubleSidedWorkaround.shader in Resources */ = {isa = PBXBuildFile; fileRef = DD99E8071F55FBA8003D380A /* GLTFShaderModifierSurface_doubleSidedWorkaround.shader */; };
-		DD9BFA8B1F9C2E2800542D5B /* GLTFShaderModifierSurface_pbrSpecularGlossiness_doubleSidedWorkaround.shader in Resources */ = {isa = PBXBuildFile; fileRef = DD9BFA8A1F9C2DA000542D5B /* GLTFShaderModifierSurface_pbrSpecularGlossiness_doubleSidedWorkaround.shader */; };
-		DD9BFA8C1F9C2E2800542D5B /* GLTFShaderModifierSurface_pbrSpecularGlossiness_doubleSidedWorkaround.shader in Resources */ = {isa = PBXBuildFile; fileRef = DD9BFA8A1F9C2DA000542D5B /* GLTFShaderModifierSurface_pbrSpecularGlossiness_doubleSidedWorkaround.shader */; };
 		DDB221F81F525E99002CFA4D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDB221F01F525E93002CFA4D /* AppDelegate.swift */; };
 		DDB221F91F525EBA002CFA4D /* art.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = DDE6FDA61F46716500CB11D6 /* art.scnassets */; };
 		DDB221FA1F525EC3002CFA4D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DDB221F11F525E93002CFA4D /* Assets.xcassets */; };
-		DDB221FB1F525EC9002CFA4D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DDB221F21F525E93002CFA4D /* LaunchScreen.storyboard */; };
 		DDB221FC1F525ECE002CFA4D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DDB221F41F525E93002CFA4D /* Main.storyboard */; };
 		DDB221FD1F525ED1002CFA4D /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDB221F61F525E93002CFA4D /* GameViewController.swift */; };
 		DDC376C41F5286FD0015764C /* GLTFSceneKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD3EB0711F52476B009F32D2 /* GLTFSceneKit.framework */; };
@@ -175,13 +176,19 @@
 
 /* Begin PBXFileReference section */
 		1213286C231A535600083524 /* GLTFExtrasTargetNames.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GLTFExtrasTargetNames.swift; sourceTree = "<group>"; };
+		46A8CD2626E6B240008819AB /* GLTFSceneKit+BundleFinder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "GLTFSceneKit+BundleFinder.swift"; sourceTree = "<group>"; };
+		49D5C8AD2767081E0076FB22 /* GLTFShaderModifierFragment_VRMUnlitTexture.shader */ = {isa = PBXFileReference; lastKnownFileType = text; path = GLTFShaderModifierFragment_VRMUnlitTexture.shader; sourceTree = "<group>"; };
+		49D5C8AE2767081E0076FB22 /* GLTFShaderModifierSurface_VRMMToon.shader */ = {isa = PBXFileReference; lastKnownFileType = text; path = GLTFShaderModifierSurface_VRMMToon.shader; sourceTree = "<group>"; };
+		49D5C8AF2767081E0076FB22 /* GLTFShaderModifierSurface_alphaModeBlend.shader */ = {isa = PBXFileReference; lastKnownFileType = text; path = GLTFShaderModifierSurface_alphaModeBlend.shader; sourceTree = "<group>"; };
+		49D5C8B02767081E0076FB22 /* GLTFShaderModifierSurface.shader */ = {isa = PBXFileReference; lastKnownFileType = text; path = GLTFShaderModifierSurface.shader; sourceTree = "<group>"; };
+		49D5C8B22767081E0076FB22 /* GLTFShaderModifierSurface_pbrSpecularGlossiness.shader */ = {isa = PBXFileReference; lastKnownFileType = text; path = GLTFShaderModifierSurface_pbrSpecularGlossiness.shader; sourceTree = "<group>"; };
+		49D5C8B32767081E0076FB22 /* GLTFShaderModifierSurface_pbrSpecularGlossiness_doubleSidedWorkaround.shader */ = {isa = PBXFileReference; lastKnownFileType = text; path = GLTFShaderModifierSurface_pbrSpecularGlossiness_doubleSidedWorkaround.shader; sourceTree = "<group>"; };
+		49D5C8B42767081E0076FB22 /* GLTFShaderModifierSurface_pbrSpecularGlossiness_texture_doubleSidedWorkaround.shader */ = {isa = PBXFileReference; lastKnownFileType = text; path = GLTFShaderModifierSurface_pbrSpecularGlossiness_texture_doubleSidedWorkaround.shader; sourceTree = "<group>"; };
+		49D5C8B52767081E0076FB22 /* GLTFShaderModifierFragment_alphaCutoff.shader */ = {isa = PBXFileReference; lastKnownFileType = text; path = GLTFShaderModifierFragment_alphaCutoff.shader; sourceTree = "<group>"; };
+		49D5C8B62767081E0076FB22 /* GLTFShaderModifierSurface_doubleSidedWorkaround.shader */ = {isa = PBXFileReference; lastKnownFileType = text; path = GLTFShaderModifierSurface_doubleSidedWorkaround.shader; sourceTree = "<group>"; };
 		49DFA9BD26A45A710009965E /* GLTFSceneKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GLTFSceneKit.h; sourceTree = "<group>"; };
 		49DFA9C026A47D520009965E /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		49DFAA2F26A4FC9F0009965E /* GLTFVRM_VRM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GLTFVRM_VRM.swift; sourceTree = "<group>"; };
-		49DFAA3026A4FC9F0009965E /* GLTFShaderModifierFragment_VRMUnlitTexture.shader */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GLTFShaderModifierFragment_VRMUnlitTexture.shader; sourceTree = "<group>"; };
-		49DFAA3126A4FC9F0009965E /* GLTFShaderModifierSurface_VRMMToon.shader */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GLTFShaderModifierSurface_VRMMToon.shader; sourceTree = "<group>"; };
-		9DA74DB31FD5F54F007F0749 /* GLTFShaderModifierSurface_alphaModeBlend.shader */ = {isa = PBXFileReference; lastKnownFileType = text; path = GLTFShaderModifierSurface_alphaModeBlend.shader; sourceTree = "<group>"; };
-		DD071E031F55ED1200F00567 /* GLTFShaderModifierSurface.shader */ = {isa = PBXFileReference; lastKnownFileType = text; path = GLTFShaderModifierSurface.shader; sourceTree = "<group>"; };
 		DD1045991F47723D004B20CE /* GLTFTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GLTFTypes.swift; sourceTree = "<group>"; };
 		DD10459B1F4772E3004B20CE /* GLTFErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GLTFErrors.swift; sourceTree = "<group>"; };
 		DD2E982D1F4CF5B800D47C89 /* ExtensionList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionList.swift; sourceTree = "<group>"; };
@@ -190,12 +197,7 @@
 		DD634F9C1F4A2D90008886AD /* GLTFFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GLTFFunctions.swift; sourceTree = "<group>"; };
 		DD83924C1F466C2D006A1CAC /* GLTFSceneKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = GLTFSceneKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD8392501F466C2D006A1CAC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		DD8804E31FA7AC91009B4584 /* GLTFShaderModifierSurface_pbrSpecularGlossiness_texture_doubleSidedWorkaround.shader */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GLTFShaderModifierSurface_pbrSpecularGlossiness_texture_doubleSidedWorkaround.shader; sourceTree = "<group>"; };
-		DD99E8071F55FBA8003D380A /* GLTFShaderModifierSurface_doubleSidedWorkaround.shader */ = {isa = PBXFileReference; lastKnownFileType = text; path = GLTFShaderModifierSurface_doubleSidedWorkaround.shader; sourceTree = "<group>"; };
-		DD99E80A1F560099003D380A /* GLTFShaderModifierFragment_alphaCutoff.shader */ = {isa = PBXFileReference; lastKnownFileType = text; path = GLTFShaderModifierFragment_alphaCutoff.shader; sourceTree = "<group>"; };
-		DD9BFA7B1F9C0EBB00542D5B /* GLTFKHRMaterialsPbrSpecularGlossiness_GLTFKHRMaterialsPbrSpecularGlossiness.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GLTFKHRMaterialsPbrSpecularGlossiness_GLTFKHRMaterialsPbrSpecularGlossiness.swift; sourceTree = "<group>"; };
-		DD9BFA7E1F9C11EA00542D5B /* GLTFShaderModifierSurface_pbrSpecularGlossiness.shader */ = {isa = PBXFileReference; lastKnownFileType = text; path = GLTFShaderModifierSurface_pbrSpecularGlossiness.shader; sourceTree = "<group>"; };
-		DD9BFA8A1F9C2DA000542D5B /* GLTFShaderModifierSurface_pbrSpecularGlossiness_doubleSidedWorkaround.shader */ = {isa = PBXFileReference; lastKnownFileType = text; path = GLTFShaderModifierSurface_pbrSpecularGlossiness_doubleSidedWorkaround.shader; sourceTree = "<group>"; };
+		DD9BFA7B1F9C0EBB00542D5B /* GLTFKHRMaterialsPbrSpecularGlossiness_GLTFKHRMaterialsPbrSpecularGlossiness.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = GLTFKHRMaterialsPbrSpecularGlossiness_GLTFKHRMaterialsPbrSpecularGlossiness.swift; sourceTree = "<group>"; tabWidth = 4; };
 		DDB221DA1F525D6E002CFA4D /* GLTFSceneKitSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GLTFSceneKitSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DDB221F01F525E93002CFA4D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DDB221F11F525E93002CFA4D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -236,7 +238,7 @@
 		DDE6FD5D1F466F2000CB11D6 /* GLTFAccessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GLTFAccessor.swift; sourceTree = "<group>"; };
 		DDE6FD5E1F466F2000CB11D6 /* GLTFAccessorSparse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GLTFAccessorSparse.swift; sourceTree = "<group>"; };
 		DDE6FD5F1F466F2000CB11D6 /* GLTFAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GLTFAnimation.swift; sourceTree = "<group>"; };
-		DDE6FD811F466F9B00CB11D6 /* GLTFUnarchiver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GLTFUnarchiver.swift; sourceTree = "<group>"; };
+		DDE6FD811F466F9B00CB11D6 /* GLTFUnarchiver.swift */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = GLTFUnarchiver.swift; sourceTree = "<group>"; tabWidth = 4; };
 		DDE6FDA61F46716500CB11D6 /* art.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = art.scnassets; sourceTree = "<group>"; };
 		DDE6FDA71F46716B00CB11D6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DDE6FDA81F46716B00CB11D6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -246,7 +248,7 @@
 		DDE6FDAE1F46716B00CB11D6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DDE6FDAF1F46716B00CB11D6 /* GameSample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GameSample.entitlements; sourceTree = "<group>"; };
 		DDE6FDB41F4671B000CB11D6 /* GLTFSceneKitSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GLTFSceneKitSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		DDE6FDD91F46785100CB11D6 /* GLTFSceneSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GLTFSceneSource.swift; sourceTree = "<group>"; };
+		DDE6FDD91F46785100CB11D6 /* GLTFSceneSource.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = GLTFSceneSource.swift; sourceTree = "<group>"; tabWidth = 4; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -287,10 +289,40 @@
 			isa = PBXGroup;
 			children = (
 				49DFAA2F26A4FC9F0009965E /* GLTFVRM_VRM.swift */,
-				49DFAA3026A4FC9F0009965E /* GLTFShaderModifierFragment_VRMUnlitTexture.shader */,
-				49DFAA3126A4FC9F0009965E /* GLTFShaderModifierSurface_VRMMToon.shader */,
 			);
 			path = VRM;
+			sourceTree = "<group>";
+		};
+		49D5C8AB2767081E0076FB22 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				49D5C8AC2767081E0076FB22 /* VRM */,
+				49D5C8AF2767081E0076FB22 /* GLTFShaderModifierSurface_alphaModeBlend.shader */,
+				49D5C8B02767081E0076FB22 /* GLTFShaderModifierSurface.shader */,
+				49D5C8B12767081E0076FB22 /* KHR_materials_pbrSpecularGlossiness */,
+				49D5C8B52767081E0076FB22 /* GLTFShaderModifierFragment_alphaCutoff.shader */,
+				49D5C8B62767081E0076FB22 /* GLTFShaderModifierSurface_doubleSidedWorkaround.shader */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		49D5C8AC2767081E0076FB22 /* VRM */ = {
+			isa = PBXGroup;
+			children = (
+				49D5C8AD2767081E0076FB22 /* GLTFShaderModifierFragment_VRMUnlitTexture.shader */,
+				49D5C8AE2767081E0076FB22 /* GLTFShaderModifierSurface_VRMMToon.shader */,
+			);
+			path = VRM;
+			sourceTree = "<group>";
+		};
+		49D5C8B12767081E0076FB22 /* KHR_materials_pbrSpecularGlossiness */ = {
+			isa = PBXGroup;
+			children = (
+				49D5C8B22767081E0076FB22 /* GLTFShaderModifierSurface_pbrSpecularGlossiness.shader */,
+				49D5C8B32767081E0076FB22 /* GLTFShaderModifierSurface_pbrSpecularGlossiness_doubleSidedWorkaround.shader */,
+				49D5C8B42767081E0076FB22 /* GLTFShaderModifierSurface_pbrSpecularGlossiness_texture_doubleSidedWorkaround.shader */,
+			);
+			path = KHR_materials_pbrSpecularGlossiness;
 			sourceTree = "<group>";
 		};
 		DD2E982B1F4CF55400D47C89 /* extensions */ = {
@@ -345,9 +377,6 @@
 			isa = PBXGroup;
 			children = (
 				DD9BFA7B1F9C0EBB00542D5B /* GLTFKHRMaterialsPbrSpecularGlossiness_GLTFKHRMaterialsPbrSpecularGlossiness.swift */,
-				DD9BFA8A1F9C2DA000542D5B /* GLTFShaderModifierSurface_pbrSpecularGlossiness_doubleSidedWorkaround.shader */,
-				DD8804E31FA7AC91009B4584 /* GLTFShaderModifierSurface_pbrSpecularGlossiness_texture_doubleSidedWorkaround.shader */,
-				DD9BFA7E1F9C11EA00542D5B /* GLTFShaderModifierSurface_pbrSpecularGlossiness.shader */,
 			);
 			path = KHR_materials_pbrSpecularGlossiness;
 			sourceTree = "<group>";
@@ -368,13 +397,11 @@
 		DDE6FD3D1F466D2700CB11D6 /* GLTFSceneKit */ = {
 			isa = PBXGroup;
 			children = (
+				49D5C8AB2767081E0076FB22 /* Resources */,
 				DDE6FD3E1F466D5000CB11D6 /* schema */,
 				DDE6FD811F466F9B00CB11D6 /* GLTFUnarchiver.swift */,
-				DD071E031F55ED1200F00567 /* GLTFShaderModifierSurface.shader */,
-				9DA74DB31FD5F54F007F0749 /* GLTFShaderModifierSurface_alphaModeBlend.shader */,
-				DD99E8071F55FBA8003D380A /* GLTFShaderModifierSurface_doubleSidedWorkaround.shader */,
-				DD99E80A1F560099003D380A /* GLTFShaderModifierFragment_alphaCutoff.shader */,
 				DDE6FDD91F46785100CB11D6 /* GLTFSceneSource.swift */,
+				46A8CD2626E6B240008819AB /* GLTFSceneKit+BundleFinder.swift */,
 				DD1045991F47723D004B20CE /* GLTFTypes.swift */,
 				DD634F9C1F4A2D90008886AD /* GLTFFunctions.swift */,
 				DD10459B1F4772E3004B20CE /* GLTFErrors.swift */,
@@ -403,6 +430,7 @@
 				DDE6FD5C1F466F2000CB11D6 /* GLTFCameraPerspective.swift */,
 				DDE6FD4A1F466F2000CB11D6 /* GLTFExtension.swift */,
 				DDE6FD471F466F2000CB11D6 /* GLTFExtras.swift */,
+				1213286C231A535600083524 /* GLTFExtrasTargetNames.swift */,
 				DDE6FD5B1F466F2000CB11D6 /* GLTFGlTF.swift */,
 				DDE6FD481F466F2000CB11D6 /* GLTFGlTFChildOfRootProperty.swift */,
 				DDE6FD431F466F2000CB11D6 /* GLTFGlTFid.swift */,
@@ -421,7 +449,6 @@
 				DDE6FD3F1F466F2000CB11D6 /* GLTFTexture.swift */,
 				DDE6FD411F466F2000CB11D6 /* GLTFTextureInfo.swift */,
 				DD2E982B1F4CF55400D47C89 /* extensions */,
-				1213286C231A535600083524 /* GLTFExtrasTargetNames.swift */,
 			);
 			path = schema;
 			sourceTree = "<group>";
@@ -619,15 +646,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9DA74DB71FD5FBAC007F0749 /* GLTFShaderModifierSurface_alphaModeBlend.shader in Resources */,
-				DD9BFA8B1F9C2E2800542D5B /* GLTFShaderModifierSurface_pbrSpecularGlossiness_doubleSidedWorkaround.shader in Resources */,
-				DD2930291F9C8E7C00216F1D /* GLTFShaderModifierSurface.shader in Resources */,
-				DD9BFA871F9C211A00542D5B /* GLTFShaderModifierSurface_doubleSidedWorkaround.shader in Resources */,
-				DD9BFA851F9C20FB00542D5B /* GLTFShaderModifierSurface_pbrSpecularGlossiness.shader in Resources */,
-				DD8804E51FA7AC92009B4584 /* GLTFShaderModifierSurface_pbrSpecularGlossiness_texture_doubleSidedWorkaround.shader in Resources */,
-				49DFAA3726A4FC9F0009965E /* GLTFShaderModifierSurface_VRMMToon.shader in Resources */,
-				49DFAA3526A4FC9F0009965E /* GLTFShaderModifierFragment_VRMUnlitTexture.shader in Resources */,
-				DD9BFA881F9C211E00542D5B /* GLTFShaderModifierFragment_alphaCutoff.shader in Resources */,
+				49FBB50327670A8100674883 /* GLTFShaderModifierFragment_VRMUnlitTexture.shader in Resources */,
+				49FBB50427670A8100674883 /* GLTFShaderModifierSurface_VRMMToon.shader in Resources */,
+				49FBB50527670A8100674883 /* GLTFShaderModifierSurface_alphaModeBlend.shader in Resources */,
+				49FBB50627670A8100674883 /* GLTFShaderModifierSurface.shader in Resources */,
+				49FBB50727670A8100674883 /* GLTFShaderModifierSurface_pbrSpecularGlossiness.shader in Resources */,
+				49FBB50827670A8100674883 /* GLTFShaderModifierSurface_pbrSpecularGlossiness_doubleSidedWorkaround.shader in Resources */,
+				49FBB50927670A8100674883 /* GLTFShaderModifierSurface_pbrSpecularGlossiness_texture_doubleSidedWorkaround.shader in Resources */,
+				49FBB50A27670A8100674883 /* GLTFShaderModifierFragment_alphaCutoff.shader in Resources */,
+				49FBB50B27670A8100674883 /* GLTFShaderModifierSurface_doubleSidedWorkaround.shader in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -635,15 +662,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9DA74DB61FD5F8D9007F0749 /* GLTFShaderModifierSurface_alphaModeBlend.shader in Resources */,
-				DD9BFA821F9C20E900542D5B /* GLTFShaderModifierSurface.shader in Resources */,
-				DD9BFA831F9C20ED00542D5B /* GLTFShaderModifierFragment_alphaCutoff.shader in Resources */,
-				DD9BFA891F9C220F00542D5B /* GLTFShaderModifierSurface_doubleSidedWorkaround.shader in Resources */,
-				DD9BFA841F9C20EF00542D5B /* GLTFShaderModifierSurface_pbrSpecularGlossiness.shader in Resources */,
-				DD8804E41FA7AC92009B4584 /* GLTFShaderModifierSurface_pbrSpecularGlossiness_texture_doubleSidedWorkaround.shader in Resources */,
-				49DFAA3626A4FC9F0009965E /* GLTFShaderModifierSurface_VRMMToon.shader in Resources */,
-				49DFAA3426A4FC9F0009965E /* GLTFShaderModifierFragment_VRMUnlitTexture.shader in Resources */,
-				DD9BFA8C1F9C2E2800542D5B /* GLTFShaderModifierSurface_pbrSpecularGlossiness_doubleSidedWorkaround.shader in Resources */,
+				49FBB50C27670C3200674883 /* GLTFShaderModifierFragment_VRMUnlitTexture.shader in Resources */,
+				49FBB50D27670C3200674883 /* GLTFShaderModifierSurface_VRMMToon.shader in Resources */,
+				49FBB50E27670C3200674883 /* GLTFShaderModifierSurface_alphaModeBlend.shader in Resources */,
+				49FBB50F27670C3200674883 /* GLTFShaderModifierSurface.shader in Resources */,
+				49FBB51027670C3200674883 /* GLTFShaderModifierSurface_pbrSpecularGlossiness.shader in Resources */,
+				49FBB51127670C3200674883 /* GLTFShaderModifierSurface_pbrSpecularGlossiness_doubleSidedWorkaround.shader in Resources */,
+				49FBB51227670C3200674883 /* GLTFShaderModifierSurface_pbrSpecularGlossiness_texture_doubleSidedWorkaround.shader in Resources */,
+				49FBB51327670C3200674883 /* GLTFShaderModifierFragment_alphaCutoff.shader in Resources */,
+				49FBB51427670C3200674883 /* GLTFShaderModifierSurface_doubleSidedWorkaround.shader in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -651,7 +678,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DDB221FB1F525EC9002CFA4D /* LaunchScreen.storyboard in Resources */,
 				DDB221FA1F525EC3002CFA4D /* Assets.xcassets in Resources */,
 				DDB221F91F525EBA002CFA4D /* art.scnassets in Resources */,
 				DDB221FC1F525ECE002CFA4D /* Main.storyboard in Resources */,
@@ -717,6 +743,7 @@
 				DD3EB0871F524783009F32D2 /* GLTFExtension.swift in Sources */,
 				DD3EB0A01F524790009F32D2 /* GLTFErrors.swift in Sources */,
 				DD3EB0881F524783009F32D2 /* GLTFExtras.swift in Sources */,
+				46A8CD2826E6B240008819AB /* GLTFSceneKit+BundleFinder.swift in Sources */,
 				DD3EB0961F524783009F32D2 /* GLTFScene.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -767,6 +794,7 @@
 				DDE6FDDA1F46785100CB11D6 /* GLTFSceneSource.swift in Sources */,
 				DDE6FD6E1F466F3600CB11D6 /* GLTFExtension.swift in Sources */,
 				DDE6FD6F1F466F3600CB11D6 /* GLTFExtras.swift in Sources */,
+				46A8CD2726E6B240008819AB /* GLTFSceneKit+BundleFinder.swift in Sources */,
 				DDE6FD7D1F466F3600CB11D6 /* GLTFScene.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

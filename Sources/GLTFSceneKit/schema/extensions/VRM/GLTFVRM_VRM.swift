@@ -17,19 +17,19 @@ struct GLTFVRM_GLTFVRMExtension: GLTFCodable {
     }
     
     struct GLTFVRM_GLTFVRMMeta: Codable {
-        let title: String
-        let version: String
-        let author: String
-        let contactInformation: String
-        let reference: String
-        let texture: Int
-        let allowedUserName: String
-        let violentUssageName: String
-        let sexualUssageName: String
-        let commercialUssageName: String
-        let otherPermissionUrl: String
-        let licenseName: String
-        let otherLicenseUrl: String
+        let title: String?
+        let version: String?
+        let author: String?
+        let contactInformation: String?
+        let reference: String?
+        let texture: Int?
+        let allowedUserName: String?
+        let violentUssageName: String?
+        let sexualUssageName: String?
+        let commercialUssageName: String?
+        let otherPermissionUrl: String?
+        let licenseName: String?
+        let otherLicenseUrl: String?
     }
     
     struct GLTFVRM_GLTFVRMHumanoid: Codable {
@@ -99,7 +99,7 @@ struct GLTFVRM_GLTFVRMExtension: GLTFCodable {
     }
     
     struct GLTFVRM_GLTFVRMBoneGroup: Codable {
-        let comment: String
+        let comment: String?
         let stiffiness: Float
         let gravityPower: Float
         let gravityDir: GLTFVRM_GLTFVRMVec3
@@ -155,7 +155,24 @@ struct GLTFVRM_GLTFVRMExtension: GLTFCodable {
 
         self.setMetadata(data.meta, to: scene)
         
-        // TODO: Implement
+        // FIXME: Can't handle a node name including "."
+        scene.rootNode.childNodes(passingTest: { (node, _) in
+            return node.name?.contains(".") ?? false
+        }).forEach {
+            $0.name = $0.name?.replacingOccurrences(of: ".", with: "_")
+        }
+        
+        // Load humanoid
+        var humanoidBoneMap = [String: String]()
+        data.humanoid.humanBones.forEach { humanBone in
+            if let boneName = unarchiver.nodes[humanBone.node]?.name {
+                humanoidBoneMap[humanBone.bone] = boneName
+            }
+        }
+        scene.rootNode.setValue(humanoidBoneMap, forKey: "VRMHumanoidBones")
+
+        // Load materialProperties
+        // TODO: Implement shaders
         data.materialProperties.forEach { material in
             let nodes = scene.rootNode.childNodes(passingTest: { node, finish in
                 if node.geometry?.material(named: material.name) != nil {
@@ -163,39 +180,89 @@ struct GLTFVRM_GLTFVRMExtension: GLTFCodable {
                 }
                 return false
             })
-            print("material nodes count: \(nodes.count)")
             
             nodes.forEach { node in
                 node.renderingOrder = material.renderQueue
                 
                 guard let orgMaterial = node.geometry?.material(named: material.name) else { return }
                 orgMaterial.shaderModifiers = [
-                    .fragment: try! String(contentsOf: URL(fileURLWithPath: Bundle(for: GLTFUnarchiver.self).path(forResource: "GLTFShaderModifierFragment_VRMUnlitTexture", ofType: "shader")!), encoding: String.Encoding.utf8)
+                    .fragment: try! String(contentsOf: URL(fileURLWithPath: bundle.path(forResource: "GLTFShaderModifierFragment_VRMUnlitTexture", ofType: "shader")!), encoding: String.Encoding.utf8)
                 ]
                 
                 orgMaterial.blendMode = .alpha
             }
         }
+
+        // Load blendShapes
+        // shapeName (presetName/name) => keyPath => weight
+        var blendShapes: [String: [String: CGFloat]] = [:]
+        data.blendShapeMaster.blendShapeGroups.forEach { blendShapeGroup in
+            var morpherWeights = [String: CGFloat]()
+            
+            blendShapeGroup.binds.forEach { bind in
+                guard bind.mesh < unarchiver.meshes.count else {
+                    // Data count error
+                    return
+                }
+                
+                guard let meshNode = unarchiver.meshes[bind.mesh] else {
+                    return
+                }
+
+                // TODO: Handle empty name and name conflicts
+                guard let meshName = meshNode.name else {
+                    return
+                }
+                                
+                for i in 0..<meshNode.childNodes.count {
+                    let keyPath = "/\(meshName).childNodes[\(i)].morpher.weights[\(bind.index)]"
+                    morpherWeights[keyPath] = CGFloat(bind.weight / 100.0)
+                }
+            }
+            
+            var shapeName = blendShapeGroup.presetName
+            if shapeName == "" {
+                shapeName = blendShapeGroup.name
+            }
+            blendShapes[shapeName] = morpherWeights
+        }
+        scene.rootNode.setValue(blendShapes, forKey: "VRMBlendShapes")
     }
     
     func setMetadata(_ meta: GLTFVRM_GLTFVRMMeta, to scene: SCNScene) {
         let dict: [String:Any] = [
-            "title": meta.title,
-            "author": meta.author,
-            "contactInformation": meta.contactInformation,
-            "reference": meta.reference,
-            "texture": meta.texture,
-            "version": meta.version,
-            "allowedUserName": meta.allowedUserName,
-            "violentUssageName": meta.violentUssageName,
-            "sexualUssageName": meta.sexualUssageName,
-            "commercialUssageName": meta.commercialUssageName,
-            "otherPermissionUrl": meta.otherPermissionUrl,
-            "licenseName": meta.licenseName,
-            "otherLicenseUrl": meta.otherLicenseUrl
+            "title": meta.title ?? "",
+            "author": meta.author ?? "",
+            "contactInformation": meta.contactInformation ?? "",
+            "reference": meta.reference ?? "",
+            "texture": meta.texture ?? 0,
+            "version": meta.version ?? "",
+            "allowedUserName": meta.allowedUserName ?? "",
+            "violentUssageName": meta.violentUssageName ?? "",
+            "sexualUssageName": meta.sexualUssageName ?? "",
+            "commercialUssageName": meta.commercialUssageName ?? "",
+            "otherPermissionUrl": meta.otherPermissionUrl ?? "",
+            "licenseName": meta.licenseName ?? "",
+            "otherLicenseUrl": meta.otherLicenseUrl ?? ""
         ]
         scene.setValue(dict, forKey: "VRMMeta")
     }
 }
 
-
+extension SCNNode {
+    // TODO: Blending some shapes which have the same keyPath
+    public func setVRMBlendShape(name: String, weight: CGFloat) {
+        guard let shapes = self.value(forKey: "VRMBlendShapes") as? [String : [String : CGFloat]] else { return }
+        
+        shapes[name]?.forEach { (keyPath, weightRatio) in
+            self.setValue(weight * weightRatio, forKeyPath: keyPath)
+        }
+    }
+    
+    public func getVRMHumanoidBone(name: String) -> SCNNode? {
+        guard let boneMap = self.value(forKey: "VRMHumanoidBones") as? [String: String] else { return nil }
+        guard let boneName = boneMap[name] else { return nil }
+        
+        return self.childNode(withName: boneName, recursively: true)
+    }
+}

@@ -83,7 +83,7 @@ struct GLTFKHRMaterialsPbrSpecularGlossiness_GLTFKHRMaterialsPbrSpecularGlossine
             material.setValue(data.glossinessFactor, forKey: "glossinessFactor")
             
             material.shaderModifiers = [
-                .surface: try! String(contentsOf: URL(fileURLWithPath: Bundle(for: GLTFUnarchiver.self).path(forResource: "GLTFShaderModifierSurface_pbrSpecularGlossiness_texture_doubleSidedWorkaround", ofType: "shader")!), encoding: String.Encoding.utf8)
+                .surface: try! String(contentsOf: URL(fileURLWithPath: Bundle.module_workaround.path(forResource: "GLTFShaderModifierSurface_pbrSpecularGlossiness_texture_doubleSidedWorkaround", ofType: "shader")!), encoding: String.Encoding.utf8)
             ]
         } else {
             material.specular.contents = createColor([
@@ -99,13 +99,13 @@ struct GLTFKHRMaterialsPbrSpecularGlossiness_GLTFKHRMaterialsPbrSpecularGlossine
             material.setValue(1.0, forKey: "glossinessFactor")
 
             material.shaderModifiers = [
-                .surface: try! String(contentsOf: URL(fileURLWithPath: Bundle(for: GLTFUnarchiver.self).path(forResource: "GLTFShaderModifierSurface_pbrSpecularGlossiness", ofType: "shader")!), encoding: String.Encoding.utf8)
+                .surface: try! String(contentsOf: URL(fileURLWithPath: Bundle.module_workaround.path(forResource: "GLTFShaderModifierSurface_pbrSpecularGlossiness", ofType: "shader")!), encoding: String.Encoding.utf8)
             ]
             
             #if SEEMS_TO_HAVE_DOUBLESIDED_BUG
                 if material.isDoubleSided {
                     material.shaderModifiers = [
-                        .surface: try! String(contentsOf: URL(fileURLWithPath: Bundle(for: GLTFUnarchiver.self).path(forResource: "GLTFShaderModifierSurface_pbrSpecularGlossiness_doubleSidedWorkaround", ofType: "shader")!), encoding: String.Encoding.utf8)
+                        .surface: try! String(contentsOf: URL(fileURLWithPath: Bundle.module_workaround.path(forResource: "GLTFShaderModifierSurface_pbrSpecularGlossiness_doubleSidedWorkaround", ofType: "shader")!), encoding: String.Encoding.utf8)
                     ]
                 }
             #endif

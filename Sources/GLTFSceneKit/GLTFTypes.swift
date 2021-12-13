@@ -14,6 +14,8 @@ let attributeMap: [String: SCNGeometrySource.Semantic] = [
     "TANGENT": SCNGeometrySource.Semantic.tangent,
     "TEXCOORD_0": SCNGeometrySource.Semantic.texcoord,
     "TEXCOORD_1": SCNGeometrySource.Semantic.texcoord,
+    "TEXCOORD_2": SCNGeometrySource.Semantic.texcoord,
+    "TEXCOORD_3": SCNGeometrySource.Semantic.texcoord,
     "COLOR_0": SCNGeometrySource.Semantic.color,
     "JOINTS_0": SCNGeometrySource.Semantic.boneIndices,
     "JOINTS_1": SCNGeometrySource.Semantic.boneIndices,
