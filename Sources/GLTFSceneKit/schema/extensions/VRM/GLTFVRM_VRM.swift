@@ -17,19 +17,19 @@ struct GLTFVRM_GLTFVRMExtension: GLTFCodable {
     }
     
     struct GLTFVRM_GLTFVRMMeta: Codable {
-        let title: String
-        let version: String
-        let author: String
-        let contactInformation: String
-        let reference: String
-        let texture: Int
-        let allowedUserName: String
-        let violentUssageName: String
-        let sexualUssageName: String
-        let commercialUssageName: String
-        let otherPermissionUrl: String
-        let licenseName: String
-        let otherLicenseUrl: String
+        let title: String?
+        let version: String?
+        let author: String?
+        let contactInformation: String?
+        let reference: String?
+        let texture: Int?
+        let allowedUserName: String?
+        let violentUssageName: String?
+        let sexualUssageName: String?
+        let commercialUssageName: String?
+        let otherPermissionUrl: String?
+        let licenseName: String?
+        let otherLicenseUrl: String?
     }
     
     struct GLTFVRM_GLTFVRMHumanoid: Codable {
@@ -99,7 +99,7 @@ struct GLTFVRM_GLTFVRMExtension: GLTFCodable {
     }
     
     struct GLTFVRM_GLTFVRMBoneGroup: Codable {
-        let comment: String
+        let comment: String?
         let stiffiness: Float
         let gravityPower: Float
         let gravityDir: GLTFVRM_GLTFVRMVec3
@@ -231,19 +231,19 @@ struct GLTFVRM_GLTFVRMExtension: GLTFCodable {
     
     func setMetadata(_ meta: GLTFVRM_GLTFVRMMeta, to scene: SCNScene) {
         let dict: [String:Any] = [
-            "title": meta.title,
-            "author": meta.author,
-            "contactInformation": meta.contactInformation,
-            "reference": meta.reference,
-            "texture": meta.texture,
-            "version": meta.version,
-            "allowedUserName": meta.allowedUserName,
-            "violentUssageName": meta.violentUssageName,
-            "sexualUssageName": meta.sexualUssageName,
-            "commercialUssageName": meta.commercialUssageName,
-            "otherPermissionUrl": meta.otherPermissionUrl,
-            "licenseName": meta.licenseName,
-            "otherLicenseUrl": meta.otherLicenseUrl
+            "title": meta.title ?? "",
+            "author": meta.author ?? "",
+            "contactInformation": meta.contactInformation ?? "",
+            "reference": meta.reference ?? "",
+            "texture": meta.texture ?? 0,
+            "version": meta.version ?? "",
+            "allowedUserName": meta.allowedUserName ?? "",
+            "violentUssageName": meta.violentUssageName ?? "",
+            "sexualUssageName": meta.sexualUssageName ?? "",
+            "commercialUssageName": meta.commercialUssageName ?? "",
+            "otherPermissionUrl": meta.otherPermissionUrl ?? "",
+            "licenseName": meta.licenseName ?? "",
+            "otherLicenseUrl": meta.otherLicenseUrl ?? ""
         ]
         scene.setValue(dict, forKey: "VRMMeta")
     }
