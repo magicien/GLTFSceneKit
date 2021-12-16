@@ -32,6 +32,7 @@ let package = Package(
               .copy("Resources/KHR_materials_pbrSpecularGlossiness/GLTFShaderModifierSurface_pbrSpecularGlossiness_doubleSidedWorkaround.shader"),
               .copy("Resources/KHR_materials_pbrSpecularGlossiness/GLTFShaderModifierSurface_pbrSpecularGlossiness_texture_doubleSidedWorkaround.shader"),
               .copy("Resources/VRM/GLTFShaderModifierFragment_VRMUnlitTexture.shader"),
+              .copy("Resources/VRM/GLTFShaderModifierFragment_VRMUnlitTexture_Cutoff.shader"),
               .copy("Resources/VRM/GLTFShaderModifierSurface_VRMMToon.shader"),
             ]
         ),
