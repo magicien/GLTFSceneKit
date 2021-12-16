@@ -180,16 +180,60 @@ struct GLTFVRM_GLTFVRMExtension: GLTFCodable {
                 }
                 return false
             })
-            
+
             nodes.forEach { node in
                 node.renderingOrder = material.renderQueue
-                
+
                 guard let orgMaterial = node.geometry?.material(named: material.name) else { return }
-                orgMaterial.shaderModifiers = [
+
+                let isAlphaCutoff: Bool
+                let blendModeFloat = material.floatProperties["_BlendMode"]
+                let blendMode = Int(blendModeFloat ?? 0)
+                switch blendMode {
+                case 1: // Cutout
+                  orgMaterial.blendMode = .replace
+                  isAlphaCutoff = true
+                case 2: // Transparent
+                  orgMaterial.blendMode = .alpha
+                  isAlphaCutoff = false
+                case 3: // TransparentWithZWrite
+                  orgMaterial.blendMode = .alpha
+                  isAlphaCutoff = false
+                default: // Opaque (0)
+                  orgMaterial.blendMode = .replace
+                  isAlphaCutoff = false
+                }
+
+                let cullModeFloat = material.floatProperties["_CullMode"]
+                let cullMode = Int(cullModeFloat ?? 0)
+                switch cullMode {
+                case 1: // Front
+                  orgMaterial.cullMode = .front
+                  orgMaterial.isDoubleSided = false
+                case 2: // Back
+                  orgMaterial.cullMode = .back
+                  orgMaterial.isDoubleSided = false
+                default: // Off (0)
+                  orgMaterial.cullMode = .front
+                  orgMaterial.isDoubleSided = true
+                }
+
+                let zWriteFloat = material.floatProperties["_ZWrite"]
+                let zWrite = Int(zWriteFloat ?? 1)
+                orgMaterial.writesToDepthBuffer = zWrite == 1
+
+                if isAlphaCutoff {
+                  orgMaterial.shaderModifiers = [
+                    .fragment: try! String(contentsOf: URL(fileURLWithPath: bundle.path(forResource: "GLTFShaderModifierFragment_VRMUnlitTexture_Cutoff", ofType: "shader")!), encoding: String.Encoding.utf8)
+                  ]
+
+                  let alphaCutOff = material.floatProperties["_Cutoff"] ?? 0
+                  orgMaterial.setValue(alphaCutOff, forKey: "alphaCutOff")
+                } else {
+                  orgMaterial.shaderModifiers = [
                     .fragment: try! String(contentsOf: URL(fileURLWithPath: bundle.path(forResource: "GLTFShaderModifierFragment_VRMUnlitTexture", ofType: "shader")!), encoding: String.Encoding.utf8)
-                ]
-                
-                orgMaterial.blendMode = .alpha
+                  ]
+                }
             }
         }
 
