@@ -466,8 +466,8 @@ public class GLTFUnarchiver {
             bufferView = bufferView.subdata(in: dataOffset..<dataOffset + dataStride * vectorCount - padding)
             
             let geometrySource = SCNGeometrySource(data: bufferView, semantic: semantic, vectorCount: vectorCount, usesFloatComponents: usesFloatComponents, componentsPerVector: componentsPerVector, bytesPerComponent: bytesPerComponent, dataOffset: 0, dataStride: dataStride)
-            
         #else
+            #error("GLTF Bug still getting through in build")
             let geometrySource = SCNGeometrySource(data: bufferView, semantic: semantic, vectorCount: vectorCount, usesFloatComponents: usesFloatComponents, componentsPerVector: componentsPerVector, bytesPerComponent: bytesPerComponent, dataOffset: dataOffset, dataStride: dataStride)
         #endif
         
@@ -1046,7 +1046,6 @@ public class GLTFUnarchiver {
         }
         
         material.isDoubleSided = glMaterial.doubleSided
-        
         material.shaderModifiers = [
             .surface: try! String(contentsOf: URL(fileURLWithPath: bundle.path(forResource: "GLTFShaderModifierSurface", ofType: "shader")!), encoding: String.Encoding.utf8)
         ]
@@ -1113,7 +1112,7 @@ public class GLTFUnarchiver {
         var weightPaths = [String]()
         for i in 0..<glMesh.primitives.count {
             let primitive = glMesh.primitives[i]
-            let primitiveNode = SCNNode()
+            
             //var sources = [SCNGeometrySource]()
             //var vertexSource: SCNGeometrySource?
             //var normalSource: SCNGeometrySource?
@@ -1159,7 +1158,7 @@ public class GLTFUnarchiver {
             }
             
             let geometry = SCNGeometry(sources: sources, elements: elements)
-            primitiveNode.geometry = geometry
+            node.geometry = geometry
             
             if let materialIndex = primitive.material {
                 let material = try self.loadMaterial(index: materialIndex)
@@ -1189,10 +1188,9 @@ public class GLTFUnarchiver {
                     
                 }
                 morpher.calculationMode = .additive
-                primitiveNode.morpher = morpher
+                node.morpher = morpher
             }
             
-            node.addChildNode(primitiveNode)
         }
         
         // TODO: set default weights
@@ -1611,22 +1609,27 @@ public class GLTFUnarchiver {
             throw GLTFUnarchiveError.DataInconsistent("loadNode: nodes is not defined")
         }
         let glNode = nodes[index]
-        let scnNode = SCNNode()
+        var scnNode = SCNNode()
         self.nodes[index] = scnNode
         
-        if let name = glNode.name {
+        let name = glNode.name
+        if name != nil {
             scnNode.name = name
         }
         if let camera = glNode.camera {
             scnNode.camera = try self.loadCamera(index: camera)
         }
         if let mesh = glNode.mesh {
-            let meshNode = try self.loadMesh(index: mesh)
-            scnNode.addChildNode(meshNode)
+            scnNode = try self.loadMesh(index: mesh)
+            
+            // Keep the main node's name, not that of the mesh
+            if (name != nil) {
+                scnNode.name = name
+            }
             
             var weightPaths = [String]()
-            for i in 0..<meshNode.childNodes.count {
-                let primitive = meshNode.childNodes[i]
+            for i in 0..<scnNode.childNodes.count {
+                let primitive = scnNode.childNodes[i]
                 if let morpher = primitive.morpher {
                     for j in 0..<morpher.targets.count {
                         let path = "childNodes[0].childNodes[\(i)].morpher.weights[\(j)]"
@@ -1637,7 +1640,7 @@ public class GLTFUnarchiver {
             scnNode.setValue(weightPaths, forUndefinedKey: "weightPaths")
             
             if let skin = glNode.skin {
-                _ = try self.loadSkin(index: skin, meshNode: meshNode)
+                _ = try self.loadSkin(index: skin, meshNode: scnNode)
                 //scnNode.skinner = skinner
             }
         }
