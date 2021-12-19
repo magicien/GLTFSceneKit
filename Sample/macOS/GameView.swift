@@ -8,6 +8,5 @@
 
 import SceneKit
 
-class GameView: SCNView {
+class GameView: SCNView {}
 
-}

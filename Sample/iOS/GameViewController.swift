@@ -16,6 +16,7 @@ class GameViewController: UIViewController {
     var gameView: SCNView? {
         get { return self.view as? SCNView }
     }
+    var scene: SCNScene?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,11 +42,15 @@ class GameViewController: UIViewController {
         
         // configure the view
         self.gameView!.backgroundColor = UIColor.gray
+
+        self.gameView!.delegate = self
     }
     
     func setScene(_ scene: SCNScene) {
         // set the scene to the view
         self.gameView!.scene = scene
+        self.scene = scene
+
         //to give nice reflections :)
         scene.lightingEnvironment.contents = "art.scnassets/shinyRoom.jpg"
         scene.lightingEnvironment.intensity = 2;
@@ -72,4 +77,10 @@ class GameViewController: UIViewController {
         // Release any cached data, images, etc that aren't in use.
     }
 
+}
+
+extension GameViewController: SCNSceneRendererDelegate {
+  func renderer(_ renderer: SCNSceneRenderer, didApplyAnimationsAtTime time: TimeInterval) {
+    self.scene?.rootNode.updateVRMSpringBones(time: time)
+  }
 }

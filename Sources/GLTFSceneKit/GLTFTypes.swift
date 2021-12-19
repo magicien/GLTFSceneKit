@@ -107,8 +107,10 @@ let keyPathMap: [String: String] = [
 
 #if os(macOS)
     typealias Image = NSImage
+    typealias Color = NSColor
 #elseif os(iOS) || os(tvOS) || os(watchOS)
     typealias Image = UIImage
+    typealias Color = UIColor
 #endif
 
 public protocol GLTFCodable: Codable {
