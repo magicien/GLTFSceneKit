@@ -5,7 +5,15 @@
 import Foundation
 import SceneKit
 
+public let GLTFVRM_VRMNodeKey = "GLTFVRM_NodeKey"
+var physicsSceneSettings: [String: GLTFVRM_VRMPhysicsSettings] = [:]
+var physicsUpdatedAt: [String: TimeInterval] = [:]
+
 struct GLTFVRM_GLTFVRMExtension: GLTFCodable {
+    static let humanoidBonesKey = "VRMHumanoidBones"
+    static let blendShapesKey = "VRMBlendShapes"
+    static let metaKey = "VRMMeta"
+
     struct GLTFVRM_VRM: Codable {
         let exportVersion: String?
         let meta: GLTFVRM_GLTFVRMMeta
@@ -169,7 +177,7 @@ struct GLTFVRM_GLTFVRMExtension: GLTFCodable {
                 humanoidBoneMap[humanBone.bone] = boneName
             }
         }
-        scene.rootNode.setValue(humanoidBoneMap, forKey: "VRMHumanoidBones")
+        scene.rootNode.setValue(humanoidBoneMap, forKey: GLTFVRM_GLTFVRMExtension.humanoidBonesKey)
 
         // Load materialProperties
         // TODO: Implement shaders
@@ -270,7 +278,9 @@ struct GLTFVRM_GLTFVRMExtension: GLTFCodable {
             }
             blendShapes[shapeName] = morpherWeights
         }
-        scene.rootNode.setValue(blendShapes, forKey: "VRMBlendShapes")
+        scene.rootNode.setValue(blendShapes, forKey: GLTFVRM_GLTFVRMExtension.blendShapesKey)
+
+        self.setupPhysics(for: scene, unarchiver: unarchiver)
     }
     
     func setMetadata(_ meta: GLTFVRM_GLTFVRMMeta, to scene: SCNScene) {
@@ -289,14 +299,66 @@ struct GLTFVRM_GLTFVRMExtension: GLTFCodable {
             "licenseName": meta.licenseName ?? "",
             "otherLicenseUrl": meta.otherLicenseUrl ?? ""
         ]
-        scene.setValue(dict, forKey: "VRMMeta")
+        scene.setValue(dict, forKey: GLTFVRM_GLTFVRMExtension.metaKey)
+    }
+
+  func setupPhysics(for scene: SCNScene, unarchiver: GLTFUnarchiver) {
+      guard let data = self.data else { return }
+
+      var colliderGroups: [GLTFVRM_VRMSpringBoneColliderGroup] = []
+      var springBones: [GLTFVRM_VRMSpringBone] = []
+
+      data.secondaryAnimation.colliderGroups.forEach { colliderGroup in
+        let nodeNo = colliderGroup.node
+        guard let nodeName = unarchiver.nodes[nodeNo]?.name else { return }
+        guard let colliderNode = scene.rootNode.childNode(withName: nodeName, recursively: true) else { return }
+
+        let colliders: [GLTFVRM_VRMSphereCollider] = colliderGroup.colliders.map { collider in
+          let offset = simd_float3(collider.offset.x, collider.offset.y, collider.offset.z)
+          return GLTFVRM_VRMSphereCollider(offset: offset, radius: collider.radius)
+        }
+
+        let group = GLTFVRM_VRMSpringBoneColliderGroup(node: colliderNode, colliders: colliders)
+        colliderGroups.append(group)
+      }
+
+      data.secondaryAnimation.boneGroups.forEach { boneGroup in
+        var rootBones: [SCNNode] = []
+
+        boneGroup.bones.forEach { boneNo in
+          guard let boneName = unarchiver.nodes[boneNo]?.name else { return }
+          guard let bone = scene.rootNode.childNode(withName: boneName, recursively: true) else { return }
+
+          rootBones.append(bone)
+        }
+
+        let colliders = boneGroup.colliderGroups.map { colliderGroups[$0] }
+
+        let springBone = GLTFVRM_VRMSpringBone(
+          center: nil,
+          rootBones: rootBones,
+          comment: boneGroup.comment,
+          stiffnessForce: boneGroup.stiffiness,
+          gravityPower: boneGroup.gravityPower,
+          gravityDir: simd_float3(boneGroup.gravityDir.x, boneGroup.gravityDir.y, boneGroup.gravityDir.z),
+          dragForce: boneGroup.dragForce,
+          hitRadius: boneGroup.hitRadius,
+          colliderGroups: colliders
+        )
+        springBones.append(springBone)
+      }
+
+      let physics = GLTFVRM_VRMPhysicsSettings(colliderGroups: colliderGroups, springBones: springBones)
+      let nodeId = UUID().uuidString
+      scene.rootNode.setValue(nodeId, forKey: GLTFVRM_VRMNodeKey)
+      physicsSceneSettings[nodeId] = physics
     }
 }
 
 extension SCNNode {
     // TODO: Blending some shapes which have the same keyPath
     public func setVRMBlendShape(name: String, weight: CGFloat) {
-        guard let shapes = self.value(forKey: "VRMBlendShapes") as? [String : [String : CGFloat]] else { return }
+        guard let shapes = self.value(forKey: GLTFVRM_GLTFVRMExtension.blendShapesKey) as? [String : [String : CGFloat]] else { return }
         
         shapes[name]?.forEach { (keyPath, weightRatio) in
             self.setValue(weight * weightRatio, forKeyPath: keyPath)
@@ -304,9 +366,28 @@ extension SCNNode {
     }
     
     public func getVRMHumanoidBone(name: String) -> SCNNode? {
-        guard let boneMap = self.value(forKey: "VRMHumanoidBones") as? [String: String] else { return nil }
+        guard let boneMap = self.value(forKey: GLTFVRM_GLTFVRMExtension.humanoidBonesKey) as? [String: String] else { return nil }
         guard let boneName = boneMap[name] else { return nil }
         
         return self.childNode(withName: boneName, recursively: true)
+    }
+
+    public func updateVRMSpringBones(time: TimeInterval) {
+      self.enumerateHierarchy { node, _ in
+        guard let nodeId = node.value(forKey: GLTFVRM_VRMNodeKey) as? String else { return }
+        guard let settings = physicsSceneSettings[nodeId] else { return }
+
+        var deltaTime: TimeInterval
+        if let previousTime = physicsUpdatedAt[nodeId] {
+          deltaTime = time - previousTime
+        } else {
+          deltaTime = 0
+        }
+        physicsUpdatedAt[nodeId] = time
+
+        settings.springBones.forEach {
+          $0.update(deltaTime: deltaTime, colliders: settings.colliderGroups)
+        }
+      }
     }
 }
