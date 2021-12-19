@@ -5,10 +5,9 @@
 import Foundation
 import SceneKit
 
-//public let GLTFVRM_VRMColliderGroupsKey = "GLTFVRM_VRMColliderGroupsKey"
-//public let GLTFVRM_VRMSpringBonesKey = "GLTFVRM_VRMSpringBonesKey"
-//public let GLTFVRM_VRMUpdateTimeKey = "GLTFVRM_VRMUpdateTimeKey"
 public let GLTFVRM_VRMNodeKey = "GLTFVRM_NodeKey"
+var physicsSceneSettings: [String: GLTFVRM_VRMPhysicsSettings] = [:]
+var physicsUpdatedAt: [String: TimeInterval] = [:]
 
 struct GLTFVRM_GLTFVRMExtension: GLTFCodable {
     static let humanoidBonesKey = "VRMHumanoidBones"
