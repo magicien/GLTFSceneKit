@@ -9,10 +9,11 @@
 #pragma arguments
 
 float alphaCutOff;
+float4 baseColor;
 
 #pragma body
 
 if (_output.color.a < alphaCutOff) {
   discard_fragment();
 }
-_output.color = float4(_surface.diffuse.rgb, 1.0);
+_output.color = baseColor * float4(_surface.diffuse.rgb, 1.0);

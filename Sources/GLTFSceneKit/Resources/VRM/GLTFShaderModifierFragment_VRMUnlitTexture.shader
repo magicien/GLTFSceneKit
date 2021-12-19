@@ -8,6 +8,8 @@
 
 #pragma arguments
 
+float4 baseColor;
+
 #pragma body
 
-_output.color = _surface.diffuse;
+_output.color = baseColor * _surface.diffuse;

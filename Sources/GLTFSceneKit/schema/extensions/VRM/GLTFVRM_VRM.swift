@@ -133,6 +133,8 @@ struct GLTFVRM_GLTFVRMExtension: GLTFCodable {
         let shader: String
         let renderQueue: Int
         let floatProperties: [String: Float]
+        let vectorProperties: [String: [Float]]
+        let textureProperties: [String: Int]
         let keywordMap: [String: Bool]
         let tagMap: [String: String]
     }
@@ -242,6 +244,14 @@ struct GLTFVRM_GLTFVRMExtension: GLTFCodable {
                     .fragment: try! String(contentsOf: URL(fileURLWithPath: bundle.path(forResource: "GLTFShaderModifierFragment_VRMUnlitTexture", ofType: "shader")!), encoding: String.Encoding.utf8)
                   ]
                 }
+
+                var baseColor = SCNVector4(1, 1, 1, 1)
+                if let color = material.vectorProperties["_Color"] {
+                  if color.count >= 4 {
+                    baseColor = SCNVector4(color[0], color[1], color[2], color[3])
+                  }
+                }
+                orgMaterial.setValue(NSValue(scnVector4: baseColor), forKey: "baseColor")
             }
         }
 
