@@ -6,8 +6,6 @@ import Foundation
 import SceneKit
 
 public let GLTFVRM_VRMNodeKey = "GLTFVRM_NodeKey"
-var physicsSceneSettings: [String: GLTFVRM_VRMPhysicsSettings] = [:]
-var physicsUpdatedAt: [String: TimeInterval] = [:]
 
 struct GLTFVRM_GLTFVRMExtension: GLTFCodable {
     static let humanoidBonesKey = "VRMHumanoidBones"
@@ -361,7 +359,7 @@ struct GLTFVRM_GLTFVRMExtension: GLTFCodable {
       let physics = GLTFVRM_VRMPhysicsSettings(colliderGroups: colliderGroups, springBones: springBones)
       let nodeId = UUID().uuidString
       scene.rootNode.setValue(nodeId, forKey: GLTFVRM_VRMNodeKey)
-      physicsSceneSettings[nodeId] = physics
+      GLTFVRM_VRMState.setSceneSettings(key: nodeId, value: physics)
     }
 }
 
@@ -385,15 +383,15 @@ extension SCNNode {
     public func updateVRMSpringBones(time: TimeInterval) {
       self.enumerateHierarchy { node, _ in
         guard let nodeId = node.value(forKey: GLTFVRM_VRMNodeKey) as? String else { return }
-        guard let settings = physicsSceneSettings[nodeId] else { return }
+        guard let settings = GLTFVRM_VRMState.getSceneSettings(key: nodeId) else { return }
 
         var deltaTime: TimeInterval
-        if let previousTime = physicsUpdatedAt[nodeId] {
+        if let previousTime = GLTFVRM_VRMState.getUpdatedAt(key: nodeId) {
           deltaTime = time - previousTime
         } else {
           deltaTime = 0
         }
-        physicsUpdatedAt[nodeId] = time
+        GLTFVRM_VRMState.setUpdatedAt(key: nodeId, value: time)
 
         settings.springBones.forEach {
           $0.update(deltaTime: deltaTime, colliders: settings.colliderGroups)

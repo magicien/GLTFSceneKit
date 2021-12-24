@@ -17,6 +17,8 @@
 		491BC4FE276F7E5700E7A448 /* GLTFVRM_VRMSpringBoneLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 491BC4FC276F7E5700E7A448 /* GLTFVRM_VRMSpringBoneLogic.swift */; };
 		491BC500276F7F0E00E7A448 /* GLTFVRM_VRMTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 491BC4FF276F7F0E00E7A448 /* GLTFVRM_VRMTypes.swift */; };
 		491BC501276F7F0E00E7A448 /* GLTFVRM_VRMTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 491BC4FF276F7F0E00E7A448 /* GLTFVRM_VRMTypes.swift */; };
+		493D93EE2775A3C1008DA108 /* GLTFVRM_VRMState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493D93ED2775A3C1008DA108 /* GLTFVRM_VRMState.swift */; };
+		493D93EF2775A3C1008DA108 /* GLTFVRM_VRMState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493D93ED2775A3C1008DA108 /* GLTFVRM_VRMState.swift */; };
 		49B64F6A276A645F000380C7 /* GLTFShaderModifierFragment_VRMUnlitTexture_Cutoff.shader in Resources */ = {isa = PBXBuildFile; fileRef = 49B64F69276A645E000380C7 /* GLTFShaderModifierFragment_VRMUnlitTexture_Cutoff.shader */; };
 		49B64F6B276A645F000380C7 /* GLTFShaderModifierFragment_VRMUnlitTexture_Cutoff.shader in Resources */ = {isa = PBXBuildFile; fileRef = 49B64F69276A645E000380C7 /* GLTFShaderModifierFragment_VRMUnlitTexture_Cutoff.shader */; };
 		49DFA9BE26A45B290009965E /* GLTFSceneKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 49DFA9BD26A45A710009965E /* GLTFSceneKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -188,6 +190,7 @@
 		491BC4F9276F0A7A00E7A448 /* GLTFVRM_VRMSpringBone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GLTFVRM_VRMSpringBone.swift; sourceTree = "<group>"; };
 		491BC4FC276F7E5700E7A448 /* GLTFVRM_VRMSpringBoneLogic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GLTFVRM_VRMSpringBoneLogic.swift; sourceTree = "<group>"; };
 		491BC4FF276F7F0E00E7A448 /* GLTFVRM_VRMTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GLTFVRM_VRMTypes.swift; sourceTree = "<group>"; };
+		493D93ED2775A3C1008DA108 /* GLTFVRM_VRMState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GLTFVRM_VRMState.swift; sourceTree = "<group>"; };
 		49B64F69276A645E000380C7 /* GLTFShaderModifierFragment_VRMUnlitTexture_Cutoff.shader */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GLTFShaderModifierFragment_VRMUnlitTexture_Cutoff.shader; sourceTree = "<group>"; };
 		49D5C8AD2767081E0076FB22 /* GLTFShaderModifierFragment_VRMUnlitTexture.shader */ = {isa = PBXFileReference; lastKnownFileType = text; path = GLTFShaderModifierFragment_VRMUnlitTexture.shader; sourceTree = "<group>"; };
 		49D5C8AE2767081E0076FB22 /* GLTFShaderModifierSurface_VRMMToon.shader */ = {isa = PBXFileReference; lastKnownFileType = text; path = GLTFShaderModifierSurface_VRMMToon.shader; sourceTree = "<group>"; };
@@ -301,6 +304,7 @@
 			isa = PBXGroup;
 			children = (
 				49DFAA2F26A4FC9F0009965E /* GLTFVRM_VRM.swift */,
+				493D93ED2775A3C1008DA108 /* GLTFVRM_VRMState.swift */,
 				491BC4FF276F7F0E00E7A448 /* GLTFVRM_VRMTypes.swift */,
 				491BC4F9276F0A7A00E7A448 /* GLTFVRM_VRMSpringBone.swift */,
 				491BC4FC276F7E5700E7A448 /* GLTFVRM_VRMSpringBoneLogic.swift */,
@@ -743,6 +747,7 @@
 				DD3EB08F1F524783009F32D2 /* GLTFMaterialNormalTextureInfo.swift in Sources */,
 				DD3EB08A1F524783009F32D2 /* GLTFGlTFChildOfRootProperty.swift in Sources */,
 				491BC4FB276F0A7A00E7A448 /* GLTFVRM_VRMSpringBone.swift in Sources */,
+				493D93EF2775A3C1008DA108 /* GLTFVRM_VRMState.swift in Sources */,
 				DD3EB07F1F524783009F32D2 /* GLTFAnimationChannelTarget.swift in Sources */,
 				DD3EB09C1F524790009F32D2 /* GLTFUnarchiver.swift in Sources */,
 				DD3EB0861F524783009F32D2 /* GLTFCameraPerspective.swift in Sources */,
@@ -797,6 +802,7 @@
 				DDE6FD761F466F3600CB11D6 /* GLTFMaterialNormalTextureInfo.swift in Sources */,
 				DDE6FD711F466F3600CB11D6 /* GLTFGlTFChildOfRootProperty.swift in Sources */,
 				491BC4FA276F0A7A00E7A448 /* GLTFVRM_VRMSpringBone.swift in Sources */,
+				493D93EE2775A3C1008DA108 /* GLTFVRM_VRMState.swift in Sources */,
 				DDE6FD661F466F3600CB11D6 /* GLTFAnimationChannelTarget.swift in Sources */,
 				DDE6FD6D1F466F3600CB11D6 /* GLTFCameraPerspective.swift in Sources */,
 				DDE6FD7A1F466F3600CB11D6 /* GLTFMeshPrimitive.swift in Sources */,
