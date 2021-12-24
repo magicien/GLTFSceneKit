@@ -385,14 +385,7 @@ extension SCNNode {
         guard let nodeId = node.value(forKey: GLTFVRM_VRMNodeKey) as? String else { return }
         guard let settings = GLTFVRM_VRMState.getSceneSettings(key: nodeId) else { return }
 
-        var deltaTime: TimeInterval
-        if let previousTime = GLTFVRM_VRMState.getUpdatedAt(key: nodeId) {
-          deltaTime = time - previousTime
-        } else {
-          deltaTime = 0
-        }
-        GLTFVRM_VRMState.setUpdatedAt(key: nodeId, value: time)
-
+        let deltaTime = GLTFVRM_VRMState.updateTime(key: nodeId, time: time)
         settings.springBones.forEach {
           $0.update(deltaTime: deltaTime, colliders: settings.colliderGroups)
         }

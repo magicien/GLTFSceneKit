@@ -33,4 +33,19 @@ class GLTFVRM_VRMState {
       self.physicsUpdatedAt[key] = value
     }
   }
+
+  static func updateTime(key: String, time: TimeInterval) -> TimeInterval {
+    var deltaTime: TimeInterval = 0
+    self.updatedAtQueue.sync(flags: .barrier) {
+      if let previousTime = self.physicsUpdatedAt[key] {
+        deltaTime = time - previousTime
+      }
+      self.physicsUpdatedAt[key] = time
+    }
+
+    if deltaTime < 0 {
+      deltaTime = 0
+    }
+    return deltaTime
+  }
 }
