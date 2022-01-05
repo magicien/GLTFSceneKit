@@ -156,6 +156,32 @@ struct GLTFVRM_GLTFVRMExtension: GLTFCodable {
     enum CodingKeys: String, CodingKey {
         case data = "VRM"
     }
+
+    func checkNameUniqueness(rootNode: SCNNode, name: String) -> Bool {
+      var nameCount: Int = 0
+      rootNode.enumerateHierarchy { node, _ in
+        if node.name == name {
+          nameCount += 1
+        }
+      }
+
+      return nameCount <= 1
+    }
+
+    func getUniqueName(targetNode: SCNNode, rootNode: SCNNode) -> String {
+      let orgName = targetNode.name ?? "node"
+      var name = orgName
+
+      var nameIsUnique = checkNameUniqueness(rootNode: rootNode, name: name)
+      var postfix: Int = 1
+      while !nameIsUnique {
+        name = "\(orgName)-\(postfix)"
+        nameIsUnique = checkNameUniqueness(rootNode: rootNode, name: name)
+        postfix += 1
+      }
+
+      return name
+    }
     
     func didLoad(by object: Any, unarchiver: GLTFUnarchiver) {
         guard let data = self.data else { return }
@@ -269,10 +295,8 @@ struct GLTFVRM_GLTFVRMExtension: GLTFCodable {
                     return
                 }
 
-                // TODO: Handle empty name and name conflicts
-                guard let meshName = meshNode.name else {
-                    return
-                }
+                let meshName = getUniqueName(targetNode: meshNode, rootNode: scene.rootNode)
+                meshNode.name = meshName
                                 
                 for i in 0..<meshNode.childNodes.count {
                     let keyPath = "/\(meshName).childNodes[\(i)].morpher.weights[\(bind.index)]"
