@@ -281,7 +281,7 @@ struct GLTFVRM_GLTFVRMExtension: GLTFCodable {
             }
             
             var shapeName = blendShapeGroup.presetName
-            if shapeName == "" {
+            if shapeName == "" || shapeName == "unknown" {
                 shapeName = blendShapeGroup.name
             }
             blendShapes[shapeName] = morpherWeights
