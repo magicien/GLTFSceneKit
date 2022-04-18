@@ -218,7 +218,27 @@ struct GLTFVRM_GLTFVRMExtension: GLTFCodable {
             nodes.forEach { node in
                 node.renderingOrder = material.renderQueue
 
-                guard let orgMaterial = node.geometry?.material(named: material.name) else { return }
+                guard let orgGeometry = node.geometry else { return }
+                guard let orgMaterial = orgGeometry.material(named: material.name) else { return }
+                
+                // Remove gltf color data
+                if orgGeometry.sources(for: .color) != nil {
+                    let sources = orgGeometry.sources.filter {
+                        $0.semantic != .color
+                    }
+                    let geometry = SCNGeometry(sources: sources, elements: orgGeometry.elements)
+                    geometry.edgeCreasesElement = orgGeometry.edgeCreasesElement
+                    geometry.edgeCreasesSource = orgGeometry.edgeCreasesSource
+                    geometry.levelsOfDetail = orgGeometry.levelsOfDetail
+                    geometry.materials = orgGeometry.materials
+                    geometry.name = orgGeometry.name
+                    geometry.program = orgGeometry.program
+                    geometry.shaderModifiers = orgGeometry.shaderModifiers
+                    geometry.subdivisionLevel = orgGeometry.subdivisionLevel
+                    geometry.tessellator = orgGeometry.tessellator
+                    geometry.wantsAdaptiveSubdivision = orgGeometry.wantsAdaptiveSubdivision
+                    node.geometry = geometry
+                }
 
                 let isAlphaCutoff: Bool
                 let blendModeFloat = material.floatProperties["_BlendMode"]
