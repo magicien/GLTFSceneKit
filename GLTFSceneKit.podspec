@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = "GLTFSceneKit"
-  s.version = "0.3.0"
+  s.version = "0.4.1-explain1"
   s.summary = "glTF loader for SceneKit"
   s.homepage = "https://github.com/magicien/GLTFSceneKit"
   s.license = "MIT"
