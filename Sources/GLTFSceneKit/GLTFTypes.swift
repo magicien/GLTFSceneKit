@@ -108,7 +108,7 @@ let keyPathMap: [String: String] = [
 #if os(macOS)
     typealias Image = NSImage
     typealias Color = NSColor
-#elseif os(iOS) || os(tvOS) || os(watchOS)
+#elseif os(iOS) || os(tvOS) || os(watchOS) || os(visionOS)
     typealias Image = UIImage
     typealias Color = UIColor
 #endif
